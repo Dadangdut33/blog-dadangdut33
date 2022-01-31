@@ -1,21 +1,23 @@
 import nextConnect from "next-connect";
-import middleware from "../../../../../lib/db";
-import { csrf } from "../../../../../lib/csrf";
+import middleware from "../../../../lib/db";
 import requestIp from "request-ip";
+import { checkToken } from "../../../../lib/csrf";
 
 const handler = nextConnect();
 
 handler.use(middleware);
 
-handler.get(async (req, res) => {
-	// request must be post
+handler.post(async (req, res) => {
+	if (!checkToken(req)) return res.status(403).send();
+
 	if (req.method !== "POST") {
 		res.status(400).json({
 			message: "Request must be a POST request",
 		});
+		return;
 	}
 
-	const id = parseInt(req.query.id);
+	const id = parseInt(req.body.id);
 	const detectedIp = requestIp.getClientIp(req);
 
 	// prettier-ignore
@@ -24,7 +26,7 @@ handler.get(async (req, res) => {
 		.toArray();
 
 	if (post.length == 0) {
-		res.status(404).json({
+		res.status(200).json({
 			message: "Post not found",
 		});
 	} else {
@@ -67,4 +69,4 @@ handler.get(async (req, res) => {
 	}
 });
 
-export default csrf(handler);
+export default handler;
