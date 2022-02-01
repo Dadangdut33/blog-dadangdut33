@@ -20,6 +20,12 @@ export async function getServerSideProps(context) {
 		var title = "test temp title";
 
 		// if not found, return error page
+		// return error page
+		// return {
+		// 	props: {
+		// 		statusCode: 404,
+		// 	},
+		// };
 
 		// replace space with dash and encode to url
 		title = encodeURIComponent(title.replace(/\s+/g, "-"));
