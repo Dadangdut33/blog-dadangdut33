@@ -37,6 +37,13 @@ handler.post(async (req, res) => {
 			message: "Subscriber not found or already unsubscribed",
 		});
 	} else {
+		// add to log
+		await req.db.collection("log").insertOne({
+			type: "unsubscribe",
+			email: email,
+			date: new Date(),
+		});
+
 		res.status(200).json({
 			message: "Unsubscribed successfully",
 		});

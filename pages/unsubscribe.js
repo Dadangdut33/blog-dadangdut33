@@ -1,4 +1,3 @@
-import ErrorPage from "next/error";
 import { csrfToken } from "../lib/csrf";
 
 export default function postId(props) {

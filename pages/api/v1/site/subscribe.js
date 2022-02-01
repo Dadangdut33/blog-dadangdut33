@@ -41,6 +41,13 @@ handler.post(async (req, res) => {
 
 	await req.db.collection("subscriber").insertOne({ email: email });
 
+	// add to log
+	await req.db.collection("log").insertOne({
+		type: "subscribe",
+		email: email,
+		date: new Date(),
+	});
+
 	// return success
 	res.status(200).json({
 		message: "Subscribed successfully",
