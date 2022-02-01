@@ -9,8 +9,10 @@ handler.get(async (req, res) => {
 	const id = parseInt(req.query.id);
 
 	// prettier-ignore
-	let post = await req.db.collection("post")
+	let post = await req.db
+		.collection("post")
 		.find({ id: id })
+		.project({ upvoter: 0, downvoter: 0, _id: 0 })
 		.toArray();
 
 	if (post.length == 0) {

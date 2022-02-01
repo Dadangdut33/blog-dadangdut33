@@ -6,10 +6,10 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.get(async (req, res) => {
-	// prettier-ignore
 	let posts = await req.db
 		.collection("post")
 		.find({})
+		.project({ upvoter: 0, downvoter: 0, _id: 0 })
 		.skip(1) // skip index 0 -> auto increment flag
 		.sort({ id: 1 })
 		.toArray();
