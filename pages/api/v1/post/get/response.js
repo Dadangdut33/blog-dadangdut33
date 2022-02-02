@@ -1,7 +1,7 @@
 import nextConnect from "next-connect";
-import middleware from "../../../../lib/db";
+import middleware from "../../../../../lib/db";
 import requestIp from "request-ip";
-import { checkToken } from "../../../../lib/csrf";
+import { checkToken } from "../../../../../lib/csrf";
 import { Cookie } from "next-cookie";
 import { randomBytes } from "crypto";
 
