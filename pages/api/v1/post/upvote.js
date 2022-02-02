@@ -10,7 +10,7 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.post(async (req, res) => {
-	if (!checkToken(req)) return res.status(403).send();
+	if (!checkToken(req)) return res.status(403).json({ message: "Invalid CSRF Token" });
 
 	if (req.method !== "POST") {
 		res.status(400).json({

@@ -1,13 +1,14 @@
 import nextConnect from "next-connect";
 import middleware from "../../../../lib/db";
 import { checkToken } from "../../../../lib/csrf";
+import { randomBytes } from "crypto";
 
 const handler = nextConnect();
 
 handler.use(middleware);
 
 handler.post(async (req, res) => {
-	if (!checkToken(req)) return res.status(403).send();
+	if (!checkToken(req)) return res.status(403).json({ message: "Invalid CSRF Token" });
 
 	// request must be post
 	if (req.method !== "POST") {
@@ -46,6 +47,7 @@ handler.post(async (req, res) => {
 		type: "subscribe",
 		email: email,
 		date: new Date(),
+		unsubscribeToken: randomBytes(32).toString("hex"),
 	});
 
 	// return success

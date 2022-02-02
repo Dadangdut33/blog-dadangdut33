@@ -11,7 +11,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 	const cookie = useCookie(ctx);
 	var rId = cookie.get("rId");
 	if (!rId) {
-		rId = randomBytes(12).toString("hex");
+		rId = randomBytes(12).toString("hex"); // generate random id with length 24
 		cookie.set("rId", rId, { path: "/" });
 	}
 

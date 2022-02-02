@@ -1,14 +1,19 @@
 import { csrfToken } from "../lib/csrf";
+import ErrorPage from "next/error";
 
 export default function postId(props) {
+	if (props.statusCode) {
+		return <ErrorPage statusCode={props.statusCode} />;
+	}
+
 	return <h1>Status: {props.message}</h1>;
 }
 
 // server side rendering
 export async function getServerSideProps(context) {
-	const { id, email } = context.query;
+	const { id, email, unsubscribeToken } = context.query; // GET params
 
-	if (!id || !email) {
+	if (!id || !email || !unsubscribeToken) {
 		// return error code
 		return {
 			props: {
@@ -26,6 +31,7 @@ export async function getServerSideProps(context) {
 			body: JSON.stringify({
 				email: email,
 				id: id,
+				unsubscribeToken: unsubscribeToken,
 			}),
 		});
 

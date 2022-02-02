@@ -8,7 +8,7 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.post(async (req, res) => {
-	if (!checkToken(req)) return res.status(403).send();
+	if (!checkToken(req)) return res.status(403).json({ message: "Invalid CSRF Token" });
 
 	// request must be post
 	if (req.method !== "POST") {
@@ -19,6 +19,7 @@ handler.post(async (req, res) => {
 
 	const email = req.body.email;
 	const id = req.body.id;
+	const unsubscribeToken = req.body.unsubscribeToken;
 
 	// if no email is provided, return error
 	if (!email || !id) {
@@ -30,7 +31,7 @@ handler.post(async (req, res) => {
 	}
 
 	// delete subscriber
-	const status = await req.db.collection("subscriber").deleteOne({ email: email, _id: ObjectID(id) });
+	const status = await req.db.collection("subscriber").deleteOne({ email: email, _id: ObjectID(id), unsubscribeToken: unsubscribeToken });
 
 	if (status.deletedCount === 0) {
 		res.status(400).json({
