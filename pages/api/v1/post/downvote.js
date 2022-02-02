@@ -77,16 +77,8 @@ handler.post(async (req, res) => {
 			message = "Downvoted";
 		}
 
-		if (setNewRid) {
-			res.status(200).json({
-				message: message,
-				cookieValue: cookie.get("rId"),
-			});
-		} else {
-			res.status(200).json({
-				message: message,
-			});
-		}
+		if (!setNewRid) res.status(200).json({ message: message });
+		else res.status(200).json({ message: message, cookieValue: cookie.get("rId") });
 	}
 });
 

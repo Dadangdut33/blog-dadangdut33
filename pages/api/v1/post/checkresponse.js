@@ -27,11 +27,11 @@ handler.post(async (req, res) => {
 
 	// prettier-ignore
 	let post = await req.db.collection("post")
-		.find({ id: id })
-		.toArray();
+        .find({ id: id })
+        .toArray();
 
 	if (post.length == 0) {
-		res.status(200).json({
+		res.status(404).json({
 			message: "Post not found",
 		});
 	} else {
@@ -41,39 +41,15 @@ handler.post(async (req, res) => {
 			setNewRid = true;
 		}
 
-		const upvoter = detectedIp + " " + rId;
+		const client = detectedIp + " " + rId;
 		let postUpvoter = post[0].upvoter;
 		let postDownvoter = post[0].downvoter;
 
-		// if the user has downvoted before
-		if (postDownvoter.includes(upvoter)) {
-			// decrement downvote and remove ip from downvoter array
-			// prettier-ignore
-			await req.db.collection("post").updateOne(
-				{ id: id },
-				{ $inc: { downvote: -1 }, $pull: { downvoter: upvoter } }
-			);
-		}
-
-		var message = "";
-		// if the user has upvoted before
-		if (postUpvoter.includes(upvoter)) {
-			// decrement upvote and remove ip from upvoter array
-			// prettier-ignore
-			await req.db.collection("post").updateOne(
-				{ id: id },
-				{ $inc: { upvote: -1 }, $pull: { upvoter: upvoter } }
-			);
-			message = "Upvote removed";
-		} else {
-			// increase upvote and add ip to upvoter array
-			// prettier-ignore
-			await req.db.collection("post").updateOne(
-				{ id: id },
-				{ $inc: { upvote: 1 }, $push: { upvoter: upvoter } },
-			);
-
-			message = "Upvoted";
+		var message = 0; // 0 = no response, 1 = upvote, 2 = downvote
+		if (postUpvoter.includes(client)) {
+			message = 1;
+		} else if (postDownvoter.includes(client)) {
+			message = -1;
 		}
 
 		if (!setNewRid) res.status(200).json({ message: message });
