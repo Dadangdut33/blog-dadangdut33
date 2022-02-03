@@ -4,6 +4,7 @@ import NavBar from "../components/navbar";
 import { useEffect, useState } from "react";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
 import { generateRSSFeed } from "../lib/rss";
+import { motion } from "framer-motion";
 
 export default function Home(props) {
 	const [posts, setPosts] = useState(props.posts);
@@ -47,13 +48,18 @@ export default function Home(props) {
 				</span>
 				<div className='row card-container'>
 					{posts.map((post) => (
-						<div className='card card-lists bg-light border border-card-dark shadow' id='card' key={post.id} style={{ padding: 0 }}>
+						<motion.a
+							className='card card-lists bg-light border border-card-dark shadow link-nodecor'
+							href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+							id='card'
+							key={post.id}
+							style={{ padding: 0 }}
+							whileHover={{ scale: 1.01 }}
+						>
 							<Image className='card-img-top card-thumbnail' src={post.thumbnail} alt={post.title + " thumbnail"} width={390} height={200} />
 							<div className='card-body bg-light'>
 								<h5 className='card-title' style={{ marginBottom: 0 }}>
-									<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
-										{post.title}
-									</a>
+									{post.title}
 								</h5>
 								<small className='text-muted'>{parseDate(post.createdAt)}</small> <br />
 								<small className='text-muted'>
@@ -74,7 +80,7 @@ export default function Home(props) {
 									</div>
 								</div>
 							</div>
-						</div>
+						</motion.a>
 					))}
 				</div>
 			</div>
