@@ -8,12 +8,8 @@ import { motion } from "framer-motion";
 
 export default function Home(props) {
 	const [posts, setPosts] = useState(props.posts);
-	const [searchClick, setSearchClick] = useState(false);
-
-	useEffect(() => {
-		// load the cdn script after the page is loaded
-		load_bootstrapjs(document);
-	}, []);
+	const [originalPosts, setOriginalPosts] = useState(props.posts);
+	const [searching, setSearching] = useState(false);
 
 	const parseDate = (date) => {
 		const dateObj = new Date(date);
@@ -28,8 +24,14 @@ export default function Home(props) {
 
 	const filterByTag = (tag) => {
 		const filteredPosts = posts.filter((post) => post.tag.includes(tag));
+		setSearching(true);
 		setPosts(filteredPosts);
 	};
+
+	useEffect(() => {
+		// load the cdn script after the page is loaded
+		load_bootstrapjs(document);
+	}, []);
 
 	return (
 		<>
@@ -47,41 +49,45 @@ export default function Home(props) {
 					<input className='form-control me-2 bg-light text-dark' id='search' type='search' placeholder='Search post 🔎' aria-label='Search' />
 				</span>
 				<div className='row card-container'>
-					{posts.map((post) => (
-						<motion.a
-							className='card card-lists bg-light border border-card-dark shadow link-nodecor'
-							href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-							id='card'
-							key={post.id}
-							style={{ padding: 0 }}
-							whileHover={{ scale: 1.01 }}
-						>
-							<Image className='card-img-top card-thumbnail' src={post.thumbnail} alt={post.title + " thumbnail"} width={390} height={200} />
-							<div className='card-body bg-light'>
-								<h5 className='card-title' style={{ marginBottom: 0 }}>
-									{post.title}
-								</h5>
-								<small className='text-muted'>{parseDate(post.createdAt)}</small> <br />
-								<small className='text-muted'>
-									<i className='far fa-eye icon-small'></i> {post.views} <i className='bi bi-arrow-up icon-small'></i> {post.upvote} <i className='bi bi-arrow-down icon-small'></i> {post.downvote}
-								</small>
-								<p className='card-text card-desc'>{post.description}</p>
-								<div className='d-flex justify-content-between align-items-center card-tags-container'>
-									<div className='btn-group'>
-										{post.tag.map(
-											(tag) => {
-												return (
-													<a className='btn btn-sm btn-outline-secondary card-tags' href={`/tag/${encodeURIComponent(tag.replace(/\s+/g, "-"))}`}>
-														#{tag}
-													</a>
-												);
-											} // map the tags
-										)}
+					{posts.length > 0
+						? posts.map((post) => (
+								<motion.div className='card card-lists bg-light border border-card-dark shadow link-nodecor' id='card' key={post.id} style={{ padding: 0 }} whileHover={{ scale: 1.01 }}>
+									<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
+										<Image className='card-img-top card-thumbnail' src={post.thumbnail} alt={post.title + " thumbnail"} width={400} height={200} />
+									</a>
+									<div className='card-body bg-light'>
+										<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
+											<div>
+												<h5 className='card-title' style={{ marginBottom: 0 }}>
+													{post.title}
+												</h5>
+												<small className='text-muted'>{parseDate(post.createdAt)}</small> <br />
+												<small className='text-muted'>
+													<i className='far fa-eye icon-small'></i> {post.views} <i className='bi bi-arrow-up icon-small'></i> {post.upvote} <i className='bi bi-arrow-down icon-small'></i>{" "}
+													{post.downvote}
+												</small>
+												<p className='card-text card-desc'>{post.description}</p>
+											</div>
+										</a>
+										<div className='d-flex justify-content-between align-items-center card-tags-container'>
+											<div className='btn-group'>
+												{post.tag.map(
+													(tag) => {
+														return (
+															<a className='btn btn-sm btn-outline-secondary card-tags' style={{ cursor: "pointer" }} onClick={() => filterByTag(tag)}>
+																#{tag}
+															</a>
+														);
+													} // map the tags
+												)}
+											</div>
+										</div>
 									</div>
-								</div>
-							</div>
-						</motion.a>
-					))}
+								</motion.div>
+						  ))
+						: searching
+						? `No post found`
+						: `No post yet`}
 				</div>
 			</div>
 		</>

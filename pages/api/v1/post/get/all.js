@@ -14,7 +14,8 @@ handler.get(async (req, res) => {
 		.sort({ id: 1 })
 		.toArray();
 
-	res.status(200).json(posts);
+	// reverse it so newver post is on top
+	res.status(200).json(posts.reverse());
 });
 
 export default handler;
