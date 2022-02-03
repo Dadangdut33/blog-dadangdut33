@@ -4,7 +4,7 @@
         <title>Articles by Fauzan F A - Dadangdut33</title>
         <link>https://blog.dadangdut33.codes</link>
         <description>Articles by Fauzan F A, a software engineer and web developer from Indonesia.</description>
-        <lastBuildDate>Thu, 03 Feb 2022 04:32:15 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 03 Feb 2022 13:39:22 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
@@ -22,8 +22,17 @@
             <link>https://blog.dadangdut33.codes/2/Test-Post-2-beneran</link>
             <guid>https://blog.dadangdut33.codes/2/Test-Post-2-beneran</guid>
             <pubDate>Mon, 31 Jan 2022 04:33:03 GMT</pubDate>
-            <description><![CDATA[merupakan test content lagi]]></description>
-            <content:encoded><![CDATA[test content yang ke 2 beneran]]></content:encoded>
+            <description><![CDATA[️Nov 2021 update: The library was renamed to iron-session and fully rewritten in TypeScript, it includes lots of new features and fixes.  Follow the migration guide here: ]]></description>
+            <content:encoded><![CDATA[⚠️ Nov 2021 update: The library was renamed to iron-session and fully rewritten in TypeScript, it includes lots of new features and fixes. Follow the migration guide here: https://github.com/vvo/iron-session/releases/tag/v6.0.0.🛠 Node.js stateless session utility using signed and encrypted cookies to store data. Works with Next.js, Express, NestJs, Fastify, and any Node.js HTTP framework.]]></content:encoded>
+            <author>contact@dadangdut33.codes (Fauzan F A)</author>
+        </item>
+        <item>
+            <title><![CDATA[Test Post 3]]></title>
+            <link>https://blog.dadangdut33.codes/3/Test-Post-3</link>
+            <guid>https://blog.dadangdut33.codes/3/Test-Post-3</guid>
+            <pubDate>Wed, 02 Feb 2022 04:33:03 GMT</pubDate>
+            <description><![CDATA[merupakan test content]]></description>
+            <content:encoded><![CDATA[test content yang ke 2]]></content:encoded>
             <author>contact@dadangdut33.codes (Fauzan F A)</author>
         </item>
     </channel>
