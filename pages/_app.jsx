@@ -1,9 +1,15 @@
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "../styles/globals.css";
 import { useCookie } from "next-cookie";
 import { randomBytes } from "crypto";
 
 function MyApp({ Component, pageProps }) {
-	return <Component {...pageProps} />;
+	return (
+		<>
+			<Component {...pageProps} />
+		</>
+	);
 }
 
 // intialize cookie for the app
