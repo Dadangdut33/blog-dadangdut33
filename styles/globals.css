@@ -22,6 +22,10 @@ a {
   font-size: large;
 }
 
+.darkmode-toggler {
+  cursor: pointer;
+}
+
 /* searchbar in nav */
 .nav-search {
   width: 80%;
@@ -62,6 +66,8 @@ a {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
+/* media queries */
 
 @media (max-width: 992px) {
   .nav-search {
