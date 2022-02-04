@@ -55,11 +55,11 @@ a {
   width: 22rem;
   overflow: hidden !important;
   transform: scale(1);
-  transition: all .3s ease-in-out;
+  transition: all .25s ease-in-out;
 }
 
 .card-lists:hover {
-  transform: scale(1.01);
+  transform: scale(1.025);
 }
 
 .thumbnail-wrapper {
@@ -95,7 +95,11 @@ a {
   margin-right: 0.5rem;
   border-radius: 1rem !important;
   background-color: #f8f9fa;
-  padding: 2px 9px
+  padding: 2px 9px;
+}
+
+.card-font-persist {
+  font-size: initial !important;
 }
 
 /* searchbar */

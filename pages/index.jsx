@@ -63,12 +63,12 @@ export default function Home(props) {
 												<h5 className='card-title' style={{ marginBottom: 0 }}>
 													{post.title}
 												</h5>
-												<small className='text-muted'>{parseDate(post.createdAt)}</small> <br />
-												<small className='text-muted'>
+												<small className='text-muted card-font-persist'>{parseDate(post.createdAt)}</small> <br />
+												<small className='text-muted card-font-persist'>
 													<i className='far fa-eye icon-small'></i> {post.views} <i className='bi bi-arrow-up icon-small'></i> {post.upvote} <i className='bi bi-arrow-down icon-small'></i>{" "}
 													{post.downvote}
 												</small>
-												<p className='card-text card-desc'>{post.description}</p>
+												<p className='card-text card-desc card-font-persist'>{post.description}</p>
 											</div>
 										</a>
 										<div className='d-flex justify-content-between align-items-center card-tags-container'>
@@ -76,7 +76,7 @@ export default function Home(props) {
 												{post.tag.map(
 													(tag) => {
 														return (
-															<a className='btn btn-sm btn-outline-secondary card-tags' style={{ cursor: "pointer" }} onClick={() => filterByTag(tag)}>
+															<a className='btn btn-sm btn-outline-secondary card-tags card-font-persist' style={{ cursor: "pointer" }} onClick={() => filterByTag(tag)}>
 																#{tag}
 															</a>
 														);
