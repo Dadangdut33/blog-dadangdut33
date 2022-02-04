@@ -98,6 +98,11 @@ a {
   margin-top: 9px;
   text-align: justify;
   text-justify: inter-word;
+  font-size: max(1rem, 1vw);
+}
+
+.card-small-el {
+  font-size: max(1rem, .7vw);
 }
 
 .card-tags-container {
@@ -118,10 +123,7 @@ a {
   border-radius: 1rem !important;
   background-color: #f8f9fa;
   padding: 2px 9px;
-}
-
-.card-font-persist {
-  font-size: initial !important;
+  font-size: initial;
 }
 
 /* searchbar */

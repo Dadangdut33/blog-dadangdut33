@@ -69,7 +69,7 @@ export default function DarkModeToggle() {
 	};
 
 	React.useEffect(() => {
-		var currentMode = localStorage.getItem("bgmode");
+		let currentMode = localStorage.getItem("bgmode");
 		if (currentMode == null) {
 			currentMode = getSystemDefaultTheme();
 			currentMode = currentMode ? "dark" : "light";
@@ -79,7 +79,7 @@ export default function DarkModeToggle() {
 		if (currentMode === "dark") {
 			setChecked(true);
 			setLogo(darkLogo);
-			var checkExist = setInterval(function () {
+			let checkExist = setInterval(function () {
 				if (document.querySelectorAll(".bg-light").length > 0) {
 					clearInterval(checkExist);
 					setDarkMode();
