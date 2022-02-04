@@ -23,12 +23,33 @@ a {
   font-size: large;
 }
 
-.darkmode-toggler {
-  cursor: pointer;
+.container {
+  margin-top: 4.5rem;
 }
 
 .icon-small::before {
   font-size: small;
+}
+
+/* nav */
+.navbar-brand {
+  font-size: larger;
+}
+
+.sub-brand {
+  margin-left: -3px;
+}
+
+.darkmode-toggler {
+  position: fixed;
+  right: 10px;
+  top: 3px;
+  z-index: 9999;
+}
+
+.nav-link {
+  margin-top: 3px;
+  font-size: 20px;
 }
 
 /* home / lists */
@@ -164,6 +185,17 @@ a {
   .card-lists {
     max-width: 90%;
     width: 900px;
+  }
+
+  .darkmode-toggler {
+    right: 70px;
+    top: 0px;
+  }
+}
+
+@media (max-width: 333px) {
+  .darkmode-toggler-btn {
+    display: none;
   }
 }
 

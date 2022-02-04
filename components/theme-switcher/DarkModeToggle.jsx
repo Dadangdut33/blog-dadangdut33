@@ -93,10 +93,10 @@ export default function DarkModeToggle() {
 	// return <Image src={logo} className='bi bi-brightness-high darkmode-toggler' width={"25"} height={"25"} fill='white' alt='light/dark toggler' viewBox='0 0 16 16' onClick={toggleBgMode} />;
 	return (
 		<div className='form-check form-switch ms-auto mt-3 me-3 darkmode-toggler'>
-			<label className='form-check-label ms-3' htmlFor='lightSwitch' style={{ marginLeft: "3px" }}>
+			<label className='form-check-label ms-3' htmlFor='lightSwitch' style={{ marginLeft: "3px", cursor: "pointer" }}>
 				<Image src={logo} className='bi bi-brightness-high' width={"25"} height={"25"} fill='white' alt='light/dark toggler' viewBox='0 0 16 16' style={{ marginBottom: "7px", cursor: "pointer" }} />
 			</label>
-			<input className='form-check-input' type={"checkbox"} id='lightSwitch' onChange={toggleBgMode} checked={checked} style={{ marginLeft: "0px", cursor: "pointer" }} />
+			<input className='form-check-input darkmode-toggler-btn' type={"checkbox"} id='lightSwitch' onChange={toggleBgMode} checked={checked} style={{ marginLeft: "0px", cursor: "pointer" }} />
 		</div>
 	);
 }

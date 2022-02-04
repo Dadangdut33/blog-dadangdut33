@@ -67,7 +67,7 @@ export default function Home(props) {
 				<h1 style={{ marginTop: "1rem" }}>
 					Blog <span style={{ fontSize: "1.25rem" }}>📝</span>
 				</h1>
-				<h5>Thoughts, ideas, and experiences that might help your coding adventure</h5>
+				<h5>I share thoughts, ideas, and experiences that might be useful in your coding adventure</h5>
 				<span className='navbar-text'>
 					<input className='form-control me-2 bg-light text-dark' id='search' type='search' placeholder='Search post 🔎' aria-label='Search' />
 				</span>

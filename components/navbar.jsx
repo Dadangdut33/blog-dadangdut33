@@ -4,15 +4,15 @@ import DarkModeToggle from "./theme-switcher/DarkModeToggle";
 export default function NavBar() {
 	return (
 		<>
-			<nav className='navbar navbar-expand-lg navbar-light bg-light border-bottom'>
+			<nav className='navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top'>
 				<div className='container-fluid'>
 					<span className='navbar-brand mb-0 h1'>
 						<a className='navbar-brand' href='https://dadangdut33.codes' style={{ marginRight: "0" }}>
 							Dadangdut33{" "}
 						</a>
-						<span className='text-muted'>
+						<span className='text-muted sub-brand'>
 							<a href='/' className='link-nodecor'>
-								- Blog
+								Blog
 							</a>
 						</span>
 					</span>
@@ -22,12 +22,16 @@ export default function NavBar() {
 					</button>
 					<div className='collapse navbar-collapse' id='navbarText'>
 						<ul className='navbar-nav me-auto mb-2 mb-lg-0'>
-							<li className='nav-item'> </li>
+							<li className='nav-item'>
+								<a className='nav-link' href='/rss.xml' target={"_blank"} rel='noopener noreferrer'>
+									Rss Feed 📡
+								</a>
+							</li>
 						</ul>
-						<DarkModeToggle />
 					</div>
 				</div>
 			</nav>
+			<DarkModeToggle />
 		</>
 	);
 }
