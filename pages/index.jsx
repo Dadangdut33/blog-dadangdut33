@@ -5,9 +5,32 @@ import { useEffect, useState } from "react";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
 import { generateRSSFeed } from "../lib/rss";
 export default function Home(props) {
-	const [posts, setPosts] = useState(props.posts);
-	const [originalPosts, setOriginalPosts] = useState(props.posts);
-	const [searching, setSearching] = useState(false);
+	// const filterByTag = (tag) => {
+	// 	const filteredPosts = posts.filter((post) => post.tag.includes(tag));
+	// 	setSearching(true);
+	// 	setPosts(filteredPosts);
+	// };
+
+	const filterPost = (posts, query) => {
+		if (!query) {
+			return posts;
+		}
+
+		return posts.filter((post) => post.title.toLowerCase().includes(query.toLowerCase()) || post.description.toLowerCase().includes(query.toLowerCase()));
+	};
+
+	const [searchQuery, setSearchQuery] = useState("");
+	const posts = filterPost(props.posts, searchQuery);
+	const [theme, setTheme] = useState("bg-light");
+
+	const scrollX = (ev, el) => {
+		ev.preventDefault();
+		el.scrollBy({
+			top: 0,
+			left: ev.deltaY,
+			behavior: "smooth",
+		});
+	};
 
 	const parseDate = (date) => {
 		const dateObj = new Date(date);
@@ -20,38 +43,27 @@ export default function Home(props) {
 		})}`;
 	};
 
-	const filterByTag = (tag) => {
-		const filteredPosts = posts.filter((post) => post.tag.includes(tag));
-		setSearching(true);
-		setPosts(filteredPosts);
-	};
-
 	useEffect(() => {
 		// load the cdn script after the page is loaded
 		load_bootstrapjs(document);
 		const tags = document.querySelectorAll("#tag-groups");
 		tags.forEach((tag) => {
-			tag.addEventListener("wheel", (e) => {
-				e.preventDefault();
-				tag.scrollBy({
-					top: 0,
-					left: e.deltaY,
-					behavior: "smooth",
-				});
-			});
+			tag.addEventListener("wheel", (e) => scrollX(e, tag));
 		});
+
+		let intervalBgCheck = setInterval(() => {
+			if (document.body.classList.contains("bg-dark")) {
+				setTheme("bg-dark");
+			} else {
+				setTheme("bg-light");
+			}
+		}, 100);
 
 		return () => {
 			// cleanup
+			clearInterval(intervalBgCheck);
 			tags.forEach((tag) => {
-				tag.removeEventListener("wheel", (e) => {
-					e.preventDefault();
-					tag.scrollBy({
-						top: 0,
-						left: e.deltaY,
-						behavior: "smooth",
-					});
-				});
+				tag.removeEventListener("wheel", (e) => scrollX(e, tag));
 			});
 		};
 	}, []);
@@ -69,12 +81,20 @@ export default function Home(props) {
 				</h1>
 				<h5>I share thoughts, ideas, and experiences that might be useful in your coding adventure</h5>
 				<span className='navbar-text'>
-					<input className='form-control me-2 bg-light text-dark' id='search' type='search' placeholder='Search post 🔎' aria-label='Search' />
+					<input
+						value={searchQuery}
+						onInput={(e) => setSearchQuery(e.target.value)}
+						className='form-control me-2 bg-light text-dark'
+						id='search'
+						type='search'
+						placeholder='Search post 🔎'
+						aria-label='Search'
+					/>
 				</span>
 				<div className='row card-container'>
 					{posts.length > 0
 						? posts.map((post) => (
-								<div className='card card-lists bg-light border border-card-dark shadow link-nodecor' id='card' key={post.id} style={{ padding: 0 }}>
+								<div className={`card card-lists ${theme} border border-card-dark shadow link-nodecor`} id='card' key={post.id} style={{ padding: 0 }}>
 									<div className='bg-light'>
 										<div className='bg-light thumbnail-wrapper'>
 											<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
@@ -82,7 +102,7 @@ export default function Home(props) {
 											</a>
 										</div>
 									</div>
-									<div className='card-body bg-light'>
+									<div className={`card-body ${theme}`}>
 										<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
 											<div>
 												<h5 className='card-title' style={{ marginBottom: 0 }}>
@@ -101,7 +121,7 @@ export default function Home(props) {
 												{post.tag.map(
 													(tag) => {
 														return (
-															<a className='btn btn-sm btn-outline-secondary card-tags card-font-persist' style={{ cursor: "pointer" }} onClick={() => filterByTag(tag)}>
+															<a className='btn btn-sm btn-outline-secondary card-tags card-font-persist' style={{ cursor: "pointer" }}>
 																#{tag}
 															</a>
 														);
@@ -112,7 +132,7 @@ export default function Home(props) {
 									</div>
 								</div>
 						  ))
-						: searching
+						: searchQuery !== ""
 						? `No post found`
 						: `No post yet`}
 				</div>
