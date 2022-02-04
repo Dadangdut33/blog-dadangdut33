@@ -4,8 +4,6 @@ import NavBar from "../components/navbar";
 import { useEffect, useState } from "react";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
 import { generateRSSFeed } from "../lib/rss";
-import { motion } from "framer-motion";
-
 export default function Home(props) {
 	const [posts, setPosts] = useState(props.posts);
 	const [originalPosts, setOriginalPosts] = useState(props.posts);
@@ -51,10 +49,14 @@ export default function Home(props) {
 				<div className='row card-container'>
 					{posts.length > 0
 						? posts.map((post) => (
-								<motion.div className='card card-lists bg-light border border-card-dark shadow link-nodecor' id='card' key={post.id} style={{ padding: 0 }} whileHover={{ scale: 1.01 }}>
-									<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
-										<Image className='card-img-top card-thumbnail' src={post.thumbnail} alt={post.title + " thumbnail"} width={400} height={200} />
-									</a>
+								<div className='card card-lists bg-light border border-card-dark shadow link-nodecor' id='card' key={post.id} style={{ padding: 0 }}>
+									<div className='bg-light'>
+										<div className='bg-light thumbnail-wrapper'>
+											<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
+												<Image className='card-img-top card-thumbnail' src={post.thumbnail} alt={post.title + " thumbnail"} width={1000} height={500} />
+											</a>
+										</div>
+									</div>
 									<div className='card-body bg-light'>
 										<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
 											<div>
@@ -83,7 +85,7 @@ export default function Home(props) {
 											</div>
 										</div>
 									</div>
-								</motion.div>
+								</div>
 						  ))
 						: searching
 						? `No post found`
