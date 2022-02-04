@@ -29,6 +29,31 @@ export default function Home(props) {
 	useEffect(() => {
 		// load the cdn script after the page is loaded
 		load_bootstrapjs(document);
+		const tags = document.querySelectorAll("#tag-groups");
+		tags.forEach((tag) => {
+			tag.addEventListener("wheel", (e) => {
+				e.preventDefault();
+				tag.scrollBy({
+					top: 0,
+					left: e.deltaY,
+					behavior: "smooth",
+				});
+			});
+		});
+
+		return () => {
+			// cleanup
+			tags.forEach((tag) => {
+				tag.removeEventListener("wheel", (e) => {
+					e.preventDefault();
+					tag.scrollBy({
+						top: 0,
+						left: e.deltaY,
+						behavior: "smooth",
+					});
+				});
+			});
+		};
 	}, []);
 
 	return (
@@ -71,7 +96,7 @@ export default function Home(props) {
 												<p className='card-text card-desc card-font-persist'>{post.description}</p>
 											</div>
 										</a>
-										<div className='d-flex justify-content-between align-items-center card-tags-container'>
+										<div className='d-flex justify-content-between align-items-center card-tags-container' id='tag-groups'>
 											<div className='btn-group'>
 												{post.tag.map(
 													(tag) => {
