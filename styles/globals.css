@@ -144,6 +144,10 @@ a {
   float: right;
 }
 
+.search-tags {
+  margin-top: .5rem;
+}
+
 /* custom links */
 .link-nodecor {
   color: inherit !important;

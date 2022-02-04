@@ -5,15 +5,22 @@ import { useEffect, useState } from "react";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
 import { generateRSSFeed } from "../lib/rss";
 export default function Home(props) {
-	// const filterByTag = (tag) => {
-	// 	const filteredPosts = posts.filter((post) => post.tag.includes(tag));
-	// 	setSearching(true);
-	// 	setPosts(filteredPosts);
-	// };
-
 	const filterPost = (posts, query) => {
 		if (!query) {
 			return posts;
+		}
+
+		// check if query contains [tag]
+		const regexp = /\[(.*?)\]/g;
+		const tag = [...query.matchAll(regexp)];
+		// get the string matched by the tag
+		const tagName = tag.map((item) => item[1]);
+
+		if (tagName.length > 0) {
+			const filterOne = posts.filter((post) => post.tag.some((tag) => tagName.includes(tag))); // get all post that match given tag
+			query = query.replace(/\[(.*?)\]/g, ""); // remove tag from query
+
+			return filterOne.filter((post) => post.title.toLowerCase().includes(query.toLowerCase()) || post.description.toLowerCase().includes(query.toLowerCase()));
 		}
 
 		return posts.filter((post) => post.title.toLowerCase().includes(query.toLowerCase()) || post.description.toLowerCase().includes(query.toLowerCase()));
@@ -22,15 +29,6 @@ export default function Home(props) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const posts = filterPost(props.posts, searchQuery);
 	const [theme, setTheme] = useState("bg-light");
-
-	const scrollX = (ev, el) => {
-		ev.preventDefault();
-		el.scrollBy({
-			top: 0,
-			left: ev.deltaY,
-			behavior: "smooth",
-		});
-	};
 
 	const parseDate = (date) => {
 		const dateObj = new Date(date);
@@ -43,15 +41,57 @@ export default function Home(props) {
 		})}`;
 	};
 
+	const scrollX = (ev, el) => {
+		ev.preventDefault();
+		el.scrollBy({
+			top: 0,
+			left: ev.deltaY,
+			behavior: "smooth",
+		});
+	};
+
+	const setActive = (elId) => {
+		const el = document.getElementById(elId);
+		if (el.classList.contains("active")) {
+			el.classList.remove("active");
+		} else {
+			el.classList.add("active");
+		}
+	};
+
+	const checkTag = (query) => {
+		if (!query) {
+			const searchTags = document.querySelectorAll(".search-card");
+			searchTags.forEach((tag) => {
+				tag.classList.remove("active");
+			});
+		}
+
+		// check if query contains [tag]
+		const regexp = /\[(.*?)\]/g;
+		const tag = [...query.matchAll(regexp)];
+		// get the string matched by the tag
+		const tagName = tag.map((item) => item[1]);
+
+		const searchTags = document.querySelectorAll(".search-card");
+		searchTags.forEach((tag) => {
+			if (tagName.includes(tag.id.split("-").pop())) {
+				tag.classList.add("active");
+			} else {
+				tag.classList.remove("active");
+			}
+		});
+	};
+
 	useEffect(() => {
 		// load the cdn script after the page is loaded
 		load_bootstrapjs(document);
-		const tags = document.querySelectorAll("#tag-groups");
-		tags.forEach((tag) => {
+		const tagsCard = document.querySelectorAll("#tag-card");
+		tagsCard.forEach((tag) => {
 			tag.addEventListener("wheel", (e) => scrollX(e, tag));
 		});
 
-		let intervalBgCheck = setInterval(() => {
+		let intervalBg = setInterval(() => {
 			if (document.body.classList.contains("bg-dark")) {
 				setTheme("bg-dark");
 			} else {
@@ -61,8 +101,8 @@ export default function Home(props) {
 
 		return () => {
 			// cleanup
-			clearInterval(intervalBgCheck);
-			tags.forEach((tag) => {
+			clearInterval(intervalBg);
+			tagsCard.forEach((tag) => {
 				tag.removeEventListener("wheel", (e) => scrollX(e, tag));
 			});
 		};
@@ -83,13 +123,32 @@ export default function Home(props) {
 				<span className='navbar-text'>
 					<input
 						value={searchQuery}
-						onInput={(e) => setSearchQuery(e.target.value)}
+						onInput={(e) => {
+							checkTag(e.target.value);
+							setSearchQuery(e.target.value);
+						}}
 						className='form-control me-2 bg-light text-dark'
 						id='search'
 						type='search'
 						placeholder='Search post 🔎'
 						aria-label='Search'
 					/>
+					<div className='search-tags'>
+						Tags:{" "}
+						{props.tags.map((tag, i) => (
+							<span
+								id={`search-${tag._id}`}
+								key={i}
+								className='btn btn-sm btn-outline-secondary card-tags search-card'
+								onClick={() => {
+									setActive(`search-${tag._id}`);
+									setSearchQuery(searchQuery.includes(`[${tag._id}]`) ? searchQuery.replace(`[${tag._id}]`, "") : `[${tag._id}]` + searchQuery.replace(`[${tag._id}]`, ""));
+								}}
+							>
+								#{tag._id}
+							</span>
+						))}
+					</div>
 				</span>
 				<div className='row card-container'>
 					{posts.length > 0
@@ -116,14 +175,21 @@ export default function Home(props) {
 												<p className='card-text card-desc'>{post.description}</p>
 											</div>
 										</a>
-										<div className='d-flex justify-content-between align-items-center card-tags-container' id='tag-groups'>
+										<div className='d-flex justify-content-between align-items-center card-tags-container' id='tag-card'>
 											<div className='btn-group'>
 												{post.tag.map(
 													(tag) => {
 														return (
-															<a className='btn btn-sm btn-outline-secondary card-tags' style={{ cursor: "pointer" }}>
+															<span
+																className='btn btn-sm btn-outline-secondary card-tags'
+																style={{ cursor: "pointer" }}
+																onClick={() => {
+																	setActive(`search-${tag}`);
+																	setSearchQuery(searchQuery.includes(`[${tag}]`) ? searchQuery.replace(`[${tag}]`, "") : `[${tag}]` + searchQuery.replace(`[${tag}]`, ""));
+																}}
+															>
 																#{tag}
-															</a>
+															</span>
 														);
 													} // map the tags
 												)}
@@ -142,12 +208,14 @@ export default function Home(props) {
 }
 
 export async function getStaticProps() {
-	const response = await fetch("http://localhost:3000/api/v1/post/get/all", {});
-	const data = await response.json();
+	const res_Posts = await fetch("http://localhost:3000/api/v1/post/get/all", {});
+	const data_Posts = await res_Posts.json();
+	const res_Tags = await fetch("http://localhost:3000/api/v1/post/get/tags", {});
+	const data_Tags = await res_Tags.json();
 
-	generateRSSFeed(data);
+	generateRSSFeed(data_Posts);
 
 	return {
-		props: { posts: data },
+		props: { posts: data_Posts, tags: data_Tags },
 	};
 }
