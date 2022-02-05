@@ -31,6 +31,7 @@ a {
   font-size: small;
 }
 
+/* --------------------------------------- */
 /* nav */
 .navbar-brand {
   font-size: larger;
@@ -52,6 +53,17 @@ a {
   font-size: 20px;
 }
 
+/* --------------------------------------- */
+/* footer */
+.footer-icon a {
+  transition: transform 0.1s ease-out;
+}
+
+.footer-icon a:hover {
+  transform: scale(1.2);
+}
+
+/* --------------------------------------- */
 /* home / lists */
 #card {
   background-color: white !important;
@@ -71,7 +83,6 @@ a {
   box-shadow: 0 3px 10px rgb(255, 255, 255, .275) !important;
 }
 
-/* ini ubah width pas kecilnya */
 .card-lists {
   margin: 1rem;
   width: 22rem;
@@ -148,6 +159,7 @@ a {
   margin-top: .5rem;
 }
 
+/* --------------------------------------- */
 /* custom links */
 .link-nodecor {
   color: inherit !important;
@@ -180,8 +192,8 @@ a {
   transform-origin: bottom left;
 }
 
+/* --------------------------------------- */
 /* media queries */
-
 @media (max-width: 992px) {
   .search-shrink {
     width: 100%;
@@ -205,6 +217,7 @@ a {
   }
 }
 
+/* --------------------------------------- */
 /* custom scrollbar - only on desktop view */
 @media only screen and (min-device-width: 575px) {
 

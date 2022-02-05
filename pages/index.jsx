@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import NavBar from "../components/navbar";
+import Footer from "../components/footer";
 import { useEffect, useState } from "react";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
 import { generateRSSFeed } from "../lib/rss";
@@ -28,7 +29,7 @@ export default function Home(props) {
 
 	const [searchQuery, setSearchQuery] = useState("");
 	const posts = filterPost(props.posts, searchQuery);
-	const [theme, setTheme] = useState("bg-light");
+	const [theme, setTheme] = useState("bg-light border-card-dark");
 
 	const parseDate = (date) => {
 		const dateObj = new Date(date);
@@ -93,9 +94,9 @@ export default function Home(props) {
 
 		let intervalBg = setInterval(() => {
 			if (document.body.classList.contains("bg-dark")) {
-				setTheme("bg-dark");
+				setTheme("bg-dark border-light");
 			} else {
-				setTheme("bg-light");
+				setTheme("bg-light border-card-dark");
 			}
 		}, 100);
 
@@ -109,7 +110,7 @@ export default function Home(props) {
 	}, []);
 
 	return (
-		<>
+		<main className='d-flex flex-column min-vh-100'>
 			<Head>
 				<title>Dadangdut33 - Blog</title>
 				<link rel='icon' href='/favicon.ico' />
@@ -153,7 +154,7 @@ export default function Home(props) {
 				<div className='row card-container'>
 					{posts.length > 0
 						? posts.map((post) => (
-								<div className={`card card-lists ${theme} border border-card-dark shadow link-nodecor`} id='card' key={post.id} style={{ padding: 0 }}>
+								<div className={`card card-lists border ${theme} shadow link-nodecor`} id='card' key={post.id} style={{ padding: 0 }}>
 									<div className='bg-light'>
 										<div className='bg-light thumbnail-wrapper'>
 											<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
@@ -177,22 +178,20 @@ export default function Home(props) {
 										</a>
 										<div className='d-flex justify-content-between align-items-center card-tags-container' id='tag-card'>
 											<div className='btn-group'>
-												{post.tag.map(
-													(tag) => {
-														return (
-															<span
-																className='btn btn-sm btn-outline-secondary card-tags'
-																style={{ cursor: "pointer" }}
-																onClick={() => {
-																	setActive(`search-${tag}`);
-																	setSearchQuery(searchQuery.includes(`[${tag}]`) ? searchQuery.replace(`[${tag}]`, "") : `[${tag}]` + searchQuery.replace(`[${tag}]`, ""));
-																}}
-															>
-																#{tag}
-															</span>
-														);
-													} // map the tags
-												)}
+												{post.tag.map((tag) => {
+													return (
+														<span
+															className='btn btn-sm btn-outline-secondary card-tags'
+															style={{ cursor: "pointer" }}
+															onClick={() => {
+																setActive(`search-${tag}`);
+																setSearchQuery(searchQuery.includes(`[${tag}]`) ? searchQuery.replace(`[${tag}]`, "") : `[${tag}]` + searchQuery.replace(`[${tag}]`, ""));
+															}}
+														>
+															#{tag}
+														</span>
+													);
+												})}
 											</div>
 										</div>
 									</div>
@@ -203,7 +202,8 @@ export default function Home(props) {
 						: `No post yet`}
 				</div>
 			</div>
-		</>
+			<Footer />
+		</main>
 	);
 }
 

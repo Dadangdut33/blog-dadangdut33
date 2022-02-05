@@ -1,4 +1,3 @@
-import { useState } from "react";
 import DarkModeToggle from "./theme-switcher/DarkModeToggle";
 
 export default function NavBar() {
