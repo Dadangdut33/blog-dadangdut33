@@ -1,10 +1,11 @@
-import Head from "next/head";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import NavBar from "../components/navbar";
 import Footer from "../components/footer";
-import { useEffect, useState } from "react";
+import Meta from "../components/meta";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
 import { generateRSSFeed } from "../lib/rss";
+import { serverUrl } from "../lib/server_url";
 export default function Home(props) {
 	const filterPost = (posts, query) => {
 		if (!query) {
@@ -111,10 +112,17 @@ export default function Home(props) {
 
 	return (
 		<main className='d-flex flex-column min-vh-100'>
-			<Head>
-				<title>Dadangdut33 - Blog</title>
-				<link rel='icon' href='/favicon.ico' />
-			</Head>
+			<Meta
+				title='Dadangdut33 - Blog'
+				description='I share thoughts, ideas, and experiences that might be useful in your coding adventure'
+				keywords='blog, tech, articles, tips'
+				author='Dadangdut33'
+				image={serverUrl + "/logo512.png"}
+				url={serverUrl}
+				siteName='Dadangdut33 - Blog'
+				type='website'
+				date={null}
+			/>
 			<NavBar />
 			<div className='container'>
 				<h1 style={{ marginTop: "1rem" }}>
@@ -207,9 +215,9 @@ export default function Home(props) {
 }
 
 export async function getStaticProps() {
-	const res_Posts = await fetch("http://localhost:3000/api/v1/post/get/all", {});
+	const res_Posts = await fetch(`${serverUrl}/api/v1/post/get/all`, {});
 	const data_Posts = await res_Posts.json();
-	const res_Tags = await fetch("http://localhost:3000/api/v1/post/get/tags", {});
+	const res_Tags = await fetch(`${serverUrl}/api/v1/post/get/tags`, {});
 	const data_Tags = await res_Tags.json();
 
 	generateRSSFeed(data_Posts);

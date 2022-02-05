@@ -1,4 +1,5 @@
 import ErrorPage from "next/error";
+import { serverUrl } from "../../lib/server_url";
 export default function postId({ statusCode }) {
 	return <ErrorPage statusCode={statusCode} />;
 }
@@ -16,6 +17,7 @@ export async function getServerSideProps(context) {
 		};
 	} else {
 		// get data from db based on id ... (later)
+		const getPost = await fetch(`${serverUrl}/api/v1/post/get/${id}`);
 
 		var title = "test temp title";
 
