@@ -25,7 +25,7 @@ export async function getServerSideProps(context) {
 	return {
 		redirect: {
 			permanent: false,
-			source: `/r/[id]`,
+			source: `/r/${id}`,
 			destination: `/r/${id}/${title}`,
 		},
 	};
