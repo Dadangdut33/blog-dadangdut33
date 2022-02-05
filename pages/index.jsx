@@ -4,8 +4,10 @@ import NavBar from "../components/navbar";
 import Footer from "../components/footer";
 import Meta from "../components/meta";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
-import { generateRSSFeed } from "../lib/rss";
 import { serverUrl } from "../lib/server_url";
+import { useCookie } from "next-cookie";
+import { randomBytes } from "crypto";
+
 export default function Home(props) {
 	const filterPost = (posts, query) => {
 		if (!query) {
@@ -165,13 +167,13 @@ export default function Home(props) {
 								<div className={`card card-lists border ${theme} shadow link-nodecor`} id='card' key={post.id} style={{ padding: 0 }}>
 									<div className='bg-light'>
 										<div className='bg-light thumbnail-wrapper'>
-											<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
+											<a className='link-nodecor' href={`/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
 												<Image className='card-img-top card-thumbnail' src={post.thumbnail} alt={post.title + " thumbnail"} width={1000} height={500} />
 											</a>
 										</div>
 									</div>
 									<div className={`card-body ${theme}`}>
-										<a className='link-nodecor' href={`/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
+										<a className='link-nodecor' href={`/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
 											<div>
 												<h5 className='card-title' style={{ marginBottom: 0 }}>
 													{post.title}
@@ -215,15 +217,20 @@ export default function Home(props) {
 	);
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(ctx) {
+	const cookie = useCookie(ctx);
+	let rId = cookie.get("rId");
+	if (!rId) {
+		rId = randomBytes(8).toString("hex"); // generate random id with length 16
+		cookie.set("rId", rId, { path: "/" });
+	}
+
 	const res_Posts = await fetch(`${serverUrl}/api/v1/post/get/all`, {});
 	const data_Posts = await res_Posts.json();
 	const res_Tags = await fetch(`${serverUrl}/api/v1/post/get/tags`, {});
 	const data_Tags = await res_Tags.json();
 
-	generateRSSFeed(data_Posts);
-
 	return {
-		props: { posts: data_Posts, tags: data_Tags },
+		props: { posts: data_Posts, tags: data_Tags, cookieValue: cookie.get("rId") },
 	};
 }
