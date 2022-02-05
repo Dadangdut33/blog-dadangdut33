@@ -13,7 +13,7 @@ export default function DarkModeToggle() {
 			element.className = element.className.replace(/-light/g, "-dark");
 		});
 
-		document.getElementById("search").classList.replace("text-dark", "text-light");
+		document.getElementById("search") ? document.getElementById("search").classList.replace("text-dark", "text-light") : ``;
 		document.querySelectorAll("#card").forEach((element) => {
 			element.classList.replace("border-card-dark", "border-light");
 		});
@@ -36,7 +36,7 @@ export default function DarkModeToggle() {
 			element.className = element.className.replace(/-dark/g, "-light");
 		});
 
-		document.getElementById("search").classList.replace("text-light", "text-dark");
+		document.getElementById("search") ? document.getElementById("search").classList.replace("text-light", "text-dark") : ``;
 		document.querySelectorAll("#card").forEach((element) => {
 			element.classList.replace("border-light", "border-card-dark");
 		});
@@ -90,11 +90,10 @@ export default function DarkModeToggle() {
 		}
 	}, []);
 
-	// return <Image src={logo} className='bi bi-brightness-high darkmode-toggler' width={"25"} height={"25"} fill='white' alt='light/dark toggler' viewBox='0 0 16 16' onClick={toggleBgMode} />;
 	return (
 		<div className='form-check form-switch ms-auto mt-3 me-3 darkmode-toggler'>
 			<label className='form-check-label ms-3' htmlFor='lightSwitch' style={{ marginLeft: "3px", cursor: "pointer" }}>
-				<Image src={logo} className='bi bi-brightness-high' width={"25"} height={"25"} fill='white' alt='light/dark toggler' viewBox='0 0 16 16' style={{ marginBottom: "7px", cursor: "pointer" }} />
+				<Image src={logo} className='bi bi-brightness-high light-svg' width={"25"} height={"25"} fill='white' alt='light/dark toggler' viewBox='0 0 16 16' />
 			</label>
 			<input className='form-check-input darkmode-toggler-btn' type={"checkbox"} id='lightSwitch' onChange={toggleBgMode} checked={checked} style={{ marginLeft: "0px", cursor: "pointer" }} />
 		</div>

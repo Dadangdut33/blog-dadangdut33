@@ -185,11 +185,12 @@ export default function Home(props) {
 										</a>
 										<div className='d-flex justify-content-between align-items-center card-tags-container' id='tag-card'>
 											<div className='btn-group'>
-												{post.tag.map((tag) => {
+												{post.tag.map((tag, i) => {
 													return (
 														<span
 															className='btn btn-sm btn-outline-secondary card-tags'
 															style={{ cursor: "pointer" }}
+															key={i}
 															onClick={() => {
 																setActive(`search-${tag}`);
 																setSearchQuery(searchQuery.includes(`[${tag}]`) ? searchQuery.replace(`[${tag}]`, "") : `[${tag}]` + searchQuery.replace(`[${tag}]`, ""));
