@@ -36,20 +36,17 @@ handler.post(async (req, res) => {
 		});
 	} else {
 		if (!rId) {
-			rId = randomBytes(12).toString("hex");
-			cookie.set("rId", rId);
+			rId = randomBytes(8).toString("hex");
+			cookie.set("rId", rId, { path: "/" });
 			setNewRid = true;
 		}
 
 		const client = detectedIp + " " + rId;
 		let postUpvoter = post[0].upvoter;
-		let postDownvoter = post[0].downvoter;
 
-		var message = 0; // 0 = no response, 1 = upvote, 2 = downvote
+		var message = 0; // 0 = no response, 1 = upvote
 		if (postUpvoter.includes(client)) {
 			message = 1;
-		} else if (postDownvoter.includes(client)) {
-			message = -1;
 		}
 
 		if (!setNewRid) res.status(200).json({ message: message });

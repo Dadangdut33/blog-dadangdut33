@@ -36,25 +36,12 @@ handler.post(async (req, res) => {
 		});
 	} else {
 		if (!rId) {
-			rId = randomBytes(12).toString("hex");
-			cookie.set("rId", rId);
+			rId = randomBytes(8).toString("hex");
+			cookie.set("rId", rId, { path: "/" });
 			setNewRid = true;
 		}
 
 		const upvoter = detectedIp + " " + rId;
-		let postUpvoter = post[0].upvoter;
-		let postDownvoter = post[0].downvoter;
-
-		// if the user has downvoted before
-		if (postDownvoter.includes(upvoter)) {
-			// decrement downvote and remove ip from downvoter array
-			// prettier-ignore
-			await req.db.collection("post").updateOne(
-				{ id: id },
-				{ $inc: { downvote: -1 }, $pull: { downvoter: upvoter } }
-			);
-		}
-
 		var message = "";
 		// if the user has upvoted before
 		if (postUpvoter.includes(upvoter)) {

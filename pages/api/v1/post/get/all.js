@@ -9,7 +9,7 @@ handler.get(async (req, res) => {
 	let posts = await req.db
 		.collection("post")
 		.find({})
-		.project({ upvoter: 0, downvoter: 0, _id: 0 })
+		.project({ upvoter: 0, _id: 0 })
 		.skip(1) // skip index 0 -> auto increment flag
 		.sort({ id: 1 })
 		.toArray();

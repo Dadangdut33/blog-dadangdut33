@@ -170,8 +170,7 @@ export default function Home(props) {
 												</h5>
 												<small className='text-muted card-small-el'>{parseDate(post.createdAt)}</small> <br />
 												<small className='text-muted card-small-el'>
-													<i className='far fa-eye icon-small'></i> {post.views} <i className='bi bi-arrow-up icon-small'></i> {post.upvote} <i className='bi bi-arrow-down icon-small'></i>{" "}
-													{post.downvote}
+													<i className='far fa-eye icon-small'></i> {post.views} <i className='far fa-heart icon-small'></i> {post.upvote}
 												</small>
 												<p className='card-text card-desc'>{post.description}</p>
 											</div>
