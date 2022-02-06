@@ -218,13 +218,6 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps(ctx) {
-	const cookie = useCookie(ctx);
-	let rId = cookie.get("rId");
-	if (!rId) {
-		rId = randomBytes(8).toString("hex"); // generate random id with length 16
-		cookie.set("rId", rId, { path: "/" });
-	}
-
 	const res_Posts = await fetch(`${serverUrl}/api/v1/post/get/all`, {});
 	const data_Posts = await res_Posts.json();
 	const res_Tags = await fetch(`${serverUrl}/api/v1/post/get/tags`, {});

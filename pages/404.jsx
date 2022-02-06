@@ -7,7 +7,6 @@ export default function PageNotFound(props) {
 			<Navbar />
 			<div className='m-auto d-flex flex-column' style={{ paddingTop: "6rem" }}>
 				<h1 style={{ fontSize: "4rem" }}>Page Not Found</h1>
-				{/* button back */}
 				<a href='/' className='btn btn-outline-primary mx-auto'>
 					<i className='fas fa-arrow-left'></i> Back to Home
 				</a>

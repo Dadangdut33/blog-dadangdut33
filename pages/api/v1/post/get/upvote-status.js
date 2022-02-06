@@ -18,7 +18,8 @@ handler.post(async (req, res) => {
 	}
 
 	const cookie = Cookie.fromApiRoute(req, res);
-	const id = parseInt(req.body.id);
+	// const id = parseInt(req.body.id);
+	const id = parseInt(req.query.id);
 
 	// prettier-ignore
 	let post = await req.db.collection("post")
@@ -30,33 +31,17 @@ handler.post(async (req, res) => {
 			message: "Post not found",
 		});
 	} else {
-		let message = "";
+		let message = 0;
 
 		// add post id to localstorage as array, get the array before first
 		let upvotedPosts = cookie.get("upvotedPosts") ? cookie.get("upvotedPosts") : false;
-		if (!upvotedPosts) {
-			upvotedPosts = [post[0].id];
-			await req.db.collection("post").updateOne({ id: id }, { $inc: { upvote: 1 } });
-
-			message = "Upvoted";
-		} else {
+		if (upvotedPosts) {
 			if (upvotedPosts.includes(post[0].id)) {
-				await req.db.collection("post").updateOne({ id: id }, { $inc: { upvote: -1 } });
-				upvotedPosts = upvotedPosts.filter((item) => item !== post[0].id);
-
-				message = "Upvote removed";
-			} else {
-				await req.db.collection("post").updateOne({ id: id }, { $inc: { upvote: 1 } });
-				upvotedPosts.push(post[0].id);
-
-				message = "Upvoted";
+				message = 1;
 			}
 		}
 
-		// expiration time is 100 years from now
-		cookie.set("upvotedPosts", JSON.stringify(upvotedPosts), { maxAge: 100 * 365 * 24 * 60 * 60, path: "/" });
-
-		res.status(200).json({ message: message, cookieValue: cookie.get("upvotedPosts") });
+		res.status(200).json({ message: message });
 	}
 });
 
