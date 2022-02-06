@@ -2,7 +2,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import "../styles/globals.css";
-import "github-markdown-css";
+import "../styles/markdown-style.css";
+import "react-toastify/dist/ReactToastify.css";
 
 function MyApp({ Component, pageProps }) {
 	return (

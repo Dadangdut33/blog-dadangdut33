@@ -1,0 +1,39 @@
+/* --------------------------------------- */
+/* markdown */
+.markdownBody {
+    max-width: 650px;
+}
+
+.markdownBody .btn-copy {
+    padding: 5px 10px;
+}
+
+.markdownBody .btn-lang {
+    padding: 4px 8px;
+}
+
+.markdownBody .anchor-link {
+    font-size: inherit;
+    color: inherit;
+}
+
+.markdownBody .anchor-link:hover::after {
+    position: absolute;
+    content: "#";
+    padding-top: 3px;
+    padding-left: 3px;
+}
+
+.markdownBody p {
+    color: cadetblue;
+    font-weight: lighter;
+}
+
+.markdownBody p code {
+    font-weight: bold;
+    border-spacing: 10px;
+    position: relative;
+    padding: .25rem;
+    border: 1px solid #eaecef;
+    border-radius: 0.25rem;
+}

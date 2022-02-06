@@ -4,9 +4,9 @@ import { useCookie } from "next-cookie";
 import { randomBytes } from "crypto";
 import { serverUrl } from "../lib/server_url";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
-import Meta from "../components/meta";
-import NavBar from "../components/navbar";
-import Footer from "../components/footer";
+import Meta from "../components/Meta";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export default function Home(props) {
 	const filterPost = (posts, query) => {
@@ -125,7 +125,7 @@ export default function Home(props) {
 				type='website'
 				date={null}
 			/>
-			<NavBar />
+			<Navbar />
 			<div className='container'>
 				<h1 style={{ marginTop: "1rem" }}>
 					Blog <span style={{ fontSize: "1.25rem" }}>📝</span>

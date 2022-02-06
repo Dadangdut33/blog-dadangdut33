@@ -1,6 +1,6 @@
 import DarkModeToggle from "./theme-switcher/DarkModeToggle";
 
-export default function NavBar() {
+export default function Navbar() {
 	return (
 		<>
 			<nav className='navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top'>

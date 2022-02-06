@@ -173,6 +173,7 @@ body {
   position: relative;
   color: inherit;
   text-decoration: none;
+  font-size: inherit;
 }
 
 .subtle-link:after {
@@ -194,16 +195,6 @@ body {
 }
 
 /* --------------------------------------- */
-/* markdown */
-.markdown-body {
-  box-sizing: border-box;
-  min-width: 200px;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 45px;
-}
-
-/* --------------------------------------- */
 /* media queries */
 @media (max-width: 992px) {
   .search-shrink {
@@ -220,92 +211,14 @@ body {
     right: 70px;
     top: 0px;
   }
-}
 
-@media (max-width: 767px) {
-  .markdown-body {
-    padding: 15px;
+  .post-content {
+    max-width: 90%;
   }
 }
 
 @media (max-width: 333px) {
   .darkmode-toggler-btn {
     display: none;
-  }
-}
-
-/* --------------------------------------- */
-/* custom scrollbar - only on desktop view */
-@media only screen and (min-device-width: 575px) {
-
-  /* width */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 5px;
-  }
-
-  /* Dark */
-  /* Handle */
-  .dark-scroll::-webkit-scrollbar-thumb {
-    background: #3f474f;
-    opacity: 0.5;
-  }
-
-  /* Handle on hover */
-  .dark-scroll::-webkit-scrollbar-thumb:hover {
-    background: #353b41;
-  }
-
-  /* Track */
-  .dark-scroll::-webkit-scrollbar-track {
-    background: #F1F1F1;
-    opacity: 0.5;
-  }
-
-  /* The track NOT covered by the handle. */
-  .dark-scroll::-webkit-scrollbar-track-piece {
-    background: #5e6a75;
-    opacity: 0.5;
-  }
-
-  /* Corner */
-  .dark-scroll:-webkit-scrollbar-corner {
-    background: #999;
-  }
-
-  /* Resizer */
-  .dark-scroll::-webkit-resizer {
-    background: #111;
-  }
-
-  /* Light */
-  /* Handle */
-  .light-scroll::-webkit-scrollbar-thumb {
-    background: #145DA0;
-  }
-
-  /* Handle on hover */
-  .light-scroll::-webkit-scrollbar-thumb:hover {
-    background: #0C2D48;
-  }
-
-  /* Track */
-  .light-scroll::-webkit-scrollbar-track {
-    background: #F1F1F1;
-  }
-
-  /* The track NOT covered by the handle. */
-  .light-scroll::-webkit-scrollbar-track-piece {
-    background: #b7b9b9;
-  }
-
-  /* Corner */
-  .light-scroll::-webkit-scrollbar-corner {
-    background: #999;
-  }
-
-  /* Resizer */
-  .light-scroll::-webkit-resizer {
-    background: #111;
   }
 }
