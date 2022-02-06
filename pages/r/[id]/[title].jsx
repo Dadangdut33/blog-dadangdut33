@@ -42,6 +42,16 @@ export default function postIdWithTitle(props) {
 			}
 		});
 
+		// get p and li
+		const p_li = document.querySelectorAll("p, li");
+		p_li.forEach((p_li) => {
+			if (theme === "dark") {
+				p_li.classList.add("text-light");
+			} else {
+				p_li.classList.add("text-dark");
+			}
+		});
+
 		return () => {
 			clearInterval(intervalBg);
 		};
@@ -62,15 +72,15 @@ export default function postIdWithTitle(props) {
 						code({ node, inline, className, children, ...props }) {
 							const match = /language-(\w+)/.exec(className || "");
 							return !inline && match ? (
-								<div style={{ position: "relative", backgroundColor: "#2a2139" }}>
+								<div className='codeblock-wrapper'>
 									<CopyToClipboard text={String(children).replace(/\n$/, "")}>
-										<div style={{ position: "absolute", right: "5px", top: "5px" }}>
+										<div className='copy-btn'>
 											<button className='btn btn-outline-info btn-copy' onClick={() => notify("Copied to clipboard!")}>
 												<i className='fa fa-clipboard' aria-hidden='true' />
 											</button>
 										</div>
 									</CopyToClipboard>
-									<div style={{ position: "absolute", left: "15px", top: "-2px" }}>
+									<div className='lang-name'>
 										<button className='btn btn-outline-info btn-lang shadow-none'>{match[1]}</button>
 									</div>
 									<div style={{ paddingTop: "20px" }}>

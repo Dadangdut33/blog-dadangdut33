@@ -1,9 +1,4 @@
-@font-face {
-  font-family: 'VT323';
-  font-style: normal;
-  font-weight: 400;
-  src: url('https://fonts.cdnfonts.com/s/15755/VT323-Regular.woff') format('woff');
-}
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 html,
 body {
@@ -15,7 +10,6 @@ body {
 
 * {
   box-sizing: border-box;
-  font-size: large;
 }
 
 .container {

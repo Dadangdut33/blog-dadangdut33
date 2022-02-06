@@ -1,39 +1,83 @@
 /* --------------------------------------- */
 /* markdown */
 .markdownBody {
-    max-width: 650px;
+	max-width: 700px;
+}
+
+/* ------------------ */
+/* header anchor */
+.markdownBody .anchor-link {
+	font-size: inherit;
+}
+
+.markdownBody .anchor-link a {
+	color: inherit;
+}
+
+.markdownBody .anchor-link:hover:after {
+	position: absolute;
+	content: "#";
+	padding-top: 7px;
+	padding-left: 3px;
+}
+
+/* ------------------ */
+/* p and stuff */
+.markdownBody p,
+.markdownBody a,
+.markdownBody li {
+	font-size: larger;
+}
+
+.markdownBody p,
+.markdownBody li {
+	font-weight: 100;
+	text-align: justify;
+	text-justify: inter-word;
+}
+
+.markdownBody .text-light {
+	color: #e8eaed !important;
+}
+
+.markdownBody .text-dark {
+	color: cadetblue !important;
+}
+
+/* ------------------ */
+/* 1 tick code */
+.markdownBody p code {
+	font-weight: 500;
+	border-spacing: 10px;
+	position: relative;
+	padding: .25rem;
+	border: 1px solid #cacfd6;
+	border-radius: 0.25rem;
+}
+
+/* ------------------ */
+/* 3 tick code */
+.markdownBody .codeblock-wrapper {
+	position: relative;
+	background-color: #2a2139;
 }
 
 .markdownBody .btn-copy {
-    padding: 5px 10px;
+	padding: 5px 10px;
 }
 
 .markdownBody .btn-lang {
-    padding: 4px 8px;
+	padding: 4px 8px;
 }
 
-.markdownBody .anchor-link {
-    font-size: inherit;
-    color: inherit;
+.markdownBody .lang-name {
+	position: absolute;
+	left: 15px;
+	top: -2px;
 }
 
-.markdownBody .anchor-link:hover::after {
-    position: absolute;
-    content: "#";
-    padding-top: 3px;
-    padding-left: 3px;
-}
-
-.markdownBody p {
-    color: cadetblue;
-    font-weight: lighter;
-}
-
-.markdownBody p code {
-    font-weight: bold;
-    border-spacing: 10px;
-    position: relative;
-    padding: .25rem;
-    border: 1px solid #eaecef;
-    border-radius: 0.25rem;
+.markdownBody .copy-btn {
+	position: absolute;
+	right: 5px;
+	top: 5px;
 }
