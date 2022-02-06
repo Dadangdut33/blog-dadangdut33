@@ -1,7 +1,5 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useCookie } from "next-cookie";
-import { randomBytes } from "crypto";
 import { serverUrl } from "../lib/server_url";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
 import Meta from "../components/Meta";
@@ -224,6 +222,6 @@ export async function getServerSideProps(ctx) {
 	const data_Tags = await res_Tags.json();
 
 	return {
-		props: { posts: data_Posts, tags: data_Tags, cookieValue: cookie.get("rId") },
+		props: { posts: data_Posts, tags: data_Tags },
 	};
 }
