@@ -10,6 +10,14 @@
 	font-size: inherit;
 }
 
+.markdownBody .anchor-link.bot-dark {
+	border-bottom: 1px solid #ffff40;
+}
+
+.markdownBody .anchor-link.bot-light {
+	border-bottom: 1px solid #2a2139;
+}
+
 .markdownBody .anchor-link a {
 	color: inherit;
 }
@@ -36,11 +44,11 @@
 }
 
 .markdownBody .text-light {
-	color: #e8eaed !important;
+	color: #CCCCCC !important;
 }
 
 .markdownBody .text-dark {
-	color: cadetblue !important;
+	color: #2a2b2c !important;
 }
 
 /* ------------------ */
@@ -53,6 +61,15 @@
 	border: 1px solid #cacfd6;
 	border-radius: 0.25rem;
 }
+
+.markdownBody p code.text-light {
+	color: yellow !important;
+}
+
+.markdownBody p code.text-dark {
+	color: rgb(214, 51, 132) !important;
+}
+
 
 /* ------------------ */
 /* 3 tick code */

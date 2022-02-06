@@ -38,7 +38,7 @@ export default function postIdWithTitle(props) {
 		headings.forEach((heading) => {
 			if (!heading.id) {
 				heading.id = heading.innerHTML.replace(/\s/g, "-");
-				heading.innerHTML = `<span class="anchor-link"><a href="#${heading.id}" class="subtle-link">${heading.innerHTML}</a></span>`;
+				heading.innerHTML = `<span class="anchor-link bot-light"><a href="#${heading.id}" class="subtle-link">${heading.innerHTML}</a></span>`;
 			}
 		});
 
@@ -59,7 +59,6 @@ export default function postIdWithTitle(props) {
 			<div className='m-auto d-flex flex-column post-content' style={{ paddingTop: "6rem" }}>
 				<div className='title'>
 					<h1 id={post.title.replace(/\s+/g, "-")}>{post.title}</h1>
-					<p className='text-dark'>test</p>
 				</div>
 				<ReactMarkdown
 					className='markdownBody'
@@ -85,9 +84,9 @@ export default function postIdWithTitle(props) {
 									</div>
 								</div>
 							) : (
-								<code className={className} {...props}>
-									{children}
-								</code>
+								<>
+									<code className={theme === "dark" ? "text-light" : "text-dark"}>{children}</code>
+								</>
 							);
 						},
 					}}

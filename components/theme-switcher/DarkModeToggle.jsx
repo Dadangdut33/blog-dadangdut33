@@ -17,6 +17,10 @@ export default function DarkModeToggle() {
 			element.classList.replace("text-dark", "text-light");
 		});
 
+		document.querySelectorAll(".anchor-link").forEach((element) => {
+			element.classList.replace("bot-light", "bot-dark");
+		});
+
 		// document body
 		document.body.classList.add("bg-dark");
 		if (document.body.classList.contains("text-dark")) {
@@ -24,9 +28,6 @@ export default function DarkModeToggle() {
 		} else {
 			document.body.classList.add("text-light");
 		}
-
-		document.body.classList.remove("light-scroll");
-		document.body.classList.add("dark-scroll");
 	};
 
 	const setLightMode = () => {
@@ -40,6 +41,10 @@ export default function DarkModeToggle() {
 			element.classList.replace("text-light", "text-dark");
 		});
 
+		document.querySelectorAll(".anchor-link").forEach((element) => {
+			element.classList.replace("bot-dark", "bot-light");
+		});
+
 		// document body
 		document.body.classList.remove("bg-dark");
 		if (document.body.classList.contains("text-light")) {
@@ -47,9 +52,6 @@ export default function DarkModeToggle() {
 		} else {
 			document.body.classList.add("text-dark");
 		}
-
-		document.body.classList.remove("dark-scroll");
-		document.body.classList.add("light-scroll");
 	};
 
 	const toggleBgMode = () => {
