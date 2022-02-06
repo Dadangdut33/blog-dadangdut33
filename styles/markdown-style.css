@@ -31,7 +31,6 @@
 
 .markdownBody p,
 .markdownBody li {
-	font-weight: 100;
 	text-align: justify;
 	text-justify: inter-word;
 }

@@ -45,11 +45,7 @@ export default function postIdWithTitle(props) {
 		// get p and li
 		const p_li = document.querySelectorAll("p, li");
 		p_li.forEach((p_li) => {
-			if (theme === "dark") {
-				p_li.classList.add("text-light");
-			} else {
-				p_li.classList.add("text-dark");
-			}
+			p_li.classList.add("text-dark");
 		});
 
 		return () => {
@@ -63,6 +59,7 @@ export default function postIdWithTitle(props) {
 			<div className='m-auto d-flex flex-column post-content' style={{ paddingTop: "6rem" }}>
 				<div className='title'>
 					<h1 id={post.title.replace(/\s+/g, "-")}>{post.title}</h1>
+					<p className='text-dark'>test</p>
 				</div>
 				<ReactMarkdown
 					className='markdownBody'

@@ -13,11 +13,11 @@ export default function DarkModeToggle() {
 			element.className = element.className.replace(/-light/g, "-dark");
 		});
 
-		document.getElementById("search") ? document.getElementById("search").classList.replace("text-dark", "text-light") : ``;
-		document.querySelectorAll("#card").forEach((element) => {
-			element.classList.replace("border-card-dark", "border-light");
+		document.querySelectorAll(".text-dark").forEach((element) => {
+			element.classList.replace("text-dark", "text-light");
 		});
 
+		// document body
 		document.body.classList.add("bg-dark");
 		if (document.body.classList.contains("text-dark")) {
 			document.body.classList.replace("text-dark", "text-light");
@@ -36,11 +36,11 @@ export default function DarkModeToggle() {
 			element.className = element.className.replace(/-dark/g, "-light");
 		});
 
-		document.getElementById("search") ? document.getElementById("search").classList.replace("text-light", "text-dark") : ``;
-		document.querySelectorAll("#card").forEach((element) => {
-			element.classList.replace("border-light", "border-card-dark");
+		document.querySelectorAll(".text-light").forEach((element) => {
+			element.classList.replace("text-light", "text-dark");
 		});
 
+		// document body
 		document.body.classList.remove("bg-dark");
 		if (document.body.classList.contains("text-light")) {
 			document.body.classList.replace("text-light", "text-dark");

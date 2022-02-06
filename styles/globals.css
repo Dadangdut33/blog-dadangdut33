@@ -90,7 +90,7 @@ body {
 }
 
 .thumbnail-wrapper {
-  max-height: 195px;
+  max-height: 180px;
   overflow: hidden !important;
 }
 

@@ -165,14 +165,14 @@ export default function Home(props) {
 					{posts.length > 0
 						? posts.map((post) => (
 								<div className={`card card-lists border ${theme} shadow link-nodecor`} id='card' key={post.id} style={{ padding: 0 }}>
-									<div className='bg-light'>
-										<div className='bg-light thumbnail-wrapper'>
+									<div className={`${theme.split(" ")[0]}`}>
+										<div className={`${theme.split(" ")[0]} thumbnail-wrapper`}>
 											<a className='link-nodecor' href={`/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
 												<Image className='card-img-top card-thumbnail' src={post.thumbnail} alt={post.title + " thumbnail"} width={1000} height={500} />
 											</a>
 										</div>
 									</div>
-									<div className={`card-body ${theme}`}>
+									<div className={`card-body ${theme.split(" ")[0]}`}>
 										<a className='link-nodecor' href={`/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
 											<div>
 												<h5 className='card-title' style={{ marginBottom: 0 }}>
