@@ -61,6 +61,8 @@ body {
 /* home / lists */
 #card {
   background-color: white !important;
+  min-height: 440px;
+  position: relative;
 }
 
 .card-container {
@@ -94,16 +96,26 @@ body {
   overflow: hidden !important;
 }
 
+.card-title {
+  max-height: 76px;
+  overflow: hidden;
+}
+
 .card-desc {
-  height: 100px;
   max-height: 100px;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
-  mask-image: linear-gradient(180deg, #000 60%, transparent);
-  margin-top: 9px;
+  margin-top: 1px;
   text-align: justify;
   text-justify: inter-word;
-  font-size: max(1rem, 1vw);
+  font-size: max(1rem, .75vw);
+}
+
+.card-desc.text-light {
+  color: #CCCCCC !important;
+}
+
+.card-desc.text-dark {
+  color: #6c757d !important;
 }
 
 .card-small-el {
@@ -111,12 +123,15 @@ body {
 }
 
 .card-tags-container {
-  max-width: 22rem;
+  max-width: 95%;
   white-space: nowrap;
   margin-top: 1rem;
   overflow-x: scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
 }
 
 .card-tags-container::-webkit-scrollbar {
@@ -209,6 +224,7 @@ body {
   .post-content {
     max-width: 90%;
   }
+
 }
 
 @media (max-width: 333px) {

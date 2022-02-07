@@ -1,4 +1,12 @@
 /* --------------------------------------- */
+/* title */
+.post-content .title {
+	max-width: 700px;
+	overflow: break-word;
+	margin: 0 auto 1rem;
+	text-align: center;
+}
+
 /* markdown */
 .markdownBody {
 	max-width: 700px;
@@ -11,7 +19,10 @@
 /* header anchor */
 .markdownBody .heading {
 	color: #111;
-	font-size: larger;
+}
+
+.markdownBody h1 span a.heading {
+	font-size: 36px;
 }
 
 .markdownBody .anchor-link {
@@ -70,7 +81,6 @@
 
 .markdownBody .text-dark {
 	color: #464646 !important;
-	font-weight: 100 !important;
 }
 
 /* ------------------ */

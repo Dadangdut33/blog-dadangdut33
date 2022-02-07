@@ -43,13 +43,15 @@ export default function Home(props) {
 		})}`;
 	};
 
-	const scrollX = (ev, el) => {
-		ev.preventDefault();
-		el.scrollBy({
-			top: 0,
-			left: ev.deltaY,
-			behavior: "smooth",
-		});
+	const scrollX = (ev, el, cardWidth, tagsWidth) => {
+		if (tagsWidth > cardWidth - 75) {
+			ev.preventDefault();
+			el.scrollBy({
+				top: 0,
+				left: ev.deltaY,
+				behavior: "smooth",
+			});
+		}
 	};
 
 	const setActive = (elId) => {
@@ -89,8 +91,16 @@ export default function Home(props) {
 		// load the cdn script after the page is loaded
 		load_bootstrapjs(document);
 		const tagsCard = document.querySelectorAll("#tag-card");
+		const insideCard = document.querySelector("#inside-card");
+		let insideCardWidth = insideCard.offsetWidth;
+
+		// on window resize update the width of the inside card
+		window.addEventListener("resize", () => {
+			insideCardWidth = insideCard.offsetWidth;
+		});
+
 		tagsCard.forEach((tag) => {
-			tag.addEventListener("wheel", (e) => scrollX(e, tag));
+			tag.addEventListener("wheel", (e) => scrollX(e, tag, insideCardWidth, tag.offsetWidth));
 		});
 
 		let intervalBg = setInterval(() => {
@@ -105,7 +115,7 @@ export default function Home(props) {
 			// cleanup
 			clearInterval(intervalBg);
 			tagsCard.forEach((tag) => {
-				tag.removeEventListener("wheel", (e) => scrollX(e, tag));
+				tag.removeEventListener("wheel", (e) => scrollX(e, tag, insideCardWidth, tag.offsetWidth));
 			});
 		};
 	}, []);
@@ -163,7 +173,7 @@ export default function Home(props) {
 					{posts.length > 0
 						? posts.map((post) => (
 								<div className={`card card-lists border ${theme} shadow link-nodecor`} id='card' key={post.id} style={{ padding: 0 }}>
-									<div className={`${theme.split(" ")[0]}`}>
+									<div className={`${theme.split(" ")[0]}`} id='inside-card'>
 										<div className={`${theme.split(" ")[0]} thumbnail-wrapper`}>
 											<a className='link-nodecor' href={`/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
 												<Image className='card-img-top card-thumbnail' src={post.thumbnail} alt={post.title + " thumbnail"} width={1000} height={500} />
@@ -180,7 +190,7 @@ export default function Home(props) {
 												<small className='text-muted card-small-el'>
 													<i className='far fa-eye icon-small'></i> {post.views} <i className='far fa-heart icon-small'></i> {post.upvote}
 												</small>
-												<p className='card-text card-desc'>{post.description}</p>
+												<p className='card-text card-desc text-dark'>{post.description}</p>
 											</div>
 										</a>
 										<div className='d-flex justify-content-between align-items-center card-tags-container' id='tag-card'>
