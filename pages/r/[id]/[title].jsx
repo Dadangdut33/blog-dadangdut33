@@ -1,27 +1,56 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useCookie } from "next-cookie";
-import { randomBytes } from "crypto";
-import { serverUrl } from "../../../lib/server_url";
-import load_bootstrapjs from "../../../lib/load_bootstrapjs";
-import Meta from "../../../components/Meta";
-import Navbar from "../../../components/Navbar";
-import Footer from "../../../components/Footer";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { synthwave84 } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import { serverUrl } from "../../../lib/server_url";
+import { RedditShareButton, TwitterShareButton, FacebookShareButton } from "react-share";
+import load_bootstrapjs from "../../../lib/load_bootstrapjs";
+import Meta from "../../../components/Meta";
+import Navbar from "../../../components/Navbar";
+import Footer from "../../../components/Footer";
 import CopyButton from "../../../components/CopyButton";
-import ReactTooltip from "react-tooltip";
+import { csrfToken } from "../../../lib/csrf";
 
-export default function postIdWithTitle({ post }) {
+export default function postIdWithTitle({ post, cookie, csrfToken }) {
 	const [theme, setTheme] = useState("light");
 	const [liked, setLiked] = useState(false);
+	const [likes, setLikes] = useState(post.upvote);
+	const cookies = useCookie(cookie);
 
 	const notify = (message) => {
 		toast.success(message);
+	};
+
+	const likeCallback = async () => {
+		const id = toast.loading("Loading...");
+		const req = await fetch("/api/v1/post/action/upvote", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"xsrf-token": csrfToken,
+			},
+			body: JSON.stringify({
+				id: post.id,
+			}),
+		});
+
+		const res = await req.json();
+		if (res.message === "Upvoted") {
+			setLikes(likes + 1);
+			setLiked(true);
+			toast.update(id, { render: "Upvoted", type: "success", isLoading: false, autoClose: 1500 });
+		} else if (res.message === "Upvote removed") {
+			setLikes(likes - 1);
+			setLiked(false);
+			toast.update(id, { render: "Upvote removed", type: "success", isLoading: false, autoClose: 1500 });
+		} else {
+			toast.update(id, { render: res.message, type: "success", isLoading: false, autoClose: 1500 });
+		}
 	};
 
 	const formatDate = (date) => {
@@ -74,6 +103,9 @@ export default function postIdWithTitle({ post }) {
 			p_li.classList.add("text-dark");
 		});
 
+		// check like
+		setLiked(cookies.get("upvotedPosts") ? cookies.get("upvotedPosts").includes(post.id) : false);
+
 		return () => {
 			clearInterval(intervalBg);
 			window.removeEventListener("scroll", () => scrollCheck(window, statsFloat, titleEl, markdownBody));
@@ -93,12 +125,11 @@ export default function postIdWithTitle({ post }) {
 					<Image src={post.thumbnail} alt={post.title + "thumbnail"} width={1000} height={500} />
 					<h1 id={post.title.replace(/\s+/g, "-")}>{post.title}</h1>
 					<div className='post-stats'>
-						{/* posted at */}
 						<p className='text-muted first'>
 							<small>
 								<i className='fas fa-calendar-alt fa-xs'></i> {formatDate(post.createdAt)}
 								<i className='fas fa-eye fa-xs icon-spacer'></i> {post.views}
-								<i className='fas fa-heart fa-xs icon-spacer'></i> {post.upvote}
+								<i className='fas fa-heart fa-xs icon-spacer'></i> {likes}
 							</small>
 						</p>
 					</div>
@@ -132,19 +163,44 @@ export default function postIdWithTitle({ post }) {
 
 					<div className='wrap-stats'>
 						<div className='stats' id='post-stats-float'>
-							<div className='stats-item'>
-								<i className='fas fa-heart fa-xs icon-spacer' data-tip='Like post'></i> Like -- liked
+							<div className='stats-item hover-effect pointer-cursor'>
+								<span className='icon-spacer-margin ripple' onClick={() => likeCallback()}>
+									{liked ? <i className='fas fa-heart fa-xs'></i> : <i className='far fa-heart fa-xs'></i>} {liked ? "Liked" : "Like"}
+								</span>
 							</div>
-							<CopyToClipboard text={post.title}>
-								<div className='stats-item'>
-									<i className='fas fa-link fa-xs icon-spacer'></i> Copy Link
+							<CopyToClipboard text={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`} onCopy={() => notify("Post url copied to clipboard")}>
+								<div className='stats-item hover-effect pointer-cursor'>
+									<span className='icon-spacer-margin'>
+										<i className='fas fa-link fa-xs'></i> Copy Link
+									</span>
 								</div>
 							</CopyToClipboard>
+							<div className='stats-item'>
+								<RedditShareButton url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`} title={post.title} className='hover-effect'>
+									<span className='icon-spacer-margin inline pointer-cursor'>
+										<i className='fab fa-reddit fa-xs'></i>
+									</span>
+								</RedditShareButton>
+								<TwitterShareButton
+									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									title={post.title}
+									hashtags={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
+									className='hover-effect'
+								>
+									<span className='icon-spacer-margin inline pointer-cursor'>
+										<i className='fab fa-twitter fa-xs'></i>
+									</span>
+								</TwitterShareButton>
+								<FacebookShareButton url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`} quote={post.description} className='hover-effect'>
+									<span className='icon-spacer-margin inline pointer-cursor'>
+										<i className='fab fa-facebook-f fa-xs'></i>
+									</span>
+								</FacebookShareButton>
+							</div>
 						</div>
 					</div>
 				</span>
 			</div>
-			<ReactTooltip />
 			<ToastContainer position='bottom-center' autoClose={2250} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover={false} theme={theme} />
 			<Footer />
 		</main>
@@ -169,6 +225,8 @@ export async function getServerSideProps(context) {
 	return {
 		props: {
 			post: post[0],
+			cookie: context.req.headers.cookie || "",
+			csrfToken: csrfToken,
 		},
 	};
 }
