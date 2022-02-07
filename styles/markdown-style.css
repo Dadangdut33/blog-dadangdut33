@@ -2,10 +2,18 @@
 /* markdown */
 .markdownBody {
 	max-width: 700px;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	padding: 0 2rem;
 }
 
 /* ------------------ */
 /* header anchor */
+.markdownBody .heading {
+	color: #111;
+	font-size: larger;
+}
+
 .markdownBody .anchor-link {
 	font-size: inherit;
 }
@@ -22,19 +30,32 @@
 	color: inherit;
 }
 
-.markdownBody .anchor-link:hover:after {
+.markdownBody .anchor-link:hover:before {
 	position: absolute;
 	content: "#";
 	padding-top: 7px;
-	padding-left: 3px;
+	margin-left: -20px;
+}
+
+/* ------------------ */
+/* link in text */
+.markdownBody p a,
+.markdownBody li a {
+	color: #4798f0;
+	text-decoration: none;
+}
+
+.markdownBody p a:hover,
+.markdownBody li a:hover {
+	text-decoration: underline;
 }
 
 /* ------------------ */
 /* p and stuff */
 .markdownBody p,
-.markdownBody a,
+.markdownBody p a,
 .markdownBody li {
-	font-size: larger;
+	font-size: 18.5px;
 }
 
 .markdownBody p,
@@ -48,7 +69,8 @@
 }
 
 .markdownBody .text-dark {
-	color: #2a2b2c !important;
+	color: #464646 !important;
+	font-weight: 100 !important;
 }
 
 /* ------------------ */
@@ -96,4 +118,12 @@
 	position: absolute;
 	right: 5px;
 	top: 5px;
+}
+
+/* media queries */
+@media (max-width: 900px) {
+	.markdownBody {
+		border: none;
+		padding: 0
+	}
 }

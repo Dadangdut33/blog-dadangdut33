@@ -39,7 +39,7 @@ export default function postIdWithTitle(props) {
 		headings.forEach((heading) => {
 			if (!heading.id) {
 				heading.id = heading.innerHTML.replace(/\s/g, "-");
-				heading.innerHTML = `<span class="anchor-link bot-light"><a href="#${heading.id}" class="subtle-link">${heading.innerHTML}</a></span>`;
+				heading.innerHTML = `<span class="anchor-link bot-light"><a href="#${heading.id}" class="subtle-link heading">${heading.innerHTML}</a></span>`;
 			}
 		});
 
