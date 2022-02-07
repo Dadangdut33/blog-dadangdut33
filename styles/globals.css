@@ -25,6 +25,10 @@ body {
   cursor: pointer;
 }
 
+.show {
+  display: block !important;
+}
+
 /* --------------------------------------- */
 /* nav */
 .navbar-brand {

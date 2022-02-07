@@ -17,15 +17,15 @@ export default function CopyButton({ text, onCopy }) {
 	};
 
 	return (
-		<CopyToClipboard text={text}>
+		<CopyToClipboard
+			text={text}
+			onCopy={() => {
+				onCopyCallback();
+				onCopy("Copied to clipboard!");
+			}}
+		>
 			<div className='copy-btn'>
-				<button
-					className='btn btn-outline-info btn-copy'
-					onClick={() => {
-						onCopyCallback();
-						onCopy("Copied to clipboard!");
-					}}
-				>
+				<button className='btn btn-outline-info btn-copy'>
 					<i className={copiedClass} aria-hidden='true' />
 				</button>
 			</div>

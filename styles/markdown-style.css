@@ -1,5 +1,5 @@
 /* --------------------------------------- */
-/* title */
+/* post */
 .post-content .title {
 	max-width: 700px;
 	overflow: break-word;
@@ -23,6 +23,23 @@
 
 .icon-spacer {
 	padding-left: 1rem;
+}
+
+/* wrapper */
+.md-wrapper {
+	position: relative;
+}
+
+.md-wrapper .wrap-stats {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.md-wrapper .wrap-stats .stats {
+	position: fixed;
+	margin-top: -31rem;
+	display: none;
 }
 
 /* markdown */
@@ -148,7 +165,14 @@
 	top: 5px;
 }
 
+
 /* media queries */
+@media (max-width: 945px) {
+	.md-wrapper .wrap-stats .stats.show {
+		display: none !important;
+	}
+}
+
 @media (max-width: 900px) {
 	.markdownBody {
 		border: none;
