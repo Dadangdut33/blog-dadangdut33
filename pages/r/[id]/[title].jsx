@@ -13,6 +13,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { synthwave84 } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import CopyButton from "../../../components/CopyButton";
 
 export default function postIdWithTitle(props) {
 	const post = props.post[0];
@@ -69,13 +70,7 @@ export default function postIdWithTitle(props) {
 							const match = /language-(\w+)/.exec(className || "");
 							return !inline && match ? (
 								<div className='codeblock-wrapper'>
-									<CopyToClipboard text={String(children).replace(/\n$/, "")}>
-										<div className='copy-btn'>
-											<button className='btn btn-outline-info btn-copy' onClick={() => notify("Copied to clipboard!")}>
-												<i className='fa fa-clipboard' aria-hidden='true' />
-											</button>
-										</div>
-									</CopyToClipboard>
+									<CopyButton text={String(children).replace(/\n$/, "")} onCopy={notify} />
 									<div className='lang-name'>
 										<button className='btn btn-outline-info btn-lang shadow-none'>{match[1]}</button>
 									</div>

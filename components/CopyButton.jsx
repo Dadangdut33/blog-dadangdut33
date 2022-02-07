@@ -1,45 +1,34 @@
-import React, { Component } from "react";
-
-import { Tooltip } from "ak-tooltip";
-import Button from "ak-button";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { useState } from "react";
 
-export default class CopyButton extends Component {
-	constructor() {
-		super();
-		this.state = {
-			toolTip: false,
-		};
+export default function CopyButton({ text, onCopy }) {
+	const [copiedClass, setCopiedClass] = useState("fa fa-clipboard");
+	const [copyTimeout, setCopyTimeout] = useState(null);
 
-		this.onClick = this.onClick.bind(this);
-	}
+	const onCopyCallback = () => {
+		setCopiedClass("fas fa-clipboard-check");
 
-	onClick() {
-		this.toggleToolTip(true);
-
-		clearTimeout(this.toggleTimeout);
-		this.toggleTimeout = setTimeout(() => {
-			this.toggleToolTip(false);
-		}, 3000);
-	}
-
-	toggleToolTip(enabled) {
-		this.setState({
-			toolTip: enabled,
-		});
-	}
-
-	render() {
-		return (
-			<Tooltip description='Copied!' visible={this.state.toolTip}>
-				<CopyToClipboard text={this.props.valueToCopy}>
-					<div style={{ position: "absolute", right: "10px", top: "10px" }}>
-						<Button appearance='default' theme={this.props.buttonTheme} onClick={this.onClick}>
-							<i className='fa fa-clipboard' aria-hidden='true' /> Copy to clipboard
-						</Button>
-					</div>
-				</CopyToClipboard>
-			</Tooltip>
+		clearTimeout(copyTimeout);
+		setCopyTimeout(
+			setTimeout(() => {
+				setCopiedClass("fa fa-clipboard");
+			}, 2500)
 		);
-	}
+	};
+
+	return (
+		<CopyToClipboard text={text}>
+			<div className='copy-btn'>
+				<button
+					className='btn btn-outline-info btn-copy'
+					onClick={() => {
+						onCopyCallback();
+						onCopy("Copied to clipboard!");
+					}}
+				>
+					<i className={copiedClass} aria-hidden='true' />
+				</button>
+			</div>
+		</CopyToClipboard>
+	);
 }
