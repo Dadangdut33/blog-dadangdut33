@@ -15,12 +15,22 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import CopyButton from "../../../components/CopyButton";
 
-export default function postIdWithTitle(props) {
-	const post = props.post[0];
+export default function postIdWithTitle({ post }) {
 	const [theme, setTheme] = useState("light");
 
 	const notify = (message) => {
 		toast.success(message);
+	};
+
+	const formatDate = (date) => {
+		const dateObj = new Date(date);
+		// format day month in words year
+		return `${dateObj.toLocaleDateString("en-US", {
+			weekday: "long",
+			month: "long",
+			day: "numeric",
+			year: "numeric",
+		})}`;
 	};
 
 	useEffect(() => {
@@ -59,7 +69,18 @@ export default function postIdWithTitle(props) {
 			<Navbar />
 			<div className='m-auto d-flex flex-column post-content' style={{ paddingTop: "6rem" }}>
 				<div className='title'>
+					<Image src={post.thumbnail} alt={post.title + "thumbnail"} width={1000} height={500} />
 					<h1 id={post.title.replace(/\s+/g, "-")}>{post.title}</h1>
+					<div className='post-stats'>
+						{/* posted at */}
+						<p className='text-muted first'>
+							<small>
+								<i className='fas fa-calendar-alt fa-xs'></i> {formatDate(post.createdAt)}
+								<i className='fas fa-eye fa-xs icon-spacer'></i> {post.views}
+								<i className='fas fa-heart fa-xs icon-spacer'></i> {post.upvote}
+							</small>
+						</p>
+					</div>
 				</div>
 				<ReactMarkdown
 					className='markdownBody'
@@ -94,7 +115,7 @@ export default function postIdWithTitle(props) {
 }
 
 export async function getServerSideProps(context) {
-	const { id, title } = context.query;
+	const { id } = context.query;
 
 	// get data from db based on id ... (later)
 	const getPost = await fetch(`${serverUrl}/api/v1/post/get/${id}`);
@@ -106,26 +127,11 @@ export async function getServerSideProps(context) {
 	}
 
 	const post = await getPost.json();
-	let postTitle = post[0].title;
-
-	// replace space with dash and encode to url
-	postTitle = encodeURIComponent(postTitle.replace(/\s+/g, "-"));
-
-	// enforce title
-	if (postTitle !== title) {
-		return {
-			redirect: {
-				permanent: false,
-				source: `/r/${id}/${title}`,
-				destination: `/r/${id}/${postTitle}`,
-			},
-		};
-	}
 
 	// return post data
 	return {
 		props: {
-			post: post,
+			post: post[0],
 		},
 	};
 }
