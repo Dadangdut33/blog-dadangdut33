@@ -23,6 +23,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 	const [liked, setLiked] = useState(false);
 	const [likes, setLikes] = useState(post.upvote);
 	const [showSide, setShowSide] = useState(false);
+	const [progress, setProgress] = useState(0);
 	const cookies = useCookie(cookie);
 
 	const notify = (message) => {
@@ -70,6 +71,10 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 	const scrollCheck = (window, statsFloat, titleEl, markdownBody) => {
 		if (window.scrollY > titleEl.offsetHeight && window.scrollY < markdownBody.offsetHeight + titleEl.offsetHeight - 250) {
 			setShowSide(true);
+			const height = markdownBody.offsetHeight - 500;
+			const scroll = window.scrollY - titleEl.offsetHeight;
+			const scrolled = (scroll / height) * 100;
+			setProgress(scrolled);
 		} else {
 			setShowSide(false);
 		}
@@ -176,6 +181,14 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 								},
 							}}
 						/>
+
+						<div className='wrap-progress'>
+							<div className='wrapper'>
+								<motion.span className='progress-bar' animate={showSide ? "open" : "closed"} variants={side_Variants}>
+									<span className='progress' id='progress' style={{ height: `${progress}%` }}></span>
+								</motion.span>
+							</div>
+						</div>
 
 						<div className='wrap-stats'>
 							<motion.div className='stats' id='post-stats-float' animate={showSide ? "open" : "closed"} variants={side_Variants}>
