@@ -43,6 +43,11 @@
 	scale: 0.6;
 }
 
+.comment-divider {
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
 /* ------------------ */
 /* wrapper */
 .md-wrapper {

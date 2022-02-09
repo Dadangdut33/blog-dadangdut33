@@ -10,13 +10,14 @@ import { synthwave84 } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import { RedditShareButton, TwitterShareButton, FacebookShareButton } from "react-share";
-import { serverUrl } from "../../../lib/server_url";
-import load_bootstrapjs from "../../../lib/load_bootstrapjs";
 import Meta from "../../../components/global/Meta";
 import Navbar from "../../../components/global/Navbar";
 import Footer from "../../../components/global/Footer";
 import CopyButton from "../../../components/markdown/CopyButton";
+import Comment from "../../../components/comment";
 import { csrfToken } from "../../../lib/csrf";
+import { serverUrl } from "../../../lib/server_url";
+import load_bootstrapjs from "../../../lib/load_bootstrapjs";
 
 export default function postIdWithTitle({ post, cookie, csrfToken }) {
 	const [theme, setTheme] = useState("light");
@@ -47,7 +48,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 		if (res.message === "Upvoted") {
 			setLikes(likes + 1);
 			setLiked(true);
-			toast.update(id, { render: "Liked", type: "info", isLoading: false, autoClose: 1500 });
+			toast.update(id, { render: "Liked", type: "success", isLoading: false, autoClose: 1500 });
 		} else if (res.message === "Upvote removed") {
 			setLikes(likes - 1);
 			setLiked(false);
@@ -306,14 +307,13 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 								</FacebookShareButton>
 							</div>
 						</div>
+
+						<div className='markdownBody no-border no-pad'>
+							<hr className='comment-divider' />
+							<Comment theme={theme} />
+						</div>
 					</span>
 				</div>
-
-				<div style={{ marginTop: "600px" }}>asdasdas</div>
-				<div style={{ marginTop: "600px" }}>asdasdas</div>
-				<div style={{ marginTop: "600px" }}>asdasdas</div>
-				<div style={{ marginTop: "600px" }}>asdasdas</div>
-				<div style={{ marginTop: "600px" }}>asdasdas</div>
 
 				<ReactTooltip effect='solid' backgroundColor='#464692' />
 				<ToastContainer
