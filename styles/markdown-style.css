@@ -29,6 +29,11 @@
 	margin-left: 1rem;
 }
 
+.post-tags {
+	scale: 0.6;
+}
+
+/* ------------------ */
 /* wrapper */
 .md-wrapper {
 	position: relative;
@@ -73,12 +78,21 @@
 	transition: background 0s;
 }
 
+/* ------------------ */
 /* markdown */
 .markdownBody {
 	max-width: 700px;
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #ddd;
 	padding: 0 2rem;
+}
+
+.no-border {
+	border: none !important;
+}
+
+.no-pad {
+	padding: 0 !important;
 }
 
 /* ------------------ */
@@ -206,7 +220,7 @@
 
 /* media queries */
 @media (max-width: 945px) {
-	.md-wrapper .wrap-stats .stats.show {
+	.md-wrapper .wrap-stats .stats {
 		display: none !important;
 	}
 }

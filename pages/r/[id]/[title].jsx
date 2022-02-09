@@ -68,7 +68,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 	};
 
 	const scrollCheck = (window, statsFloat, titleEl, markdownBody) => {
-		if (window.scrollY > titleEl.offsetHeight && window.scrollY < markdownBody.offsetHeight + titleEl.offsetHeight) {
+		if (window.scrollY > titleEl.offsetHeight && window.scrollY < markdownBody.offsetHeight + titleEl.offsetHeight - 250) {
 			setShowSide(true);
 		} else {
 			setShowSide(false);
@@ -149,6 +149,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 							</p>
 						</div>
 					</div>
+
 					<span className='md-wrapper'>
 						<ReactMarkdown
 							className='markdownBody'
@@ -233,8 +234,75 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 								</div>
 							</motion.div>
 						</div>
+
+						<div>
+							<div className='icon-spacer-margin post-tags markdownBody no-border no-pad'>
+								{post.tag.map((tag, i) => (
+									<span className='btn btn-sm btn-outline-secondary card-tags post-tag' style={{ cursor: "default" }} key={i}>
+										#{tag}
+									</span>
+								))}
+							</div>
+
+							<div className='stats-item pt-2'>
+								<span className='icon-spacer-margin ripple pointer-cursor' onClick={() => likeCallback()} data-tip={liked ? "Unlike the post" : "Like the post"} data-place='bottom'>
+									{liked ? <i className='fas fa-heart fa-xs'></i> : <i className='far fa-heart fa-xs'></i>} {liked ? "Liked" : "Like"}
+								</span>
+								<CopyToClipboard
+									text={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									onCopy={() => notify("Post url copied to clipboard")}
+									data-tip='Copy post url to clipboard'
+									data-place='bottom'
+								>
+									<span className='icon-spacer-margin pointer-cursor'>
+										<i className='fas fa-link fa-xs'></i> Copy Link
+									</span>
+								</CopyToClipboard>
+								<RedditShareButton
+									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									title={post.title}
+									className='hover-effect'
+									data-tip='Share the post to reddit'
+									data-place='bottom'
+								>
+									<span className='icon-spacer-margin inline pointer-cursor'>
+										<i className='fab fa-reddit fa-xs'></i>
+									</span>
+								</RedditShareButton>
+								<TwitterShareButton
+									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									title={post.title}
+									hashtags={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
+									className='hover-effect'
+									data-tip='Share the post to twitter'
+									data-place='bottom'
+								>
+									<span className='icon-spacer-margin inline pointer-cursor'>
+										<i className='fab fa-twitter fa-xs'></i>
+									</span>
+								</TwitterShareButton>
+								<FacebookShareButton
+									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									quote={post.description}
+									className='hover-effect'
+									data-tip='Share the post to facebook'
+									data-place='bottom'
+								>
+									<span className='icon-spacer-margin inline pointer-cursor'>
+										<i className='fab fa-facebook-f fa-xs'></i>
+									</span>
+								</FacebookShareButton>
+							</div>
+						</div>
 					</span>
 				</div>
+
+				<div style={{ marginTop: "600px" }}>asdasdas</div>
+				<div style={{ marginTop: "600px" }}>asdasdas</div>
+				<div style={{ marginTop: "600px" }}>asdasdas</div>
+				<div style={{ marginTop: "600px" }}>asdasdas</div>
+				<div style={{ marginTop: "600px" }}>asdasdas</div>
+
 				<ReactTooltip effect='solid' backgroundColor='#464692' />
 				<ToastContainer
 					position='bottom-center'
