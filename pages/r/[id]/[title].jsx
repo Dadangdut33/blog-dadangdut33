@@ -68,7 +68,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 		})}`;
 	};
 
-	const scrollCheck = (window, statsFloat, titleEl, markdownBody) => {
+	const scrollCheck = (window, titleEl, markdownBody) => {
 		if (window.scrollY > titleEl.offsetHeight && window.scrollY < markdownBody.offsetHeight + titleEl.offsetHeight - 250) {
 			setShowSide(true);
 			const height = markdownBody.offsetHeight - 500;
@@ -91,10 +91,9 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 			}
 		}, 100);
 
-		const statsFloat = document.getElementById("post-stats-float");
 		const titleEl = document.querySelector(".title");
 		const markdownBody = document.querySelector(".markdownBody");
-		window.addEventListener("scroll", () => scrollCheck(window, statsFloat, titleEl, markdownBody));
+		window.addEventListener("scroll", () => scrollCheck(window, titleEl, markdownBody));
 
 		// Get all heading elements and add id to them if they don't have one and add a href to their own id to make them clickable
 		const headings = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
@@ -116,7 +115,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 
 		return () => {
 			clearInterval(intervalBg);
-			window.removeEventListener("scroll", () => scrollCheck(window, statsFloat, titleEl, markdownBody));
+			window.removeEventListener("scroll", () => scrollCheck(window, titleEl, markdownBody));
 		};
 	}, []);
 
