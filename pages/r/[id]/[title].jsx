@@ -141,6 +141,9 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 			<main className='d-flex flex-column min-vh-100'>
 				<Navbar />
 				<div className='m-auto d-flex flex-column post-content' style={{ paddingTop: "6rem" }}>
+					<a href='/' className='btn btn-outline-dark btn-sm mr-2' data-tip='Click here to go back to homepage' data-place='bottom'>
+						<i className='fas fa-home'></i>
+					</a>
 					<div className='title'>
 						<Image src={post.thumbnail} alt={post.title + "thumbnail"} width={1000} height={500} />
 						<h1 id={post.title.replace(/\s+/g, "-")}>{post.title}</h1>

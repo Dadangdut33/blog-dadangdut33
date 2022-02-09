@@ -20,6 +20,9 @@ handler.get(async (req, res) => {
 			message: "Post not found",
 		});
 	} else {
+		// increment view
+		await req.db.collection("post").updateOne({ id: id }, { $inc: { views: 1 } });
+
 		res.status(200).json(post);
 	}
 });
