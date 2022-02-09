@@ -1,6 +1,7 @@
 import nextConnect from "next-connect";
 import middleware from "../../../../../lib/db";
 import { checkToken } from "../../../../../lib/csrf";
+import { Cookie } from "next-cookie";
 
 const handler = nextConnect();
 
@@ -12,6 +13,15 @@ handler.post(async (req, res) => {
 	if (req.method !== "POST") {
 		res.status(400).json({
 			message: "Request must be a POST request",
+		});
+		return;
+	}
+
+	const cookie = Cookie.fromApiRoute(req, res);
+	// check if user is logged in and admin
+	if (!cookie.get("user") || !cookie.get("admin")) {
+		res.status(403).json({
+			message: "You must be logged in as admin to perform this action",
 		});
 		return;
 	}
