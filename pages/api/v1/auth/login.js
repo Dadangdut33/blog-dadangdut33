@@ -1,0 +1,66 @@
+import nextConnect from "next-connect";
+import middleware from "../../../../lib/db";
+import { checkToken } from "../../../../lib/csrf";
+import { Cookie } from "next-cookie";
+import AES from "crypto-js/aes";
+const handler = nextConnect();
+
+handler.use(middleware);
+
+handler.get(async (req, res) => {
+	// if (!checkToken(req)) return res.status(403).json({ message: "Invalid CSRF Token" });
+
+	// if (req.method !== "POST") {
+	// 	res.status(400).json({
+	// 		message: "Request must be a POST request",
+	// 	});
+	// 	return;
+	// }
+
+	// get user from db
+	const user = await req.db.collection("user").findOne({
+		username: req.query.username,
+	});
+
+	// check if user exists
+	if (!user) {
+		res.status(404).json({
+			message: "User not found",
+		});
+		return;
+	}
+
+	var CryptoJS = require("crypto-js");
+	// get key from db
+	const key = await req.db.collection("key").findOne({});
+
+	// decrypt db password and compare
+	const decrypted = AES.decrypt(user.password, key.key);
+	const originalText = decrypted.toString(CryptoJS.enc.Utf8);
+
+	if (originalText !== req.query.password) {
+		res.status(403).json({
+			message: "Invalid password",
+		});
+		return;
+	}
+
+	// create session cookie store as json object
+	const cookie = Cookie.fromApiRoute(req, res);
+	const sessionData = {
+		username: user.username,
+		admin: user.role === "admin" ? true : false,
+	};
+
+	// encrypt session data
+	const encrypted = AES.encrypt(JSON.stringify(sessionData), process.env.SESSION_PASSWORD);
+
+	cookie.set("user", encrypted.toString(), { maxAge: 14 * 24 * 60 * 60, path: "/" });
+
+	res.status(200).json({
+		message: "Login successful",
+		cookieValue: cookie.get("user"),
+	});
+});
+
+export default handler;
