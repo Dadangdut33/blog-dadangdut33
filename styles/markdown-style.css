@@ -73,7 +73,6 @@
 .md-wrapper .wrap-progress .wrapper .progress-bar {
 	position: fixed;
 	margin-top: -22rem;
-	margin-right: 10rem;
 	width: 2px;
 	height: 500px;
 	background: #ccc;
@@ -261,5 +260,17 @@
 	.markdownBody {
 		border: none;
 		padding: 0
+	}
+}
+
+@media (max-width: 800px) {
+	.md-wrapper .wrap-progress .wrapper {
+		margin-left: -1.25rem;
+	}
+}
+
+@media (max-width: 600px) {
+	.md-wrapper .wrap-progress .wrapper {
+		display: none;
 	}
 }
