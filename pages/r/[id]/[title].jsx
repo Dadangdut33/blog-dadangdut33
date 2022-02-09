@@ -121,123 +121,136 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 	};
 
 	return (
-		<main className='d-flex flex-column min-vh-100'>
-			<Navbar />
-			<div className='m-auto d-flex flex-column post-content' style={{ paddingTop: "6rem" }}>
-				<div className='title'>
-					<Image src={post.thumbnail} alt={post.title + "thumbnail"} width={1000} height={500} />
-					<h1 id={post.title.replace(/\s+/g, "-")}>{post.title}</h1>
-					<div className='post-stats'>
-						<p className='text-muted first'>
-							<small>
-								<i className='fas fa-calendar-alt fa-xs'></i> {formatDate(post.createdAt)}
-								<i className='fas fa-eye fa-xs icon-spacer'></i> {post.views}
-								<i className='fas fa-heart fa-xs icon-spacer'></i> {likes}
-							</small>
-						</p>
+		<>
+			<Meta
+				title={post.title + " | Dadangdut33 - Blog"}
+				description={post.description}
+				keywords={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
+				author='Dadangdut33'
+				image={post.thumbnail}
+				url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+				siteName='Dadangdut33 - Blog'
+				type='article'
+				date={post.createdAt}
+			/>
+			<main className='d-flex flex-column min-vh-100'>
+				<Navbar />
+				<div className='m-auto d-flex flex-column post-content' style={{ paddingTop: "6rem" }}>
+					<div className='title'>
+						<Image src={post.thumbnail} alt={post.title + "thumbnail"} width={1000} height={500} />
+						<h1 id={post.title.replace(/\s+/g, "-")}>{post.title}</h1>
+						<div className='post-stats'>
+							<p className='text-muted first'>
+								<small>
+									<i className='fas fa-calendar-alt fa-xs'></i> {formatDate(post.createdAt)}
+									<i className='fas fa-eye fa-xs icon-spacer'></i> {post.views}
+									<i className='fas fa-heart fa-xs icon-spacer'></i> {likes}
+								</small>
+							</p>
+						</div>
 					</div>
-				</div>
-				<span className='md-wrapper'>
-					<ReactMarkdown
-						className='markdownBody'
-						children={post.content}
-						remarkPlugins={[gfm]}
-						components={{
-							code({ node, inline, className, children, ...props }) {
-								const match = /language-(\w+)/.exec(className || "");
-								return !inline && match ? (
-									<div className='codeblock-wrapper'>
-										<CopyButton text={String(children).replace(/\n$/, "")} onCopy={notify} />
-										<div className='lang-name'>
-											<button className='btn btn-outline-info btn-lang shadow-none'>{match[1]}</button>
+					<span className='md-wrapper'>
+						<ReactMarkdown
+							className='markdownBody'
+							children={post.content}
+							remarkPlugins={[gfm]}
+							components={{
+								code({ node, inline, className, children, ...props }) {
+									const match = /language-(\w+)/.exec(className || "");
+									return !inline && match ? (
+										<div className='codeblock-wrapper'>
+											<CopyButton text={String(children).replace(/\n$/, "")} onCopy={notify} />
+											<div className='lang-name'>
+												<button className='btn btn-outline-info btn-lang shadow-none'>{match[1]}</button>
+											</div>
+											<div style={{ paddingTop: "20px" }}>
+												<SyntaxHighlighter children={String(children).replace(/\n$/, "")} style={synthwave84} language={match[1]} {...props} />
+											</div>
 										</div>
-										<div style={{ paddingTop: "20px" }}>
-											<SyntaxHighlighter children={String(children).replace(/\n$/, "")} style={synthwave84} language={match[1]} {...props} />
-										</div>
-									</div>
-								) : (
-									<>
-										<code className={theme === "dark" ? "text-light" : "text-dark"}>{children}</code>
-									</>
-								);
-							},
-						}}
-					/>
+									) : (
+										<>
+											<code className={theme === "dark" ? "text-light" : "text-dark"}>{children}</code>
+										</>
+									);
+								},
+							}}
+						/>
 
-					<div className='wrap-stats'>
-						<motion.div className='stats' id='post-stats-float' animate={showSide ? "open" : "closed"} variants={side_Variants}>
-							<div className='stats-item hover-effect pointer-cursor'>
-								<span className='icon-spacer-margin ripple' onClick={() => likeCallback()} data-tip={liked ? "Unlike the post" : "Like the post"} data-place='right'>
-									{liked ? <i className='fas fa-heart fa-xs'></i> : <i className='far fa-heart fa-xs'></i>} {liked ? "Liked" : "Like"}
-								</span>
-							</div>
-							<CopyToClipboard
-								text={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-								onCopy={() => notify("Post url copied to clipboard")}
-								data-tip='Copy post url to clipboard'
-								data-place='right'
-							>
+						<div className='wrap-stats'>
+							<motion.div className='stats' id='post-stats-float' animate={showSide ? "open" : "closed"} variants={side_Variants}>
 								<div className='stats-item hover-effect pointer-cursor'>
-									<span className='icon-spacer-margin'>
-										<i className='fas fa-link fa-xs'></i> Copy Link
+									<span className='icon-spacer-margin ripple' onClick={() => likeCallback()} data-tip={liked ? "Unlike the post" : "Like the post"} data-place='right'>
+										{liked ? <i className='fas fa-heart fa-xs'></i> : <i className='far fa-heart fa-xs'></i>} {liked ? "Liked" : "Like"}
 									</span>
 								</div>
-							</CopyToClipboard>
-							<div className='stats-item'>
-								<RedditShareButton
-									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-									title={post.title}
-									className='hover-effect'
-									data-tip='Share the post to reddit'
-									data-place='bottom'
+								<CopyToClipboard
+									text={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									onCopy={() => notify("Post url copied to clipboard")}
+									data-tip='Copy post url to clipboard'
+									data-place='right'
 								>
-									<span className='icon-spacer-margin inline pointer-cursor'>
-										<i className='fab fa-reddit fa-xs'></i>
-									</span>
-								</RedditShareButton>
-								<TwitterShareButton
-									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-									title={post.title}
-									hashtags={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
-									className='hover-effect'
-									data-tip='Share the post to twitter'
-									data-place='bottom'
-								>
-									<span className='icon-spacer-margin inline pointer-cursor'>
-										<i className='fab fa-twitter fa-xs'></i>
-									</span>
-								</TwitterShareButton>
-								<FacebookShareButton
-									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-									quote={post.description}
-									className='hover-effect'
-									data-tip='Share the post to facebook'
-									data-place='bottom'
-								>
-									<span className='icon-spacer-margin inline pointer-cursor'>
-										<i className='fab fa-facebook-f fa-xs'></i>
-									</span>
-								</FacebookShareButton>
-							</div>
-						</motion.div>
-					</div>
-				</span>
-			</div>
-			<ReactTooltip effect='solid' backgroundColor='#464692' />
-			<ToastContainer
-				position='bottom-center'
-				autoClose={2250}
-				hideProgressBar={false}
-				newestOnTop={false}
-				closeOnClick
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover={false}
-				theme={theme}
-			/>
-			<Footer />
-		</main>
+									<div className='stats-item hover-effect pointer-cursor'>
+										<span className='icon-spacer-margin'>
+											<i className='fas fa-link fa-xs'></i> Copy Link
+										</span>
+									</div>
+								</CopyToClipboard>
+								<div className='stats-item'>
+									<RedditShareButton
+										url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+										title={post.title}
+										className='hover-effect'
+										data-tip='Share the post to reddit'
+										data-place='bottom'
+									>
+										<span className='icon-spacer-margin inline pointer-cursor'>
+											<i className='fab fa-reddit fa-xs'></i>
+										</span>
+									</RedditShareButton>
+									<TwitterShareButton
+										url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+										title={post.title}
+										hashtags={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
+										className='hover-effect'
+										data-tip='Share the post to twitter'
+										data-place='bottom'
+									>
+										<span className='icon-spacer-margin inline pointer-cursor'>
+											<i className='fab fa-twitter fa-xs'></i>
+										</span>
+									</TwitterShareButton>
+									<FacebookShareButton
+										url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+										quote={post.description}
+										className='hover-effect'
+										data-tip='Share the post to facebook'
+										data-place='bottom'
+									>
+										<span className='icon-spacer-margin inline pointer-cursor'>
+											<i className='fab fa-facebook-f fa-xs'></i>
+										</span>
+									</FacebookShareButton>
+								</div>
+							</motion.div>
+						</div>
+					</span>
+				</div>
+				<ReactTooltip effect='solid' backgroundColor='#464692' />
+				<ToastContainer
+					position='bottom-center'
+					autoClose={2250}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover={false}
+					theme={theme}
+				/>
+				<Footer />
+			</main>
+		</>
 	);
 }
 
