@@ -5,6 +5,7 @@ import load_bootstrapjs from "../lib/load_bootstrapjs";
 import Meta from "../components/global/Meta";
 import Navbar from "../components/global/Navbar";
 import Footer from "../components/global/Footer";
+import { motion } from "framer-motion";
 
 export default function Home(props) {
 	const filterPost = (posts, query) => {
@@ -120,6 +121,37 @@ export default function Home(props) {
 		};
 	}, []);
 
+	const fadeFromTop = {
+		hidden: {
+			opacity: 0,
+			y: -100,
+		},
+		visible: {
+			opacity: 1,
+			y: 0,
+			transition: {
+				type: "spring",
+				stiffness: 70,
+			},
+		},
+	};
+
+	const fadeFromBottom = {
+		hidden: {
+			opacity: 0,
+			y: 100,
+		},
+		visible: {
+			opacity: 1,
+			y: 0,
+			transition: {
+				delay: 0.46,
+				type: "spring",
+				stiffness: 70,
+			},
+		},
+	};
+
 	return (
 		<>
 			<Meta
@@ -136,41 +168,44 @@ export default function Home(props) {
 			<main className='d-flex flex-column min-vh-100'>
 				<Navbar />
 				<div className='container'>
-					<h1 style={{ marginTop: "1rem" }}>
-						Blog <span style={{ fontSize: "1.25rem" }}>📝</span>
-					</h1>
-					<h5>I share thoughts, ideas, and experiences that might be useful in your coding adventure</h5>
-					<span className='navbar-text'>
-						<input
-							value={searchQuery}
-							onInput={(e) => {
-								checkTag(e.target.value);
-								setSearchQuery(e.target.value);
-							}}
-							className='form-control me-2 bg-light text-dark'
-							id='search'
-							type='search'
-							placeholder='Search post 🔎'
-							aria-label='Search'
-						/>
-						<div className='search-tags'>
-							Tags:{" "}
-							{props.tags.map((tag, i) => (
-								<span
-									id={`search-${tag._id}`}
-									key={i}
-									className='btn btn-sm btn-outline-secondary card-tags search-card'
-									onClick={() => {
-										setActive(`search-${tag._id}`);
-										setSearchQuery(searchQuery.includes(`[${tag._id}]`) ? searchQuery.replace(`[${tag._id}]`, "") : `[${tag._id}]` + searchQuery.replace(`[${tag._id}]`, ""));
-									}}
-								>
-									#{tag._id}
-								</span>
-							))}
-						</div>
-					</span>
-					<div className='row card-container'>
+					<motion.div variants={fadeFromTop} initial='hidden' animate='visible'>
+						<h1 style={{ marginTop: "1rem" }}>
+							Blog <span style={{ fontSize: "1.25rem" }}>📝</span>
+						</h1>
+						<h5>I share thoughts, ideas, and experiences that might be useful in your coding adventure</h5>
+						<span className='navbar-text'>
+							<input
+								value={searchQuery}
+								onInput={(e) => {
+									checkTag(e.target.value);
+									setSearchQuery(e.target.value);
+								}}
+								className='form-control me-2 bg-light text-dark'
+								id='search'
+								type='search'
+								placeholder='Search post 🔎'
+								aria-label='Search'
+							/>
+							<div className='search-tags'>
+								Tags:{" "}
+								{props.tags.map((tag, i) => (
+									<span
+										id={`search-${tag}`}
+										key={i}
+										className='btn btn-sm btn-outline-secondary card-tags search-card'
+										onClick={() => {
+											setActive(`search-${tag}`);
+											setSearchQuery(searchQuery.includes(`[${tag}]`) ? searchQuery.replace(`[${tag}]`, "") : `[${tag}]` + searchQuery.replace(`[${tag}]`, ""));
+										}}
+									>
+										#{tag}
+									</span>
+								))}
+							</div>
+						</span>
+					</motion.div>
+
+					<motion.div className='row card-container' variants={fadeFromBottom} initial='hidden' animate='visible'>
 						{posts.length > 0
 							? posts.map((post) => (
 									<div className={`card card-lists border ${theme} shadow link-nodecor`} id='card' key={post.id} style={{ padding: 0 }}>
@@ -221,7 +256,7 @@ export default function Home(props) {
 							: searchQuery !== ""
 							? `No post found`
 							: `No post yet`}
-					</div>
+					</motion.div>
 				</div>
 				<Footer />
 			</main>
@@ -232,10 +267,15 @@ export default function Home(props) {
 export async function getServerSideProps(ctx) {
 	const res_Posts = await fetch(`${serverUrl}/api/v1/post/get/all`, {});
 	const data_Posts = await res_Posts.json();
-	const res_Tags = await fetch(`${serverUrl}/api/v1/post/get/tags`, {});
-	const data_Tags = await res_Tags.json();
+
+	// get all tags from data_posts
+	let tags = data_Posts.map((post) => post.tag.map((tag) => tag));
+	// get all tags from the array tags
+	tags = [].concat(...tags);
+	// remove duplicate tags and sort
+	tags = [...new Set(tags)].sort();
 
 	return {
-		props: { posts: data_Posts, tags: data_Tags },
+		props: { posts: data_Posts, tags: tags },
 	};
 }
