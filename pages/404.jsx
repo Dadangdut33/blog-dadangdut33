@@ -1,5 +1,5 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../components/global/Navbar";
+import Footer from "../components/global/Footer";
 import ChromeDinoGame from "react-chrome-dino";
 export default function PageNotFound(props) {
 	return (

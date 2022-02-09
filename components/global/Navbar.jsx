@@ -1,4 +1,4 @@
-import DarkModeToggle from "./theme-switcher/DarkModeToggle";
+import DarkModeToggle from "../theme-switcher/DarkModeToggle";
 
 export default function Navbar() {
 	return (
@@ -16,7 +16,15 @@ export default function Navbar() {
 						</span>
 					</span>
 
-					<button className='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarText' aria-controls='navbarText' aria-expanded='false' aria-label='Toggle navigation'>
+					<button
+						className='navbar-toggler'
+						type='button'
+						data-bs-toggle='collapse'
+						data-bs-target='#navbarText'
+						aria-controls='navbarText'
+						aria-expanded='false'
+						aria-label='Toggle navigation'
+					>
 						<span className='navbar-toggler-icon'></span>
 					</button>
 					<div className='collapse navbar-collapse' id='navbarText'>

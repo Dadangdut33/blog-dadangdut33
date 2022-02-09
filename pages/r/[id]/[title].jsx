@@ -1,25 +1,28 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useCookie } from "next-cookie";
+import ReactTooltip from "react-tooltip";
+import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { synthwave84 } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
-import { serverUrl } from "../../../lib/server_url";
 import { RedditShareButton, TwitterShareButton, FacebookShareButton } from "react-share";
+import { serverUrl } from "../../../lib/server_url";
 import load_bootstrapjs from "../../../lib/load_bootstrapjs";
-import Meta from "../../../components/Meta";
-import Navbar from "../../../components/Navbar";
-import Footer from "../../../components/Footer";
-import CopyButton from "../../../components/CopyButton";
+import Meta from "../../../components/global/Meta";
+import Navbar from "../../../components/global/Navbar";
+import Footer from "../../../components/global/Footer";
+import CopyButton from "../../../components/markdown/CopyButton";
 import { csrfToken } from "../../../lib/csrf";
 
 export default function postIdWithTitle({ post, cookie, csrfToken }) {
 	const [theme, setTheme] = useState("light");
 	const [liked, setLiked] = useState(false);
 	const [likes, setLikes] = useState(post.upvote);
+	const [showSide, setShowSide] = useState(false);
 	const cookies = useCookie(cookie);
 
 	const notify = (message) => {
@@ -43,13 +46,13 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 		if (res.message === "Upvoted") {
 			setLikes(likes + 1);
 			setLiked(true);
-			toast.update(id, { render: "Upvoted", type: "success", isLoading: false, autoClose: 1500 });
+			toast.update(id, { render: "Liked", type: "info", isLoading: false, autoClose: 1500 });
 		} else if (res.message === "Upvote removed") {
 			setLikes(likes - 1);
 			setLiked(false);
-			toast.update(id, { render: "Upvote removed", type: "success", isLoading: false, autoClose: 1500 });
+			toast.update(id, { render: "Like removed", type: "info", isLoading: false, autoClose: 1500 });
 		} else {
-			toast.update(id, { render: res.message, type: "success", isLoading: false, autoClose: 1500 });
+			toast.update(id, { render: res.message, type: "error", isLoading: false, autoClose: 1500 });
 		}
 	};
 
@@ -66,9 +69,9 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 
 	const scrollCheck = (window, statsFloat, titleEl, markdownBody) => {
 		if (window.scrollY > titleEl.offsetHeight && window.scrollY < markdownBody.offsetHeight + titleEl.offsetHeight) {
-			statsFloat.classList.add("show");
+			setShowSide(true);
 		} else {
-			statsFloat.classList.remove("show");
+			setShowSide(false);
 		}
 	};
 
@@ -112,9 +115,9 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 		};
 	}, []);
 
-	const variants = {
-		open: { opacity: 1, x: 0 },
-		closed: { opacity: 0, x: "-100%" },
+	const side_Variants = {
+		open: { opacity: 1, y: 0 },
+		closed: { opacity: 0, y: "-100%" },
 	};
 
 	return (
@@ -162,13 +165,18 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 					/>
 
 					<div className='wrap-stats'>
-						<div className='stats' id='post-stats-float'>
+						<motion.div className='stats' id='post-stats-float' animate={showSide ? "open" : "closed"} variants={side_Variants}>
 							<div className='stats-item hover-effect pointer-cursor'>
-								<span className='icon-spacer-margin ripple' onClick={() => likeCallback()}>
+								<span className='icon-spacer-margin ripple' onClick={() => likeCallback()} data-tip={liked ? "Unlike the post" : "Like the post"} data-place='right'>
 									{liked ? <i className='fas fa-heart fa-xs'></i> : <i className='far fa-heart fa-xs'></i>} {liked ? "Liked" : "Like"}
 								</span>
 							</div>
-							<CopyToClipboard text={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`} onCopy={() => notify("Post url copied to clipboard")}>
+							<CopyToClipboard
+								text={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+								onCopy={() => notify("Post url copied to clipboard")}
+								data-tip='Copy post url to clipboard'
+								data-place='right'
+							>
 								<div className='stats-item hover-effect pointer-cursor'>
 									<span className='icon-spacer-margin'>
 										<i className='fas fa-link fa-xs'></i> Copy Link
@@ -176,7 +184,13 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 								</div>
 							</CopyToClipboard>
 							<div className='stats-item'>
-								<RedditShareButton url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`} title={post.title} className='hover-effect'>
+								<RedditShareButton
+									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									title={post.title}
+									className='hover-effect'
+									data-tip='Share the post to reddit'
+									data-place='bottom'
+								>
 									<span className='icon-spacer-margin inline pointer-cursor'>
 										<i className='fab fa-reddit fa-xs'></i>
 									</span>
@@ -186,22 +200,42 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 									title={post.title}
 									hashtags={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
 									className='hover-effect'
+									data-tip='Share the post to twitter'
+									data-place='bottom'
 								>
 									<span className='icon-spacer-margin inline pointer-cursor'>
 										<i className='fab fa-twitter fa-xs'></i>
 									</span>
 								</TwitterShareButton>
-								<FacebookShareButton url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`} quote={post.description} className='hover-effect'>
+								<FacebookShareButton
+									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									quote={post.description}
+									className='hover-effect'
+									data-tip='Share the post to facebook'
+									data-place='bottom'
+								>
 									<span className='icon-spacer-margin inline pointer-cursor'>
 										<i className='fab fa-facebook-f fa-xs'></i>
 									</span>
 								</FacebookShareButton>
 							</div>
-						</div>
+						</motion.div>
 					</div>
 				</span>
 			</div>
-			<ToastContainer position='bottom-center' autoClose={2250} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover={false} theme={theme} />
+			<ReactTooltip effect='solid' backgroundColor='#464692' />
+			<ToastContainer
+				position='bottom-center'
+				autoClose={2250}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover={false}
+				theme={theme}
+			/>
 			<Footer />
 		</main>
 	);

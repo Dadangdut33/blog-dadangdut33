@@ -2,9 +2,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { serverUrl } from "../lib/server_url";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
-import Meta from "../components/Meta";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Meta from "../components/global/Meta";
+import Navbar from "../components/global/Navbar";
+import Footer from "../components/global/Footer";
 
 export default function Home(props) {
 	const filterPost = (posts, query) => {
@@ -203,7 +203,9 @@ export default function Home(props) {
 															key={i}
 															onClick={() => {
 																setActive(`search-${tag}`);
-																setSearchQuery(searchQuery.includes(`[${tag}]`) ? searchQuery.replace(`[${tag}]`, "") : `[${tag}]` + searchQuery.replace(`[${tag}]`, ""));
+																setSearchQuery(
+																	searchQuery.includes(`[${tag}]`) ? searchQuery.replace(`[${tag}]`, "") : `[${tag}]` + searchQuery.replace(`[${tag}]`, "")
+																);
 															}}
 														>
 															#{tag}
