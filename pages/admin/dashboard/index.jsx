@@ -108,7 +108,7 @@ export default function Dashboard(props) {
 			<span className='admin-main'></span>
 			<main class='center-vertical-horizontal'>
 				<div class='container'>
-					<div class='row bg-white dashboard inside border-light'>
+					<div class='row bg-white dashboard inside border-light' style={{ fontSize: "large" }}>
 						<div class='col-md-12'>
 							<h1>
 								Admin Dashboard 🛠
@@ -181,12 +181,12 @@ export default function Dashboard(props) {
 											<th scope='row'>{i + 1}</th>
 											<td style={{ maxWidth: "300px" }}>
 												{post.title}
-												<span data-tip={"Tags: " + post.tag.join(", ")}> 🔗</span>
+												<span data-tip={`ID: ${post.id} | Tags: ` + post.tag.join(", ")}> 🔗</span>
 											</td>
 											<td style={{ maxWidth: "300px" }}>{post.description}</td>
 											<td style={{ maxWidth: "100px" }}>{post.views}</td>
 											<td style={{ maxWidth: "100px" }}>{post.upvote}</td>
-											<td style={{ maxWidth: "100px" }}>{parseDate(post.createdAt)}</td>
+											<td style={{ maxWidth: "120px" }}>{parseDate(post.createdAt)}</td>
 											<td style={{ maxWidth: "90px" }}>
 												<a href={`/admin/dashboard/post/edit/${post.id}`}>
 													<a className='btn btn-sm btn-outline-primary'>Edit</a>

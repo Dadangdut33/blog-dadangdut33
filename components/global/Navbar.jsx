@@ -36,7 +36,7 @@ export default function Navbar({ admin }) {
 							</li>
 							{admin ? (
 								<li className='nav-item'>
-									<a className='nav-link' href='/admin/dashboard' target={"_blank"} rel='noopener noreferrer'>
+									<a className='nav-link' href='/admin/dashboard'>
 										Admin Panel 🔐
 									</a>
 								</li>
