@@ -6,6 +6,7 @@ import Meta from "../components/global/Meta";
 import Navbar from "../components/global/Navbar";
 import Footer from "../components/global/Footer";
 import { motion } from "framer-motion";
+import { useCookie } from "next-cookie";
 
 export default function Home(props) {
 	const filterPost = (posts, query) => {
@@ -50,6 +51,7 @@ export default function Home(props) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const posts = sortPost(filterPost(props.posts, searchQuery), sortBy);
 	const [theme, setTheme] = useState("bg-light border-card-dark");
+	const [showMsg, setShowMsg] = useState(true);
 
 	const parseDate = (date) => {
 		const dateObj = new Date(date);
@@ -230,6 +232,24 @@ export default function Home(props) {
 									<option value='Likes'>Most Likes</option>
 								</select>
 							</div>
+
+							{props.message && showMsg ? (
+								<>
+									<div className={props.message.status === "success" ? "alert alert-success" : "alert alert-danger"} role='alert' style={{ position: "relative", marginBottom: "0" }}>
+										{props.message.message}
+										<button
+											type='button'
+											className='close'
+											data-dismiss='alert'
+											aria-label='Close'
+											style={{ position: "absolute", right: "10px" }}
+											onClick={() => setShowMsg(!showMsg)}
+										>
+											<span aria-hidden='true'>&times;</span>
+										</button>
+									</div>
+								</>
+							) : null}
 						</span>
 					</motion.div>
 
@@ -303,7 +323,15 @@ export async function getServerSideProps(ctx) {
 	// remove duplicate tags and sort
 	tags = [...new Set(tags)].sort();
 
+	const cookie = useCookie(ctx);
+	const msgGet = cookie.get("message") ? cookie.get("message") : "";
+	cookie.remove("message");
+
 	return {
-		props: { posts: data_Posts, tags: tags },
+		props: {
+			posts: data_Posts,
+			tags: tags,
+			message: msgGet,
+		},
 	};
 }
