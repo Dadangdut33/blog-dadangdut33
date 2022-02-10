@@ -1,6 +1,19 @@
 import { useCookie } from "next-cookie";
-export default function logout(props) {
-	return <h1>Redirecting...</h1>;
+import { useEffect } from "react";
+export default function Logout({ cookie }) {
+	const cookies = useCookie(cookie);
+
+	useEffect(() => {
+		const msg = {
+			status: "success",
+			message: "You have logged out successfully",
+		};
+		cookies.set("message", JSON.stringify(msg), { path: "/" });
+
+		window.location.href = "/";
+	}, []);
+
+	return <h1>Successfully logged out! Redirecting...</h1>;
 }
 
 export async function getServerSideProps(context) {
@@ -21,19 +34,11 @@ export async function getServerSideProps(context) {
 	}
 
 	// destroy session cookie
-	cookie.remove("user", { path: "/" });
-
-	// set message
-	const msg = {
-		status: "success",
-		message: "You have been logged out successfully",
-	};
-	cookie.set("message", JSON.stringify(msg), { path: "/" });
+	cookie.remove("user", { path: "/" }); // cannot set cookie after remove for some reason
 
 	return {
-		redirect: {
-			permanent: false,
-			destination: `/`,
+		props: {
+			cookie: cookie.get("user"),
 		},
 	};
 }

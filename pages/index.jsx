@@ -1,12 +1,14 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useCookie } from "next-cookie";
+import aes from "crypto-js/aes";
+import { enc } from "crypto-js/core";
 import { serverUrl } from "../lib/server_url";
 import load_bootstrapjs from "../lib/load_bootstrapjs";
 import Meta from "../components/global/Meta";
 import Navbar from "../components/global/Navbar";
 import Footer from "../components/global/Footer";
-import { motion } from "framer-motion";
-import { useCookie } from "next-cookie";
 
 export default function Home(props) {
 	const filterPost = (posts, query) => {
@@ -35,7 +37,6 @@ export default function Home(props) {
 			case "Newest":
 				return posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 			case "Oldest":
-				console.log("Oldest");
 				return posts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 			case "Views":
 				return posts.sort((a, b) => b.views - a.views);
@@ -186,7 +187,7 @@ export default function Home(props) {
 				date={null}
 			/>
 			<main className='d-flex flex-column min-vh-100'>
-				<Navbar />
+				<Navbar admin={props.admin} />
 				<div className='container'>
 					<motion.div variants={fadeFromTop} initial='hidden' animate='visible'>
 						<h1 style={{ marginTop: "1rem" }}>
@@ -235,7 +236,11 @@ export default function Home(props) {
 
 							{props.message && showMsg ? (
 								<>
-									<div className={props.message.status === "success" ? "alert alert-success" : "alert alert-danger"} role='alert' style={{ position: "relative", marginBottom: "0" }}>
+									<div
+										className={props.message.status === "success" ? "alert alert-success mt-1" : "alert alert-danger mt-1"}
+										role='alert'
+										style={{ position: "relative", marginBottom: "0" }}
+									>
 										{props.message.message}
 										<button
 											type='button'
@@ -245,7 +250,7 @@ export default function Home(props) {
 											style={{ position: "absolute", right: "10px" }}
 											onClick={() => setShowMsg(!showMsg)}
 										>
-											<span aria-hidden='true'>&times;</span>
+											<span aria-hidden='true'>❌</span>
 										</button>
 									</div>
 								</>
@@ -326,12 +331,20 @@ export async function getServerSideProps(ctx) {
 	const cookie = useCookie(ctx);
 	const msgGet = cookie.get("message") ? cookie.get("message") : "";
 	cookie.remove("message");
+	let admin = false;
+	if (cookie.get("user")) {
+		// decrypt user
+		const user = JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8));
+
+		admin = user.admin;
+	}
 
 	return {
 		props: {
 			posts: data_Posts,
 			tags: tags,
 			message: msgGet,
+			admin: admin,
 		},
 	};
 }

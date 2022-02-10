@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import { RedditShareButton, TwitterShareButton, FacebookShareButton } from "react-share";
+import aes from "crypto-js/aes";
+import { enc } from "crypto-js/core";
 import Meta from "../../../components/global/Meta";
 import Navbar from "../../../components/global/Navbar";
 import Footer from "../../../components/global/Footer";
@@ -15,7 +17,7 @@ import { serverUrl } from "../../../lib/server_url";
 import load_bootstrapjs from "../../../lib/load_bootstrapjs";
 import Markdown from "../../../components/markdown/Markdown";
 
-export default function postIdWithTitle({ post, cookie, csrfToken }) {
+export default function postIdWithTitle({ post, cookie, csrfToken, admin }) {
 	const [theme, setTheme] = useState("light");
 	const [liked, setLiked] = useState(false);
 	const [likes, setLikes] = useState(post.upvote);
@@ -50,7 +52,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 			setLiked(false);
 			toast.update(id, { render: "Like removed", type: "info", isLoading: false, autoClose: 1500 });
 		} else {
-			toast.update(id, { render: res.message, type: "error", isLoading: false, autoClose: 1500 });
+			toast.update(id, { render: res.message + " Try to refresh the page!", type: "error", isLoading: false, autoClose: 1500 });
 		}
 	};
 
@@ -147,7 +149,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 				date={post.createdAt}
 			/>
 			<main className='d-flex flex-column min-vh-100'>
-				<Navbar />
+				<Navbar admin={admin} />
 				<motion.div className='m-auto d-flex flex-column post-content' style={{ paddingTop: "6rem" }} initial={"initial"} animate={"show"} variants={fadeIn}>
 					<a
 						href='/'
@@ -326,8 +328,8 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 	);
 }
 
-export async function getServerSideProps(context) {
-	const { id } = context.query;
+export async function getServerSideProps(ctx) {
+	const { id } = ctx.query;
 
 	// get data from db based on id ... (later)
 	const getPost = await fetch(`${serverUrl}/api/v1/post/get/${id}`);
@@ -340,12 +342,22 @@ export async function getServerSideProps(context) {
 
 	const post = await getPost.json();
 
+	const cookie = useCookie(ctx);
+	let admin = false;
+	if (cookie.get("user")) {
+		// decrypt user
+		const user = JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8));
+
+		admin = user.admin;
+	}
+
 	// return post data
 	return {
 		props: {
 			post: post[0],
-			cookie: context.req.headers.cookie || "",
+			cookie: ctx.req.headers.cookie || "",
 			csrfToken: csrfToken,
+			admin: admin,
 		},
 	};
 }

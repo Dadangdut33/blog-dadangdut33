@@ -1,6 +1,6 @@
 import DarkModeToggle from "../theme-switcher/DarkModeToggle";
 
-export default function Navbar() {
+export default function Navbar({ admin }) {
 	return (
 		<>
 			<nav className='navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top'>
@@ -34,6 +34,13 @@ export default function Navbar() {
 									Rss Feed 📡
 								</a>
 							</li>
+							{admin ? (
+								<li className='nav-item'>
+									<a className='nav-link' href='/admin/dashboard' target={"_blank"} rel='noopener noreferrer'>
+										Admin Panel 🔐
+									</a>
+								</li>
+							) : null}
 						</ul>
 					</div>
 				</div>
