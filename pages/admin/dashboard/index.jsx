@@ -1,10 +1,11 @@
 import { ToastContainer, toast } from "react-toastify";
 import Head from "next/head";
-import { serverUrl } from "../../../lib/server_url";
 import { useCookie } from "next-cookie";
 import aes from "crypto-js/aes";
 import { enc } from "crypto-js/core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import ReactTooltip from "react-tooltip";
+import { serverUrl } from "../../../lib/server_url";
 
 // post list, delete, sort, search, category....
 export default function Dashboard(props) {
@@ -178,7 +179,10 @@ export default function Dashboard(props) {
 									{posts.map((post, i) => (
 										<tr key={i}>
 											<th scope='row'>{i + 1}</th>
-											<td style={{ maxWidth: "300px" }}>{post.title}</td>
+											<td style={{ maxWidth: "300px" }}>
+												{post.title}
+												<span data-tip={"Tags: " + post.tag.join(", ")}> 🔗</span>
+											</td>
 											<td style={{ maxWidth: "300px" }}>{post.description}</td>
 											<td style={{ maxWidth: "100px" }}>{post.views}</td>
 											<td style={{ maxWidth: "100px" }}>{post.upvote}</td>
@@ -207,6 +211,7 @@ export default function Dashboard(props) {
 				</div>
 			</main>
 
+			<ReactTooltip backgroundColor='#464692' />
 			<ToastContainer
 				position='bottom-center'
 				autoClose={2250}
