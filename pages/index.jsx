@@ -24,13 +24,31 @@ export default function Home(props) {
 			query = query.replace(/\[(.*?)\]/g, ""); // remove tag from query
 
 			return filterOne.filter((post) => post.title.toLowerCase().includes(query.toLowerCase()) || post.description.toLowerCase().includes(query.toLowerCase()));
+		} else {
+			return posts.filter((post) => post.title.toLowerCase().includes(query.toLowerCase()) || post.description.toLowerCase().includes(query.toLowerCase()));
 		}
-
-		return posts.filter((post) => post.title.toLowerCase().includes(query.toLowerCase()) || post.description.toLowerCase().includes(query.toLowerCase()));
 	};
 
+	const sortPost = (posts, sortBy) => {
+		switch (sortBy) {
+			case "Newest":
+				return posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+			case "Oldest":
+				console.log("Oldest");
+				return posts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+			case "Views":
+				return posts.sort((a, b) => b.views - a.views);
+			case "Likes":
+				return posts.sort((a, b) => b.upvote - a.upvote);
+
+			default:
+				break;
+		}
+	};
+
+	const [sortBy, setSortBy] = useState("Newest");
 	const [searchQuery, setSearchQuery] = useState("");
-	const posts = filterPost(props.posts, searchQuery);
+	const posts = sortPost(filterPost(props.posts, searchQuery), sortBy);
 	const [theme, setTheme] = useState("bg-light border-card-dark");
 
 	const parseDate = (date) => {
@@ -201,6 +219,16 @@ export default function Home(props) {
 										#{tag}
 									</span>
 								))}
+							</div>
+
+							<div className='sort-by pt-2'>
+								Sort by:{" "}
+								<select onChange={(e) => setSortBy(e.target.value)}>
+									<option value='Newest'>Newest - Oldest</option>
+									<option value='Oldest'>Oldest - Newest</option>
+									<option value='Views'>Most Views</option>
+									<option value='Likes'>Most Likes</option>
+								</select>
 							</div>
 						</span>
 					</motion.div>
