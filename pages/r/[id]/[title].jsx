@@ -343,13 +343,7 @@ export async function getServerSideProps(ctx) {
 	const post = await getPost.json();
 
 	const cookie = useCookie(ctx);
-	let admin = false;
-	if (cookie.get("user")) {
-		// decrypt user
-		const user = JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8));
-
-		admin = user.admin;
-	}
+	let admin = cookie.get("user") ? JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8)).admin : false;
 
 	// return post data
 	return {

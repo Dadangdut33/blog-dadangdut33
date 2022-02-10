@@ -33,6 +33,10 @@ body {
   cursor: pointer;
 }
 
+.center-vertical-horizontal {
+  margin: 150px auto;
+}
+
 /* --------------------------------------- */
 /* nav */
 .navbar-brand {

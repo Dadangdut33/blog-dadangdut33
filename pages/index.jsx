@@ -48,12 +48,6 @@ export default function Home(props) {
 		}
 	};
 
-	const [sortBy, setSortBy] = useState("Newest");
-	const [searchQuery, setSearchQuery] = useState("");
-	const posts = sortPost(filterPost(props.posts, searchQuery), sortBy);
-	const [theme, setTheme] = useState("bg-light border-card-dark");
-	const [showMsg, setShowMsg] = useState(true);
-
 	const parseDate = (date) => {
 		const dateObj = new Date(date);
 		// format day month in words year
@@ -108,6 +102,12 @@ export default function Home(props) {
 			}
 		});
 	};
+
+	const [sortBy, setSortBy] = useState("Newest");
+	const [searchQuery, setSearchQuery] = useState("");
+	const posts = sortPost(filterPost(props.posts, searchQuery), sortBy);
+	const [theme, setTheme] = useState("bg-light border-card-dark");
+	const [showMsg, setShowMsg] = useState(true);
 
 	useEffect(() => {
 		// load the cdn script after the page is loaded
@@ -323,21 +323,14 @@ export async function getServerSideProps(ctx) {
 
 	// get all tags from data_posts
 	let tags = data_Posts.map((post) => post.tag.map((tag) => tag));
-	// get all tags from the array tags
-	tags = [].concat(...tags);
-	// remove duplicate tags and sort
-	tags = [...new Set(tags)].sort();
+	tags = [].concat(...tags); // get all tags from the array tags
+	tags = [...new Set(tags)].sort(); // remove duplicate tags and sort
 
 	const cookie = useCookie(ctx);
+	let admin = cookie.get("user") ? JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8)).admin : false;
+
 	const msgGet = cookie.get("message") ? cookie.get("message") : "";
 	cookie.remove("message");
-	let admin = false;
-	if (cookie.get("user")) {
-		// decrypt user
-		const user = JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8));
-
-		admin = user.admin;
-	}
 
 	return {
 		props: {
