@@ -3,21 +3,17 @@ import { useEffect, useState } from "react";
 import { useCookie } from "next-cookie";
 import ReactTooltip from "react-tooltip";
 import { motion } from "framer-motion";
-import ReactMarkdown from "react-markdown";
-import gfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { synthwave84 } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import { RedditShareButton, TwitterShareButton, FacebookShareButton } from "react-share";
 import Meta from "../../../components/global/Meta";
 import Navbar from "../../../components/global/Navbar";
 import Footer from "../../../components/global/Footer";
-import CopyButton from "../../../components/markdown/CopyButton";
 import Comment from "../../../components/comment";
 import { csrfToken } from "../../../lib/csrf";
 import { serverUrl } from "../../../lib/server_url";
 import load_bootstrapjs from "../../../lib/load_bootstrapjs";
+import Markdown from "../../../components/markdown/Markdown";
 
 export default function postIdWithTitle({ post, cookie, csrfToken }) {
 	const [theme, setTheme] = useState("light");
@@ -125,6 +121,18 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 		closed: { opacity: 0, y: "-100%" },
 	};
 
+	const fadeIn = {
+		initial: { opacity: 0, y: 100 },
+		show: {
+			opacity: 1,
+			y: 0,
+			transition: {
+				type: "spring",
+				stiffness: 77,
+			},
+		},
+	};
+
 	return (
 		<>
 			<Meta
@@ -140,7 +148,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 			/>
 			<main className='d-flex flex-column min-vh-100'>
 				<Navbar />
-				<div className='m-auto d-flex flex-column post-content' style={{ paddingTop: "6rem" }}>
+				<motion.div className='m-auto d-flex flex-column post-content' style={{ paddingTop: "6rem" }} initial={"initial"} animate={"show"} variants={fadeIn}>
 					<a
 						href='/'
 						className={theme === "dark" ? `btn btn-outline-light btn-sm mr-2` : `btn btn-outline-dark btn-sm mr-2`}
@@ -164,31 +172,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 					</div>
 
 					<span className='md-wrapper'>
-						<ReactMarkdown
-							className='markdownBody'
-							children={post.content}
-							remarkPlugins={[gfm]}
-							components={{
-								code({ node, inline, className, children, ...props }) {
-									const match = /language-(\w+)/.exec(className || "");
-									return !inline && match ? (
-										<div className='codeblock-wrapper'>
-											<CopyButton text={String(children).replace(/\n$/, "")} onCopy={notify} />
-											<div className='lang-name'>
-												<button className='btn btn-outline-info btn-lang shadow-none'>{match[1]}</button>
-											</div>
-											<div style={{ paddingTop: "20px" }}>
-												<SyntaxHighlighter children={String(children).replace(/\n$/, "")} style={synthwave84} language={match[1]} {...props} />
-											</div>
-										</div>
-									) : (
-										<>
-											<code className={theme === "dark" ? "text-light" : "text-dark"}>{children}</code>
-										</>
-									);
-								},
-							}}
-						/>
+						<Markdown text={post.content} onCopy={notify} theme={theme} />
 
 						<div className='wrap-progress'>
 							<div className='wrapper'>
@@ -321,7 +305,7 @@ export default function postIdWithTitle({ post, cookie, csrfToken }) {
 							<Comment theme={theme} />
 						</div>
 					</span>
-				</div>
+				</motion.div>
 
 				<ReactTooltip effect='solid' backgroundColor='#464692' />
 				<ToastContainer
