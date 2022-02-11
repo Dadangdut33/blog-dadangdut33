@@ -1,4 +1,198 @@
-// post create
+import { ToastContainer, toast } from "react-toastify";
+import Head from "next/head";
+import { useCookie } from "next-cookie";
+import aes from "crypto-js/aes";
+import { enc } from "crypto-js/core";
+import { useEffect, useState } from "react";
+import ReactTooltip from "react-tooltip";
+import { serverUrl } from "../../../../lib/server_url";
+import { csrfToken } from "../../../../lib/csrf";
+import Markdown from "../../../../components/markdown/Markdown";
+import DarkModeToggle from "../../../../components/theme-switcher/DarkModeToggle";
+
 export default function CreatePost(props) {
-	return <h1>TEST</h1>;
+	const [title, setTitle] = useState("");
+	const [thumbnail, setThumbnail] = useState("");
+	const [tags, setTags] = useState("");
+	const [description, setDescription] = useState("");
+	const [content, setContent] = useState("");
+	const [showPopup, setShowPopup] = useState(false);
+	const [popupMsg, setPopupMsg] = useState("");
+	const [theme, setTheme] = useState("light");
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+	};
+
+	const notify = (message) => {
+		toast.success(message);
+	};
+
+	const bgChange = () => {
+		const p_li = document.querySelectorAll("p, li");
+		p_li.forEach((p_li) => {
+			p_li.classList.add("text-dark");
+		});
+	};
+
+	useEffect(() => {
+		document.body.classList.add("admin-dashboard");
+
+		let intervalBg = setInterval(() => {
+			if (document.body.classList.contains("bg-dark")) {
+				setTheme("dark");
+			} else {
+				setTheme("light");
+			}
+		}, 100);
+
+		return () => {
+			clearInterval(intervalBg);
+		};
+	});
+
+	return (
+		<>
+			<Head>
+				<title>Create a new post | Dadangdut33 - Blog</title>
+				<meta charSet='UTF-8' />
+				<link rel='icon' href='/favicon.ico' />
+				<meta name='viewport' content='width=1024' />
+			</Head>
+			<main>
+				<div className='container' style={{ margin: "150px 200px" }}>
+					<div className={theme === "light" ? "row bg-white dashboard inside border-light" : "row bg-dark dashboard inside border-dark"} style={{ width: "1470px" }}>
+						<div className='col-md-12'>
+							<div className='row'>
+								<div className='col-md-12' style={{ position: "relative" }}>
+									<div className='d-flex justify-content-between' style={{ position: "absolute" }}>
+										<a href='/admin/dashboard' className='btn btn-outline-primary'>
+											<i className='fas fa-arrow-left'></i> Back to Dashboard
+										</a>
+									</div>
+									<h1 className='text-center'>Create a new post</h1>
+									<span style={{ position: "absolute", right: "5px", top: "0px" }}>
+										<DarkModeToggle fixed={false} />
+									</span>
+								</div>
+							</div>
+							<div className='row'>
+								<div className='col-md-12'>
+									<form className='form-group' onSubmit={handleSubmit}>
+										<div className='form-group'>
+											<label htmlFor='title'>Title</label>
+											<input type='text' className='form-control' id='title' name='title' value={title} onInput={(e) => setTitle(e.target.value)} />
+										</div>
+										<div className='form-group'>
+											<label htmlFor='thumbnail'>Thumbnail</label>
+											<input type='text' className='form-control' id='thumbnail' name='thumbnail' value={thumbnail} onInput={(e) => setThumbnail(e.target.value)} />
+										</div>
+										<div className='form-group'>
+											<label htmlFor='description'>Description</label>
+											<textarea className='form-control' id='description' name='description' value={description} onInput={(e) => setDescription(e.target.value)} />
+										</div>
+										<div className='form-group'>
+											<label htmlFor='preview'>Content</label>
+											<div className='flex-row'>
+												<textarea
+													className='form-control'
+													id='content'
+													name='content'
+													value={content}
+													onInput={(e) => setContent(e.target.value)}
+													style={{ width: "700px", marginRight: "14px" }}
+												/>
+												<span style={{ width: "700px", position: "relative" }}>
+													<p style={{ position: "absolute", top: "-21px", left: "10px" }}>Preview</p>
+													<Markdown text={content} theme={theme} onCopy={notify} />
+												</span>
+											</div>
+										</div>
+										<div className='form-group'>
+											<label htmlFor='tags'>Tags</label>
+											<input type='text' className='form-control' id='tags' name='tags' value={tags} onInput={(e) => setTags(e.target.value)} />
+										</div>
+										<div className='form-group'>
+											<button type='submit' className='float-right btn btn-primary mt-2'>
+												Submit
+											</button>
+											<button type='button' className='float-right btn btn-outline-secondary mt-2' style={{ marginRight: ".5rem" }}>
+												Cancel
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+
+			{showPopup ? (
+				<div className='delete-popup'>
+					<div className='popup-content'>
+						<h1>Are you sure you want to ${popupMsg} the post?</h1>
+						<p>Warning! Action done is irreversible</p>
+						<div className='btn-group'>
+							<button
+								className='btn btn-sm btn-outline-primary'
+								onClick={() => {
+									setShowPopup(false);
+								}}
+							>
+								<small>🔵</small> Cancel
+							</button>
+							<button
+								className='btn btn-sm btn-outline-danger'
+								onClick={() => {
+									if (popupMsg === "upload") {
+										// upload
+									} else {
+										// cancel
+									}
+								}}
+							>
+								<small>🔴</small> Delete
+							</button>
+						</div>
+					</div>
+				</div>
+			) : null}
+
+			<ReactTooltip backgroundColor='#464692' />
+			<ToastContainer
+				position='bottom-center'
+				autoClose={2250}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover={false}
+				theme={"dark"}
+			/>
+		</>
+	);
+}
+
+export async function getServerSideProps(ctx) {
+	const cookie = useCookie(ctx);
+	let admin = cookie.get("user") ? JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8)).admin : false;
+	if (!admin) {
+		ctx.res.writeHead(302, {
+			Location: "/",
+		});
+		ctx.res.end();
+	}
+
+	const req = await fetch(`${serverUrl}/api/v1/post/get/tags`, {});
+	const tags = await req.json();
+
+	return {
+		props: {
+			tags: tags,
+			csrfToken: csrfToken,
+		},
+	};
 }

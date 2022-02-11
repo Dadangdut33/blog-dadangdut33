@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useCookie } from "next-cookie";
 import aes from "crypto-js/aes";
 import { enc } from "crypto-js/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { serverUrl } from "../../../lib/server_url";
 import { csrfToken } from "../../../lib/csrf";
@@ -150,6 +150,10 @@ export default function Dashboard(props) {
 		}
 	};
 
+	useEffect(() => {
+		document.body.classList.add("admin-dashboard");
+	});
+
 	return (
 		<>
 			<Head>
@@ -159,7 +163,6 @@ export default function Dashboard(props) {
 				<meta name='viewport' content='width=1024' />
 			</Head>
 
-			<span className='admin-main'></span>
 			<main className='center-vertical-horizontal'>
 				<div className='container'>
 					<div className='row bg-white dashboard inside border-light' style={{ fontSize: "large" }}>
@@ -173,7 +176,7 @@ export default function Dashboard(props) {
 									<a href='/' className='btn btn-primary' style={{ marginLeft: "10px" }}>
 										🏠 Homepage
 									</a>
-									<a href='/admin/post/create' className='btn btn-success' style={{ marginLeft: "10px" }}>
+									<a href='/admin/dashboard/post/create' className='btn btn-success' style={{ marginLeft: "10px" }}>
 										➕ Create New Post
 									</a>
 								</span>
@@ -335,15 +338,10 @@ export async function getServerSideProps(ctx) {
 	tags = [].concat(...tags); // get all tags from the array tags
 	tags = [...new Set(tags)].sort(); // remove duplicate tags and sort
 
-	const msgGet = cookie.get("message") ? cookie.get("message") : "";
-	cookie.remove("message");
-
 	return {
 		props: {
 			posts: data_Posts,
 			tags: tags,
-			message: msgGet,
-			admin: admin,
 			csrfToken: csrfToken,
 		},
 	};

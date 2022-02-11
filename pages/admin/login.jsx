@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useCookie } from "next-cookie";
 import { ToastContainer, toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { csrfToken } from "../../lib/csrf";
 
 export default function Login({ csrfToken }) {
@@ -61,6 +61,10 @@ export default function Login({ csrfToken }) {
 		}
 	};
 
+	useEffect(() => {
+		document.body.classList.add("admin-dashboard");
+	});
+
 	return (
 		<>
 			<Head>
@@ -69,7 +73,6 @@ export default function Login({ csrfToken }) {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<span className='admin-main'></span>
 			<main className='container login-wrap panel-login'>
 				<div className='row'>
 					<div className='col-lg-3 col-md-2'></div>

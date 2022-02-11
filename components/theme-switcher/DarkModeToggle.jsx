@@ -3,7 +3,7 @@ import darkLogo from "./dark.svg";
 import lightLogo from "./light.svg";
 import Image from "next/image";
 
-export default function DarkModeToggle() {
+export default function DarkModeToggle({ fixed = true }) {
 	const [checked, setChecked] = React.useState(false);
 	const [logo, setLogo] = React.useState(checked ? darkLogo : lightLogo);
 	const setDarkMode = () => {
@@ -93,7 +93,7 @@ export default function DarkModeToggle() {
 	}, []);
 
 	return (
-		<div className='form-check form-switch ms-auto mt-3 me-3 darkmode-toggler'>
+		<div className={fixed ? "form-check form-switch ms-auto mt-3 me-3 darkmode-toggler" : "form-check form-switch ms-auto mt-3 me-3"}>
 			<label className='form-check-label ms-3' htmlFor='lightSwitch' style={{ marginLeft: "3px", cursor: "pointer" }}>
 				<Image src={logo} className='bi bi-brightness-high light-svg' width={"25"} height={"25"} fill='white' alt='light/dark toggler' viewBox='0 0 16 16' />
 			</label>
