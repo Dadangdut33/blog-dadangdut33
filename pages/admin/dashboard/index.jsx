@@ -49,6 +49,7 @@ export default function Dashboard(props) {
 	const [sortBy, setSortBy] = useState("Newest");
 	const [searchQuery, setSearchQuery] = useState("");
 	const posts = sortPost(filterPost(props.posts, searchQuery), sortBy);
+	const [deletePopup, setDeletePopup] = useState(false);
 
 	const parseDate = (date) => {
 		const dateObj = new Date(date);
@@ -198,9 +199,11 @@ export default function Dashboard(props) {
 												<button
 													className='btn btn-sm btn-outline-danger dashboard action-table'
 													onClick={() => {
-														if (window.confirm("Are you sure you want to delete this post?")) {
-															// delete post
-														}
+														setDeletePopup(true);
+														// if (window.confirm("Are you sure you want to delete this post?")) {
+														// 	// delete post
+														// 	deletePost(post.id);
+														// }
 													}}
 												>
 													Delete
@@ -210,6 +213,27 @@ export default function Dashboard(props) {
 									))}
 								</tbody>
 							</table>
+							{deletePopup ? (
+								<div className='delete-popup'>
+									<div className='popup-content'>
+										<h1>Are you sure you want to delete this post?</h1>
+										<div className='btn-group'>
+											<button className='btn btn-sm btn-outline-primary' onClick={() => setDeletePopup(false)}>
+												Cancel
+											</button>
+											<button
+												className='btn btn-sm btn-outline-danger'
+												onClick={() => {
+													// deletePost(post.id);
+													setDeletePopup(false);
+												}}
+											>
+												Delete
+											</button>
+										</div>
+									</div>
+								</div>
+							) : null}
 						</div>
 					</div>
 				</div>
