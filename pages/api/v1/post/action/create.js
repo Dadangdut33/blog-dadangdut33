@@ -37,7 +37,6 @@ handler.post(async (req, res) => {
 		content: req.body.content,
 		tag: req.body.tag.split(","),
 		upvote: 0,
-		upvoter: [],
 		views: 0,
 		createdAt: new Date(),
 	};
