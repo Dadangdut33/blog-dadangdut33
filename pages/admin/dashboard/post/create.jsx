@@ -9,6 +9,7 @@ import { serverUrl } from "../../../../lib/server_url";
 import { csrfToken } from "../../../../lib/csrf";
 import Markdown from "../../../../components/markdown/Markdown";
 import DarkModeToggle from "../../../../components/theme-switcher/DarkModeToggle";
+import validImageURL from "../../../../lib/checkImage";
 
 export default function CreatePost(props) {
 	const [title, setTitle] = useState("");
@@ -20,19 +21,88 @@ export default function CreatePost(props) {
 	const [popupMsg, setPopupMsg] = useState("");
 	const [theme, setTheme] = useState("light");
 
-	const handleSubmit = async (e) => {
+	const resetForm = () => {
+		setTitle("");
+		setThumbnail("");
+		setTags("");
+		setDescription("");
+		setContent("");
+	};
+
+	const handleSubmit = (e) => {
 		e.preventDefault();
+	};
+
+	const submit = async () => {
+		const toastId = toast.loading("Submitting...");
+
+		// check empty is not allowed
+		if (title === "" || thumbnail === "" || tags === "" || description === "" || content === "") {
+			toast.update(toastId, {
+				render: "Please fill all the required fields.",
+				type: toast.TYPE.ERROR,
+				isLoading: false,
+				autoClose: 2000,
+			});
+			return;
+		}
+
+		// validate thumbnail
+		if (!validImageURL(thumbnail)) {
+			toast.update(toastId, {
+				render: "Thumbnail is not a valid image URL.",
+				type: toast.TYPE.ERROR,
+				isLoading: false,
+				autoClose: 2000,
+			});
+			return;
+		}
+
+		const data = {
+			title: title,
+			thumbnail: thumbnail,
+			description: description,
+			content: content,
+			tag: tags,
+		};
+
+		const response = await fetch(`${serverUrl}/api/v1/post/action/create`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"xsrf-token": props.csrfToken,
+			},
+			body: JSON.stringify(data),
+		});
+
+		const res = await response.json();
+
+		console.log(res);
+
+		if (res.message === "Post created") {
+			toast.update(toastId, {
+				render: "Post created successfully.",
+				type: toast.TYPE.SUCCESS,
+				isLoading: false,
+				autoClose: 2000,
+			});
+			resetForm();
+
+			setTimeout(() => {
+				window.location.href = "/admin/dashboard";
+			}, 2000);
+		} else {
+			toast.update(toastId, {
+				render: `Err: ${res.message}`,
+				type: toast.TYPE.ERROR,
+				isLoading: false,
+				autoClose: 2000,
+			});
+		}
 	};
 
 	const notify = (message) => {
 		toast.success(message);
-	};
-
-	const bgChange = () => {
-		const p_li = document.querySelectorAll("p, li");
-		p_li.forEach((p_li) => {
-			p_li.classList.add("text-dark");
-		});
 	};
 
 	useEffect(() => {
@@ -78,18 +148,39 @@ export default function CreatePost(props) {
 							</div>
 							<div className='row'>
 								<div className='col-md-12'>
-									<form className='form-group' onSubmit={handleSubmit}>
+									<form className='form-group'>
 										<div className='form-group'>
 											<label htmlFor='title'>Title</label>
-											<input type='text' className='form-control' id='title' name='title' value={title} onInput={(e) => setTitle(e.target.value)} />
+											<input type='text' className='form-control' id='title' name='title' value={title} onInput={(e) => setTitle(e.target.value)} required />
 										</div>
 										<div className='form-group'>
 											<label htmlFor='thumbnail'>Thumbnail</label>
-											<input type='text' className='form-control' id='thumbnail' name='thumbnail' value={thumbnail} onInput={(e) => setThumbnail(e.target.value)} />
+											<input type='text' className='form-control' id='thumbnail' name='thumbnail' value={thumbnail} onInput={(e) => setThumbnail(e.target.value)} required />
+										</div>
+										<div className='form-group'>
+											<label htmlFor='tags'>Tags (Input separated by ,)</label>
+											<input
+												type='text'
+												data-tip={`Previously used tags: ` + props.tags.join(", ")}
+												className='form-control'
+												id='tags'
+												name='tags'
+												value={tags}
+												onInput={(e) => setTags(e.target.value)}
+												required
+											/>
 										</div>
 										<div className='form-group'>
 											<label htmlFor='description'>Description</label>
-											<textarea className='form-control' id='description' name='description' value={description} onInput={(e) => setDescription(e.target.value)} />
+											<textarea
+												className='form-control'
+												id='description'
+												name='description'
+												value={description}
+												onInput={(e) => setDescription(e.target.value)}
+												minLength={10}
+												required
+											/>
 										</div>
 										<div className='form-group'>
 											<label htmlFor='preview'>Content</label>
@@ -101,6 +192,8 @@ export default function CreatePost(props) {
 													value={content}
 													onInput={(e) => setContent(e.target.value)}
 													style={{ width: "700px", marginRight: "14px" }}
+													minLength={50}
+													required
 												/>
 												<span style={{ width: "700px", position: "relative" }}>
 													<p style={{ position: "absolute", top: "-21px", left: "10px" }}>Preview</p>
@@ -109,14 +202,26 @@ export default function CreatePost(props) {
 											</div>
 										</div>
 										<div className='form-group'>
-											<label htmlFor='tags'>Tags</label>
-											<input type='text' className='form-control' id='tags' name='tags' value={tags} onInput={(e) => setTags(e.target.value)} />
-										</div>
-										<div className='form-group'>
-											<button type='submit' className='float-right btn btn-primary mt-2'>
-												Submit
+											<button
+												type='submit'
+												className='float-right btn btn-primary mt-2'
+												onClick={(e) => {
+													handleSubmit(e);
+													setPopupMsg("upload");
+													setShowPopup(true);
+												}}
+											>
+												Submit & Upload
 											</button>
-											<button type='button' className='float-right btn btn-outline-secondary mt-2' style={{ marginRight: ".5rem" }}>
+											<button
+												type='button'
+												className='float-right btn btn-outline-secondary mt-2'
+												style={{ marginRight: ".5rem" }}
+												onClick={() => {
+													setPopupMsg("cancel and reset");
+													setShowPopup(true);
+												}}
+											>
 												Cancel
 											</button>
 										</div>
@@ -131,7 +236,7 @@ export default function CreatePost(props) {
 			{showPopup ? (
 				<div className='delete-popup'>
 					<div className='popup-content'>
-						<h1>Are you sure you want to ${popupMsg} the post?</h1>
+						<h1>Are you sure you want to {popupMsg} the post?</h1>
 						<p>Warning! Action done is irreversible</p>
 						<div className='btn-group'>
 							<button
@@ -140,19 +245,22 @@ export default function CreatePost(props) {
 									setShowPopup(false);
 								}}
 							>
-								<small>🔵</small> Cancel
+								<small>🔵</small> No
 							</button>
 							<button
 								className='btn btn-sm btn-outline-danger'
 								onClick={() => {
 									if (popupMsg === "upload") {
 										// upload
+										submit();
 									} else {
-										// cancel
+										resetForm();
+										setShowPopup(false);
+										notify("Post reseted");
 									}
 								}}
 							>
-								<small>🔴</small> Delete
+								<small>🔴</small> Yes
 							</button>
 						</div>
 					</div>
@@ -187,7 +295,14 @@ export async function getServerSideProps(ctx) {
 	}
 
 	const req = await fetch(`${serverUrl}/api/v1/post/get/tags`, {});
-	const tags = await req.json();
+	let tags = await req.json();
+	tags = tags
+		.map((tag) => {
+			return tag._id;
+		})
+		.sort((a, b) => {
+			if (a < b) return -1;
+		});
 
 	return {
 		props: {

@@ -25,8 +25,8 @@ handler.post(async (req, res) => {
 
 	// check if user exists
 	if (!user) {
-		res.status(404).json({
-			message: "User not found",
+		res.status(403).json({
+			message: "User or password is incorrect!",
 		});
 		return;
 	}
@@ -40,7 +40,7 @@ handler.post(async (req, res) => {
 
 	if (originalText !== req.body.password) {
 		res.status(403).json({
-			message: "Invalid password",
+			message: "User or password is incorrect!",
 		});
 		return;
 	}
