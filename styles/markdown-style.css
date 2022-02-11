@@ -21,6 +21,10 @@
 	z-index: 9999;
 }
 
+.post-date {
+	text-decoration: underline;
+}
+
 .post-stats {
 	display: flex;
 	align-items: center;

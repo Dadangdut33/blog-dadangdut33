@@ -180,13 +180,17 @@ export default function Dashboard(props) {
 										<tr key={i}>
 											<th scope='row'>{i + 1}</th>
 											<td style={{ maxWidth: "300px" }}>
-												{post.title}
+												<a href={`/r/${post.id}/`}>{post.title}</a>
 												<span data-tip={`ID: ${post.id} | Tags: ` + post.tag.join(", ")}> 🔗</span>
 											</td>
 											<td style={{ maxWidth: "300px" }}>{post.description}</td>
 											<td style={{ maxWidth: "100px" }}>{post.views}</td>
 											<td style={{ maxWidth: "100px" }}>{post.upvote}</td>
-											<td style={{ maxWidth: "120px" }}>{parseDate(post.createdAt)}</td>
+											<td style={{ maxWidth: "120px" }}>
+												<span className='post-date' data-tip={`Last updated: ${post.lastUpdatedAt ? formatDate(post.lastUpdatedAt) : `No Changes`}`} data-place='bottom'>
+													{parseDate(post.createdAt)}
+												</span>
+											</td>
 											<td style={{ maxWidth: "90px" }}>
 												<a href={`/admin/dashboard/post/edit/${post.id}`}>
 													<a className='btn btn-sm btn-outline-primary'>Edit</a>

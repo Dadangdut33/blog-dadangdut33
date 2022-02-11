@@ -164,7 +164,9 @@ export default function postIdWithTitle({ post, cookie, csrfToken, admin }) {
 						<div className='post-stats'>
 							<p className='text-muted first'>
 								<small>
-									<i className='fas fa-calendar-alt fa-xs'></i> {formatDate(post.createdAt)}
+									<span className='post-date' data-tip={`Last updated: ${post.lastUpdatedAt ? formatDate(post.lastUpdatedAt) : `No Changes`}`} data-place='bottom'>
+										<i className='fas fa-calendar-alt fa-xs'></i> {formatDate(post.createdAt)}
+									</span>
 									<i className='fas fa-eye fa-xs icon-spacer'></i> {post.views}
 									<i className='fas fa-heart fa-xs icon-spacer'></i> {likes}
 								</small>
