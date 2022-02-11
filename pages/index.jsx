@@ -112,18 +112,24 @@ export default function Home(props) {
 	useEffect(() => {
 		// load the cdn script after the page is loaded
 		load_bootstrapjs(document);
-		const tagsCard = document.querySelectorAll("#tag-card");
-		const insideCard = document.querySelector("#inside-card");
-		let insideCardWidth = insideCard.offsetWidth;
+		let postEmpty = false;
+		try {
+			// added to try catch in case post is empty
+			const tagsCard = document.querySelectorAll("#tag-card");
+			const insideCard = document.querySelector("#inside-card");
+			let insideCardWidth = insideCard.offsetWidth;
 
-		// on window resize update the width of the inside card
-		window.addEventListener("resize", () => {
-			insideCardWidth = insideCard.offsetWidth;
-		});
+			// on window resize update the width of the inside card
+			window.addEventListener("resize", () => {
+				insideCardWidth = insideCard.offsetWidth;
+			});
 
-		tagsCard.forEach((tag) => {
-			tag.addEventListener("wheel", (e) => scrollX(e, tag, insideCardWidth, tag.offsetWidth));
-		});
+			tagsCard.forEach((tag) => {
+				tag.addEventListener("wheel", (e) => scrollX(e, tag, insideCardWidth, tag.offsetWidth));
+			});
+		} catch (e) {
+			postEmpty = true;
+		}
 
 		let intervalBg = setInterval(() => {
 			if (document.body.classList.contains("bg-dark")) {
@@ -136,9 +142,11 @@ export default function Home(props) {
 		return () => {
 			// cleanup
 			clearInterval(intervalBg);
-			tagsCard.forEach((tag) => {
-				tag.removeEventListener("wheel", (e) => scrollX(e, tag, insideCardWidth, tag.offsetWidth));
-			});
+			if (!postEmpty) {
+				tagsCard.forEach((tag) => {
+					tag.removeEventListener("wheel", (e) => scrollX(e, tag, insideCardWidth, tag.offsetWidth));
+				});
+			}
 		};
 	}, []);
 
@@ -322,9 +330,12 @@ export async function getServerSideProps(ctx) {
 	const data_Posts = await res_Posts.json();
 
 	// get all tags from data_posts
-	let tags = data_Posts.map((post) => post.tag.map((tag) => tag));
-	tags = [].concat(...tags); // get all tags from the array tags
-	tags = [...new Set(tags)].sort(); // remove duplicate tags and sort
+	let tags = [];
+	if (data_Posts.length > 0) {
+		tags = data_Posts.map((post) => post.tag.map((tag) => tag));
+		tags = [].concat(...tags); // get all tags from the array tags
+		tags = [...new Set(tags)].sort(); // remove duplicate tags and sort
+	}
 
 	const cookie = useCookie(ctx);
 	let admin = cookie.get("user") ? JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8)).admin : false;

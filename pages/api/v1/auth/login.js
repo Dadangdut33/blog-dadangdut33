@@ -1,6 +1,5 @@
 import nextConnect from "next-connect";
 import middleware from "../../../../lib/db";
-import { checkToken } from "../../../../lib/csrf";
 import { Cookie } from "next-cookie";
 import AES from "crypto-js/aes";
 import { enc } from "crypto-js/core";
@@ -9,8 +8,6 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.post(async (req, res) => {
-	if (!checkToken(req)) return res.status(403).json({ message: "Invalid CSRF Token" });
-
 	if (req.method !== "POST") {
 		res.status(400).json({
 			message: "Request must be a POST request",

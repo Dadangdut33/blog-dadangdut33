@@ -2,9 +2,8 @@ import Head from "next/head";
 import { useCookie } from "next-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import { csrfToken } from "../../lib/csrf";
 
-export default function Login({ csrfToken }) {
+export default function Login() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [msgNotif, setMsgNotif] = useState("");
@@ -33,7 +32,6 @@ export default function Login({ csrfToken }) {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"xsrf-token": csrfToken,
 			},
 			body: JSON.stringify(data),
 		});
@@ -138,8 +136,6 @@ export async function getServerSideProps(context) {
 	}
 
 	return {
-		props: {
-			csrfToken: csrfToken,
-		},
+		props: {},
 	};
 }

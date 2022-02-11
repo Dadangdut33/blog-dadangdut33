@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import aes from "crypto-js/aes";
 import { enc } from "crypto-js/core";
-import { csrfToken } from "../../../lib/csrf";
 import { serverUrl } from "../../../lib/server_url";
 import Meta from "../../../components/global/Meta";
 import Navbar from "../../../components/global/Navbar";
@@ -16,7 +15,7 @@ import load_bootstrapjs from "../../../lib/load_bootstrapjs";
 import Markdown from "../../../components/markdown/Markdown";
 import Share from "../../../components/markdown/Share";
 
-export default function postIdWithTitle({ post, cookie, csrfToken, admin }) {
+export default function postIdWithTitle({ post, cookie, admin }) {
 	const [theme, setTheme] = useState("light");
 	const [liked, setLiked] = useState(false);
 	const [likes, setLikes] = useState(post.upvote);
@@ -34,7 +33,6 @@ export default function postIdWithTitle({ post, cookie, csrfToken, admin }) {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"xsrf-token": csrfToken,
 			},
 			body: JSON.stringify({
 				id: post.id,
@@ -272,7 +270,6 @@ export async function getServerSideProps(ctx) {
 		props: {
 			post: post[0],
 			cookie: ctx.req.headers.cookie || "",
-			csrfToken: csrfToken,
 			admin: admin,
 		},
 	};

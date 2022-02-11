@@ -6,7 +6,6 @@ import { enc } from "crypto-js/core";
 import { useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { serverUrl } from "../../../lib/server_url";
-import { csrfToken } from "../../../lib/csrf";
 
 export default function Dashboard(props) {
 	const filterPost = (posts, query) => {
@@ -121,7 +120,6 @@ export default function Dashboard(props) {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"xsrf-token": props.csrfToken,
 			},
 			body: JSON.stringify({
 				id: id,
@@ -342,7 +340,6 @@ export async function getServerSideProps(ctx) {
 		props: {
 			posts: data_Posts,
 			tags: tags,
-			csrfToken: csrfToken,
 		},
 	};
 }

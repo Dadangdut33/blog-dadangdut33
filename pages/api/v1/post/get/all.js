@@ -7,7 +7,7 @@ handler.use(middleware);
 
 handler.get(async (req, res) => {
 	let posts = await req.db
-		.collection("post")
+		.collection("a")
 		.find({})
 		.project({ upvoter: 0, _id: 0 })
 		.skip(1) // skip index 0 -> auto increment flag

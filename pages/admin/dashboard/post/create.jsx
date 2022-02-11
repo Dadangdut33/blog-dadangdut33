@@ -6,7 +6,6 @@ import { enc } from "crypto-js/core";
 import { useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { serverUrl } from "../../../../lib/server_url";
-import { csrfToken } from "../../../../lib/csrf";
 import Markdown from "../../../../components/markdown/Markdown";
 import DarkModeToggle from "../../../../components/theme-switcher/DarkModeToggle";
 import validImageURL from "../../../../lib/checkImage";
@@ -70,7 +69,6 @@ export default function CreatePost(props) {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"xsrf-token": props.csrfToken,
 			},
 			body: JSON.stringify(data),
 		});
@@ -305,7 +303,6 @@ export async function getServerSideProps(ctx) {
 	return {
 		props: {
 			tags: tags,
-			csrfToken: csrfToken,
 		},
 	};
 }
