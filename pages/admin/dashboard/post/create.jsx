@@ -233,7 +233,7 @@ export default function CreatePost(props) {
 
 			{showPopup ? (
 				<div className='delete-popup'>
-					<div className='popup-content'>
+					<div className={theme === "light" ? "popup-content bg-light" : `popup-content bg-dark`}>
 						<h1>Are you sure you want to {popupMsg} the post?</h1>
 						<p>Warning! Action done is irreversible</p>
 						<div className='btn-group'>
