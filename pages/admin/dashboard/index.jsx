@@ -106,20 +106,20 @@ export default function Dashboard(props) {
 			</Head>
 
 			<span className='admin-main'></span>
-			<main class='center-vertical-horizontal'>
-				<div class='container'>
-					<div class='row bg-white dashboard inside border-light' style={{ fontSize: "large" }}>
-						<div class='col-md-12'>
+			<main className='center-vertical-horizontal'>
+				<div className='container'>
+					<div className='row bg-white dashboard inside border-light' style={{ fontSize: "large" }}>
+						<div className='col-md-12'>
 							<h1>
 								Admin Dashboard 🛠
-								<span class='float-right'>
-									<a href='/admin/logout' class='btn btn-danger'>
+								<span className='float-right'>
+									<a href='/admin/logout' className='btn btn-danger'>
 										🚩 Logout
 									</a>
-									<a href='/' class='btn btn-primary' style={{ marginLeft: "10px" }}>
+									<a href='/' className='btn btn-primary' style={{ marginLeft: "10px" }}>
 										🏠 Homepage
 									</a>
-									<a href='/admin/post/create' class='btn btn-success' style={{ marginLeft: "10px" }}>
+									<a href='/admin/post/create' className='btn btn-success' style={{ marginLeft: "10px" }}>
 										➕ Create New Post
 									</a>
 								</span>
@@ -163,7 +163,7 @@ export default function Dashboard(props) {
 								</select>
 							</div>
 
-							<table class='table table-hover table-striped'>
+							<table className='table table-hover table-striped'>
 								<thead>
 									<tr>
 										<th>#</th>
