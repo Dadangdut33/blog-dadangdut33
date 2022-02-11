@@ -11,7 +11,7 @@ import { serverUrl } from "../../../lib/server_url";
 import Meta from "../../../components/global/Meta";
 import Navbar from "../../../components/global/Navbar";
 import Footer from "../../../components/global/Footer";
-import Comment from "../../../components/comment";
+import Comment from "../../../components/Comment";
 import load_bootstrapjs from "../../../lib/load_bootstrapjs";
 import Markdown from "../../../components/markdown/Markdown";
 import Share from "../../../components/markdown/Share";
