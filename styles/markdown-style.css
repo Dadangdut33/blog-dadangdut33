@@ -77,7 +77,7 @@
 
 .md-wrapper .wrap-progress .wrapper .progress-bar {
 	position: fixed;
-	margin-top: -22rem;
+	margin-top: -23.25rem;
 	width: 2px;
 	height: 500px;
 	background: #ccc;
@@ -90,8 +90,9 @@
 	background: #464692;
 }
 
-.hover-effect {
+.hover-effect-inline {
 	transition: all 0.1s ease-out !important;
+	transform: scale(1);
 }
 
 .hover-effect:hover {

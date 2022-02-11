@@ -37,6 +37,16 @@ body {
   margin: 150px auto;
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 /* --------------------------------------- */
 /* nav */
 .navbar-brand {
