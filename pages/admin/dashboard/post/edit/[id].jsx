@@ -67,7 +67,7 @@ export default function CreatePost(props) {
 			tag: tags,
 		};
 
-		const response = await fetch(`${serverUrl}/api/v1/post/action/edit`, {
+		const req = await fetch(`${serverUrl}/api/v1/post/action/edit`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -76,9 +76,9 @@ export default function CreatePost(props) {
 			body: JSON.stringify(data),
 		});
 
-		const res = await response.json();
+		const res = await req.json();
 
-		if (response.status === 200) {
+		if (req.status === 200) {
 			toast.update(toastId, {
 				render: "Post updated successfully.",
 				type: toast.TYPE.SUCCESS,

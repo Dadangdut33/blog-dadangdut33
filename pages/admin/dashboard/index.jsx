@@ -130,7 +130,7 @@ export default function Dashboard(props) {
 
 		const res = await req.json();
 
-		if (res.message === "Post deleted") {
+		if (req.status === 200) {
 			toast.update(toastId, {
 				render: "Post deleted successfully",
 				type: toast.TYPE.SUCCESS,
@@ -237,7 +237,7 @@ export default function Dashboard(props) {
 										<tr key={i}>
 											<th scope='row'>{i + 1}</th>
 											<td style={{ maxWidth: "300px" }}>
-												<a href={`/r/${post.id}/`}>{post.title}</a>
+												<a href={`/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>{post.title}</a>
 												<span data-tip={`ID: ${post.id} | Tags: ` + post.tag.join(", ")}> 🔗</span>
 											</td>
 											<td style={{ maxWidth: "300px" }}>{post.description}</td>

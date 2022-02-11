@@ -29,7 +29,7 @@ export default function Login({ csrfToken }) {
 			password: password,
 		};
 
-		const response = await fetch("/api/v1/auth/login", {
+		const req = await fetch("/api/v1/auth/login", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -38,9 +38,9 @@ export default function Login({ csrfToken }) {
 			body: JSON.stringify(data),
 		});
 
-		const res = await response.json();
+		const res = await req.json();
 
-		if (res.message === "Login successful") {
+		if (req.status === 200) {
 			setMsgNotif("Successfully logged in!");
 			toast.update(toastId, {
 				render: "Logged in succesfully!",
