@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 import { useCookie } from "next-cookie";
 import ReactTooltip from "react-tooltip";
 import { motion } from "framer-motion";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
-import { RedditShareButton, TwitterShareButton, FacebookShareButton } from "react-share";
 import aes from "crypto-js/aes";
 import { enc } from "crypto-js/core";
 import Meta from "../../../components/global/Meta";
@@ -16,6 +14,7 @@ import { csrfToken } from "../../../lib/csrf";
 import { serverUrl } from "../../../lib/server_url";
 import load_bootstrapjs from "../../../lib/load_bootstrapjs";
 import Markdown from "../../../components/markdown/Markdown";
+import Share from "../../../components/markdown/Share";
 
 export default function postIdWithTitle({ post, cookie, csrfToken, admin }) {
 	const [theme, setTheme] = useState("light");
@@ -186,59 +185,17 @@ export default function postIdWithTitle({ post, cookie, csrfToken, admin }) {
 
 						<div className='wrap-stats'>
 							<motion.div className='stats' id='post-stats-float' animate={showSide ? "open" : "closed"} variants={side_Variants}>
-								<div className='stats-item hover-effect pointer-cursor'>
-									<span className='icon-spacer-margin ripple' onClick={() => likeCallback()} data-tip={liked ? "Unlike the post" : "Like the post"} data-place='right'>
-										{liked ? <i className='fas fa-heart fa-xs'></i> : <i className='far fa-heart fa-xs'></i>} {liked ? "Liked" : "Like"}
-									</span>
-								</div>
-								<CopyToClipboard
-									text={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-									onCopy={() => notify("Post url copied to clipboard")}
-									data-tip='Copy post url to clipboard'
-									data-place='right'
-								>
-									<div className='stats-item hover-effect pointer-cursor'>
-										<span className='icon-spacer-margin'>
-											<i className='fas fa-link fa-xs'></i> Copy Link
-										</span>
-									</div>
-								</CopyToClipboard>
-								<div className='stats-item'>
-									<RedditShareButton
-										url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-										title={post.title}
-										className='hover-effect'
-										data-tip='Share the post to reddit'
-										data-place='bottom'
-									>
-										<span className='icon-spacer-margin inline pointer-cursor'>
-											<i className='fab fa-reddit fa-xs'></i>
-										</span>
-									</RedditShareButton>
-									<TwitterShareButton
-										url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-										title={post.title}
-										hashtags={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
-										className='hover-effect'
-										data-tip='Share the post to twitter'
-										data-place='bottom'
-									>
-										<span className='icon-spacer-margin inline pointer-cursor'>
-											<i className='fab fa-twitter fa-xs'></i>
-										</span>
-									</TwitterShareButton>
-									<FacebookShareButton
-										url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-										quote={post.description}
-										className='hover-effect'
-										data-tip='Share the post to facebook'
-										data-place='bottom'
-									>
-										<span className='icon-spacer-margin inline pointer-cursor'>
-											<i className='fab fa-facebook-f fa-xs'></i>
-										</span>
-									</FacebookShareButton>
-								</div>
+								<Share
+									liked={liked}
+									inline={false}
+									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									desc={post.description}
+									title={post.title}
+									tags={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
+									onCopy={notify}
+									likeCallback={likeCallback}
+									tipPlacement={["right", "right", "bottom", "bottom", "bottom"]}
+								/>
 							</motion.div>
 						</div>
 
@@ -252,53 +209,16 @@ export default function postIdWithTitle({ post, cookie, csrfToken, admin }) {
 							</div>
 
 							<div className='stats-item pt-2'>
-								<span className='icon-spacer-margin ripple pointer-cursor' onClick={() => likeCallback()} data-tip={liked ? "Unlike the post" : "Like the post"} data-place='bottom'>
-									{liked ? <i className='fas fa-heart fa-xs'></i> : <i className='far fa-heart fa-xs'></i>} {liked ? "Liked" : "Like"}
-								</span>
-								<CopyToClipboard
-									text={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-									onCopy={() => notify("Post url copied to clipboard")}
-									data-tip='Copy post url to clipboard'
-									data-place='bottom'
-								>
-									<span className='icon-spacer-margin pointer-cursor'>
-										<i className='fas fa-link fa-xs'></i> Copy Link
-									</span>
-								</CopyToClipboard>
-								<RedditShareButton
+								<Share
+									liked={liked}
+									inline={true}
 									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
+									desc={post.description}
 									title={post.title}
-									className='hover-effect'
-									data-tip='Share the post to reddit'
-									data-place='bottom'
-								>
-									<span className='icon-spacer-margin inline pointer-cursor'>
-										<i className='fab fa-reddit fa-xs'></i>
-									</span>
-								</RedditShareButton>
-								<TwitterShareButton
-									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-									title={post.title}
-									hashtags={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
-									className='hover-effect'
-									data-tip='Share the post to twitter'
-									data-place='bottom'
-								>
-									<span className='icon-spacer-margin inline pointer-cursor'>
-										<i className='fab fa-twitter fa-xs'></i>
-									</span>
-								</TwitterShareButton>
-								<FacebookShareButton
-									url={`${serverUrl}/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}
-									quote={post.description}
-									className='hover-effect'
-									data-tip='Share the post to facebook'
-									data-place='bottom'
-								>
-									<span className='icon-spacer-margin inline pointer-cursor'>
-										<i className='fab fa-facebook-f fa-xs'></i>
-									</span>
-								</FacebookShareButton>
+									tags={post.tag.map((tag) => tag.replace(/\s+/g, ""))}
+									onCopy={notify}
+									likeCallback={likeCallback}
+								/>
 							</div>
 						</div>
 
