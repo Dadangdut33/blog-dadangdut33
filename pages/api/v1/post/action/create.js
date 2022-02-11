@@ -1,9 +1,9 @@
 import nextConnect from "next-connect";
-import middleware from "../../../../../lib/db";
-import { checkToken } from "../../../../../lib/csrf";
 import { Cookie } from "next-cookie";
 import aes from "crypto-js/aes";
 import { enc } from "crypto-js/core";
+import middleware from "../../../../../lib/db";
+import { checkToken } from "../../../../../lib/csrf";
 
 const handler = nextConnect();
 

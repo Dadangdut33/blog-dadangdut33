@@ -77,9 +77,7 @@ export default function CreatePost(props) {
 
 		const res = await response.json();
 
-		console.log(res);
-
-		if (res.message === "Post created") {
+		if (response.status === 200) {
 			toast.update(toastId, {
 				render: "Post created successfully.",
 				type: toast.TYPE.SUCCESS,
@@ -148,7 +146,7 @@ export default function CreatePost(props) {
 							</div>
 							<div className='row'>
 								<div className='col-md-12'>
-									<form className='form-group'>
+									<form className='form-group' onSubmit={handleSubmit}>
 										<div className='form-group'>
 											<label htmlFor='title'>Title</label>
 											<input type='text' className='form-control' id='title' name='title' value={title} onInput={(e) => setTitle(e.target.value)} required />

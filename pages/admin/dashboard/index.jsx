@@ -244,7 +244,7 @@ export default function Dashboard(props) {
 											<td style={{ maxWidth: "100px" }}>{post.views}</td>
 											<td style={{ maxWidth: "100px" }}>{post.upvote}</td>
 											<td style={{ maxWidth: "120px" }}>
-												<span className='post-date' data-tip={`Last updated: ${post.lastUpdatedAt ? formatDate(post.lastUpdatedAt) : `No Changes`}`} data-place='bottom'>
+												<span className='post-date' data-tip={`Last updated: ${post.lastUpdatedAt ? parseDate(post.lastUpdatedAt) : `No Changes`}`} data-place='bottom'>
 													{parseDate(post.createdAt)}
 												</span>
 											</td>
