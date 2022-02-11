@@ -1,7 +1,9 @@
 import nextConnect from "next-connect";
+import { Cookie } from "next-cookie";
+import aes from "crypto-js/aes";
+import { enc } from "crypto-js/core";
 import middleware from "../../../../../lib/db";
 import { checkToken } from "../../../../../lib/csrf";
-import { Cookie } from "next-cookie";
 
 const handler = nextConnect();
 
@@ -19,7 +21,8 @@ handler.post(async (req, res) => {
 
 	const cookie = Cookie.fromApiRoute(req, res);
 	// check if user is logged in and admin
-	if (!cookie.get("user") || !cookie.get("admin")) {
+	let admin = cookie.get("user") ? JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8)).admin : false;
+	if (!admin) {
 		res.status(403).json({
 			message: "You must be logged in as admin to perform this action",
 		});
@@ -27,7 +30,7 @@ handler.post(async (req, res) => {
 	}
 
 	// delete from post collection
-	const id = parseInt(req.query.id);
+	const id = parseInt(req.body.id);
 
 	// prettier-ignore
 	let post = await req.db.collection("post")

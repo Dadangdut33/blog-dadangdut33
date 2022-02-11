@@ -6,8 +6,8 @@ import { enc } from "crypto-js/core";
 import { useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { serverUrl } from "../../../lib/server_url";
+import { csrfToken } from "../../../lib/csrf";
 
-// post list, delete, sort, search, category....
 export default function Dashboard(props) {
 	const filterPost = (posts, query) => {
 		if (!query) {
@@ -46,10 +46,17 @@ export default function Dashboard(props) {
 		}
 	};
 
+	const filterDelete = (posts, deleted) => {
+		// remove post that has been deleted by id
+		return posts.filter((post) => !deleted.includes(post.id));
+	};
+
 	const [sortBy, setSortBy] = useState("Newest");
 	const [searchQuery, setSearchQuery] = useState("");
-	const posts = sortPost(filterPost(props.posts, searchQuery), sortBy);
+	const [deletedPost, setDeletedPost] = useState([]);
+	const posts = filterDelete(sortPost(filterPost(props.posts, searchQuery), sortBy), deletedPost);
 	const [deletePopup, setDeletePopup] = useState(false);
+	const [deletePostID, setDeletePostID] = useState(null);
 
 	const parseDate = (date) => {
 		const dateObj = new Date(date);
@@ -95,6 +102,52 @@ export default function Dashboard(props) {
 				tag.classList.remove("active");
 			}
 		});
+	};
+
+	const deletePost = async (id) => {
+		const toastId = toast.loading("Deleting...");
+
+		if (!id) {
+			toast.update(toastId, {
+				render: "Error No ID Given",
+				type: toast.TYPE.ERROR,
+				isLoading: false,
+				autoClose: 2000,
+			});
+			return;
+		}
+
+		const req = await fetch(`${serverUrl}/api/v1/post/action/delete`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"xsrf-token": props.csrfToken,
+			},
+			body: JSON.stringify({
+				id: id,
+			}),
+		});
+
+		const res = await req.json();
+
+		if (res.message === "Post deleted") {
+			toast.update(toastId, {
+				render: "Post deleted successfully",
+				type: toast.TYPE.SUCCESS,
+				isLoading: false,
+				autoClose: 2000,
+			});
+			setDeletedPost([...deletedPost, id]);
+			setDeletePopup(false);
+			setDeletePostID(null);
+		} else {
+			toast.update(toastId, {
+				render: `Error ${res.message}`,
+				type: toast.TYPE.ERROR,
+				isLoading: false,
+				autoClose: 2000,
+			});
+		}
 	};
 
 	return (
@@ -199,11 +252,13 @@ export default function Dashboard(props) {
 												<button
 													className='btn btn-sm btn-outline-danger dashboard action-table'
 													onClick={() => {
-														setDeletePopup(true);
-														// if (window.confirm("Are you sure you want to delete this post?")) {
-														// 	// delete post
-														// 	deletePost(post.id);
-														// }
+														// 3 layer of confirmation just in case i'm a dumb idiot and delete something by accident
+														if (window.confirm("Confirmation #1\nAre you sure that you want to delete this post?")) {
+															if (window.confirm("Confirmation #2\nAre you really really sure that you want to delete this post?")) {
+																setDeletePopup(true);
+																setDeletePostID(post.id);
+															}
+														}
 													}}
 												>
 													Delete
@@ -216,19 +271,25 @@ export default function Dashboard(props) {
 							{deletePopup ? (
 								<div className='delete-popup'>
 									<div className='popup-content'>
-										<h1>Are you sure you want to delete this post?</h1>
+										<h1>OK! Are you sure you want to delete this post now?</h1>
+										<p>Warning! This action cannot be undone!!</p>
 										<div className='btn-group'>
-											<button className='btn btn-sm btn-outline-primary' onClick={() => setDeletePopup(false)}>
-												Cancel
+											<button
+												className='btn btn-sm btn-outline-primary'
+												onClick={() => {
+													setDeletePopup(false);
+													setDeletePostID(null);
+												}}
+											>
+												<small>🔵</small> Cancel
 											</button>
 											<button
 												className='btn btn-sm btn-outline-danger'
 												onClick={() => {
-													// deletePost(post.id);
-													setDeletePopup(false);
+													deletePost(deletePostID);
 												}}
 											>
-												Delete
+												<small>🔴</small> Delete
 											</button>
 										</div>
 									</div>
@@ -283,6 +344,7 @@ export async function getServerSideProps(ctx) {
 			tags: tags,
 			message: msgGet,
 			admin: admin,
+			csrfToken: csrfToken,
 		},
 	};
 }
