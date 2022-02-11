@@ -1,13 +1,13 @@
+import Head from "next/head";
 import { useCookie } from "next-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import { useState } from "react";
 import { csrfToken } from "../../lib/csrf";
 
-export default function Login({ cookie, csrfToken }) {
+export default function Login({ csrfToken }) {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [msgNotif, setMsgNotif] = useState("");
-	const cookies = useCookie(cookie);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -63,6 +63,12 @@ export default function Login({ cookie, csrfToken }) {
 
 	return (
 		<>
+			<Head>
+				<title>Admin Login | Dadangdut33 Blog</title>
+				<meta charSet='UTF-8' />
+				<link rel='icon' href='/favicon.ico' />
+			</Head>
+
 			<span className='admin-main'></span>
 			<main className='container login-wrap panel-login'>
 				<div className='row'>
@@ -119,7 +125,6 @@ export default function Login({ cookie, csrfToken }) {
 
 export async function getServerSideProps(context) {
 	const cookie = useCookie(context);
-
 	if (cookie.get("user")) {
 		return {
 			redirect: {
@@ -131,7 +136,6 @@ export async function getServerSideProps(context) {
 
 	return {
 		props: {
-			cookie: context.req.headers.cookie || "",
 			csrfToken: csrfToken,
 		},
 	};
