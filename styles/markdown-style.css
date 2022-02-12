@@ -126,6 +126,16 @@
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #ddd;
 	padding: 0 2rem;
+	overflow: hidden;
+	overflow-wrap: break-word;
+}
+
+.md-thumbnail {
+	max-width: 700px;
+}
+
+.markdownBody img {
+	width: 100%;
 }
 
 .no-border {
