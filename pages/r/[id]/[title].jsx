@@ -157,9 +157,7 @@ export default function postIdWithTitle({ post, cookie, admin }) {
 						<i className='fas fa-home'></i>
 					</a>
 					<div className='title'>
-						<div className={"image-container md-thumbnail"}>
-							<Image src={post.thumbnail} alt={post.title + "thumbnail"} layout='fill' className={"image"} />
-						</div>
+						<Image src={post.thumbnail} alt={post.title + "thumbnail"} width={1000} height={500} />
 						<h1 id={post.title.replace(/\s+/g, "-")}>{post.title}</h1>
 						<div className='post-stats'>
 							<p className='text-muted first'>
