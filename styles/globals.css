@@ -109,6 +109,15 @@ body {
 
 /* --------------------------------------- */
 /* home / lists */
+.sort-by {
+  display: flex;
+  flex-direction: row;
+}
+
+.sort-by div {
+  position: relative;
+}
+
 #card {
   background-color: white !important;
   min-height: 440px;
@@ -275,6 +284,12 @@ body {
     max-width: 90%;
   }
 
+}
+
+@media (max-width: 350px) {
+  .sort-by {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 333px) {
