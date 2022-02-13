@@ -142,6 +142,10 @@
 	width: initial !important;
 }
 
+.markdownBody .img-normal.contain {
+	width: 80% !important;
+}
+
 .no-border {
 	border: none !important;
 }
@@ -220,7 +224,8 @@
 
 /* ------------------ */
 /* 1 tick code */
-.markdownBody p code {
+.markdownBody p code,
+.markdownBody li code {
 	font-weight: 500;
 	border-spacing: 10px;
 	position: relative;
@@ -229,11 +234,13 @@
 	border-radius: 0.25rem;
 }
 
-.markdownBody p code.text-light {
+.markdownBody p code.text-light,
+.markdownBody li code.text-light {
 	color: yellow !important;
 }
 
-.markdownBody p code.text-dark {
+.markdownBody p code.text-dark,
+.markdownBody li code.text-dark {
 	color: rgb(214, 51, 132) !important;
 }
 
