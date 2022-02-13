@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { synthwave84 } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import CopyButton from "./CopyButton";
@@ -10,6 +11,7 @@ export default function Markdown({ text, onCopy, theme }) {
 			className='markdownBody'
 			children={text}
 			remarkPlugins={[gfm]}
+			rehypePlugins={[rehypeRaw]}
 			components={{
 				code({ node, inline, className, children, ...props }) {
 					const match = /language-(\w+)/.exec(className || "");

@@ -138,6 +138,10 @@
 	width: 100%;
 }
 
+.markdownBody .img-normal {
+	width: initial !important;
+}
+
 .no-border {
 	border: none !important;
 }
