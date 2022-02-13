@@ -7,6 +7,7 @@ handler.use(middleware);
 
 handler.get(async (req, res) => {
 	const id = parseInt(req.query.id);
+	const updateView = req.query.updateview ? (req.query.updateview === "false" ? false : true) : true;
 
 	// prettier-ignore
 	let post = await req.db
@@ -20,8 +21,7 @@ handler.get(async (req, res) => {
 			message: "Post not found",
 		});
 	} else {
-		// increment view
-		await req.db.collection("post").updateOne({ id: id }, { $inc: { views: 1 } });
+		if (updateView) await req.db.collection("post").updateOne({ id: id }, { $inc: { views: 1 } });
 
 		res.status(200).json(post);
 	}

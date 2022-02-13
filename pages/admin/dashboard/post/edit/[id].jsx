@@ -301,7 +301,7 @@ export async function getServerSideProps(ctx) {
 
 	// get post
 	const postId = ctx.query.id;
-	const reqPost = await fetch(`${serverUrl}/api/v1/post/get/${postId}`, {});
+	const reqPost = await fetch(`${serverUrl}/api/v1/post/get/${postId}?updateview=false`, {});
 	if (reqPost.status === 404) {
 		return {
 			notFound: true,

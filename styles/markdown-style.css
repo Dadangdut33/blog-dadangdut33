@@ -66,7 +66,7 @@
 
 .md-wrapper .wrap-stats .stats {
 	position: fixed;
-	margin-top: -29rem;
+	margin-top: -33rem;
 }
 
 .md-wrapper .wrap-progress {
@@ -81,7 +81,7 @@
 
 .md-wrapper .wrap-progress .wrapper .progress-bar {
 	position: fixed;
-	margin-top: -23.25rem;
+	margin-top: -27rem;
 	width: 2px;
 	height: 500px;
 	background: #ccc;
