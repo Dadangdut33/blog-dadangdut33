@@ -1,3 +1,12 @@
+# About
+My personal blog site made with next.js. Database is using mongodb, comments using giscus.
+
+# Links
+- [Blog](https://blog.dadangdut33.codes)
+- [Profile Page](https://dadangdut33.codes)
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
