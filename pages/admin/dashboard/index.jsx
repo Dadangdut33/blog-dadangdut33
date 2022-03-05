@@ -6,7 +6,7 @@ import { enc } from "crypto-js/core";
 import { useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { serverUrl } from "../../../lib/server_url";
-
+// TODO: make the search bar a component ?
 export default function Dashboard(props) {
 	const filterPost = (posts, query) => {
 		if (!query) {

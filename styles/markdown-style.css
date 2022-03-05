@@ -130,12 +130,22 @@
 	overflow-wrap: break-word;
 }
 
+.markdownBody p,
+.markdownBody li {
+	font-family: 'Fira Code', monospace;
+}
+
+.markdownBody h1 span a.heading {
+	font-size: 36px;
+}
+
 .md-thumbnail {
 	max-width: 700px;
 }
 
 .markdownBody img {
 	width: 100%;
+	margin-bottom: 4px;
 }
 
 .markdownBody .img-normal {
@@ -160,13 +170,6 @@
 	color: #111;
 }
 
-.markdownBody h1 span a.heading {
-	font-size: 36px;
-}
-
-.markdownBody .anchor-link {
-	font-size: inherit;
-}
 
 .markdownBody .anchor-link.bot-dark {
 	border-bottom: 1px solid #ffff40;
@@ -202,11 +205,6 @@
 
 /* ------------------ */
 /* p and stuff */
-.markdownBody p,
-.markdownBody p a,
-.markdownBody li {
-	font-size: 18.5px;
-}
 
 .markdownBody p,
 .markdownBody li {

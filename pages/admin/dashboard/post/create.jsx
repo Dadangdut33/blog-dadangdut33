@@ -9,6 +9,7 @@ import { serverUrl } from "../../../../lib/server_url";
 import Markdown from "../../../../components/markdown/Markdown";
 import DarkModeToggle from "../../../../components/theme-switcher/DarkModeToggle";
 import validImageURL from "../../../../lib/checkImage";
+// TODO: make it a single component for create and edit...
 
 export default function CreatePost(props) {
 	const [title, setTitle] = useState("");
@@ -112,8 +113,21 @@ export default function CreatePost(props) {
 			}
 		}, 100);
 
+		window.onbeforeunload = function (e) {
+			e = e || window.event;
+
+			// For IE and Firefox prior to version 4
+			if (e) {
+				e.returnValue = "Any string";
+			}
+
+			// For Safari
+			return "Any string";
+		};
+
 		return () => {
 			clearInterval(intervalBg);
+			Window.onbeforeunload = null;
 		};
 	});
 
@@ -144,7 +158,7 @@ export default function CreatePost(props) {
 							</div>
 							<div className='row'>
 								<div className='col-md-12'>
-									<form className='form-group' onSubmit={handleSubmit}>
+									<form className='form-group create-edit' onSubmit={handleSubmit}>
 										<div className='form-group'>
 											<label htmlFor='title'>Title</label>
 											<input type='text' className='form-control' id='title' name='title' value={title} onInput={(e) => setTitle(e.target.value)} required />

@@ -196,6 +196,12 @@ label.panel-login {
 }
 
 /* ------------------------- */
+/* form */
+.create-edit .form-group .form-control {
+	font-family: 'Fira Code', monospace;
+}
+
+/* ------------------------- */
 /* media queries */
 @media (max-width: 1400px) {
 	.dashboard.action-table {
