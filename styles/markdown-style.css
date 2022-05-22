@@ -132,7 +132,12 @@
 
 .markdownBody p,
 .markdownBody li {
-	font-family: Segoe UI, monospace;
+	font-family: Segoe UI,
+		monospace,
+		Tahoma,
+		Geneva,
+		Verdana,
+		sans-serif;
 }
 
 .markdownBody h1 span a.heading {

@@ -164,7 +164,15 @@ export default function CreatePost(props) {
 										</div>
 										<div className='form-group'>
 											<label htmlFor='thumbnail'>Thumbnail</label>
-											<input type='text' className='form-control' id='thumbnail' name='thumbnail' value={thumbnail} onInput={(e) => setThumbnail(e.target.value)} required />
+											<input
+												type='text'
+												className='form-control'
+												id='thumbnail'
+												name='thumbnail'
+												value={thumbnail}
+												onInput={(e) => setThumbnail(e.target.value)}
+												required
+											/>
 										</div>
 										<div className='form-group'>
 											<label htmlFor='tags'>Tags (Input separated by ,)</label>
@@ -200,7 +208,7 @@ export default function CreatePost(props) {
 													name='content'
 													value={content}
 													onInput={(e) => setContent(e.target.value)}
-													style={{ width: "700px", marginRight: "14px" }}
+													style={{ width: "700px", marginRight: "14px", font: "Segoe UI" }}
 													minLength={50}
 													required
 												/>

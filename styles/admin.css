@@ -9,6 +9,16 @@
 	background: #222D32 !important;
 }
 
+/* edit */
+textarea#content.form-control {
+	font-family: Segoe UI,
+		monospace,
+		Tahoma,
+		Geneva,
+		Verdana,
+		sans-serif;
+}
+
 /* ------------------------- */
 /* index-dashboard */
 .dashboard.inside {
