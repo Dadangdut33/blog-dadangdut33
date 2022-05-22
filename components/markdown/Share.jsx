@@ -2,7 +2,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { RedditShareButton, TwitterShareButton, FacebookShareButton } from "react-share";
 export default function Share({ liked, inline, url, desc, title, tags, onCopy, likeCallback, tipPlacement = ["bottom", "bottom", "bottom", "bottom", "bottom"] }) {
 	return (
-		<div className={inline ? "flex-row" : "flex-column"}>
+		<div className={inline ? "d-flex flex-row" : "d-flex flex-column"}>
 			<div className='stats-item hover-effect pointer-cursor'>
 				<span className='icon-spacer-margin ripple pointer-cursor' onClick={() => likeCallback()} data-tip={liked ? "Unlike the post" : "Like the post"} data-place={tipPlacement[0]}>
 					{liked ? <i className='fas fa-heart fa-xs'></i> : <i className='far fa-heart fa-xs'></i>} {liked ? "Liked" : "Like"}

@@ -35,6 +35,7 @@ body {
   margin: 0;
   font-family: 'VT323', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   scroll-behavior: smooth;
+  overflow-x: auto;
 }
 
 * {
@@ -60,20 +61,6 @@ body {
 
 .pointer-cursor {
   cursor: pointer;
-}
-
-.center-vertical-horizontal {
-  margin: 150px auto;
-}
-
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
 }
 
 /* --------------------------------------- */

@@ -136,113 +136,115 @@ export default function CreatePost(props) {
 				<title>Edit post | Dadangdut33 - Blog</title>
 				<meta charSet='UTF-8' />
 				<link rel='icon' href='/favicon.ico' />
-				<meta name='viewport' content='width=1024' />
+				<meta name='viewport' content='width=1200' />
 			</Head>
-			<main>
-				<div className='container' style={{ margin: "150px 200px" }}>
-					<div className={theme === "light" ? "row bg-white dashboard inside border-light" : "row bg-dark dashboard inside border-dark"} style={{ width: "1470px" }}>
-						<div className='col-md-12'>
-							<div className='row'>
-								<div className='col-md-12' style={{ position: "relative" }}>
-									<div className='d-flex justify-content-between' style={{ position: "absolute" }}>
-										<a href='/admin/dashboard' className='btn btn-outline-primary'>
-											<i className='fas fa-arrow-left'></i> Back to Dashboard
-										</a>
+			<main className='d-flex flex-column min-vh-100'>
+				<div className='m-auto'>
+					<div className='dashboard wrapper'>
+						<div className={theme === "light" ? "row bg-white dashboard inside border-light" : "row bg-dark dashboard inside border-dark"}>
+							<div className='col-md-12'>
+								<div className='row'>
+									<div className='col-md-12' style={{ position: "relative" }}>
+										<div className='d-flex justify-content-between' style={{ position: "absolute" }}>
+											<a href='/admin/dashboard' className='btn btn-outline-primary'>
+												<i className='fas fa-arrow-left'></i> Back to Dashboard
+											</a>
+										</div>
+										<h1 className='text-center'>Edit Post</h1>
+										<span style={{ position: "absolute", right: "5px", top: "0px" }}>
+											<DarkModeToggle fixed={false} />
+										</span>
 									</div>
-									<h1 className='text-center'>Edit Post</h1>
-									<span style={{ position: "absolute", right: "5px", top: "0px" }}>
-										<DarkModeToggle fixed={false} />
-									</span>
 								</div>
-							</div>
-							<div className='row'>
-								<div className='col-md-12'>
-									<form className='form-group create-edit' onSubmit={handleSubmit}>
-										<div className='form-group'>
-											<label htmlFor='title'>Title</label>
-											<input type='text' className='form-control' id='title' name='title' value={title} onInput={(e) => setTitle(e.target.value)} required />
-										</div>
-										<div className='form-group'>
-											<label htmlFor='thumbnail'>Thumbnail</label>
-											<input
-												type='text'
-												className='form-control'
-												id='thumbnail'
-												name='thumbnail'
-												value={thumbnail}
-												onInput={(e) => setThumbnail(e.target.value)}
-												required
-											/>
-										</div>
-										<div className='form-group'>
-											<label htmlFor='tags'>Tags (Input separated by ,)</label>
-											<input
-												type='text'
-												data-tip={`Previously used tags: ` + props.tags.join(", ")}
-												className='form-control'
-												id='tags'
-												name='tags'
-												value={tags}
-												onInput={(e) => setTags(e.target.value)}
-												required
-											/>
-										</div>
-										<div className='form-group'>
-											<label htmlFor='description'>Description</label>
-											<textarea
-												className='form-control'
-												id='description'
-												name='description'
-												value={description}
-												onInput={(e) => setDescription(e.target.value)}
-												minLength={10}
-												required
-											/>
-										</div>
-										<div className='form-group'>
-											<label htmlFor='preview'>Content</label>
-											<div className='flex-row'>
-												<textarea
+								<div className='row'>
+									<div className='col-md-12'>
+										<form className='form-group create-edit' onSubmit={handleSubmit}>
+											<div className='form-group'>
+												<label htmlFor='title'>Title</label>
+												<input type='text' className='form-control' id='title' name='title' value={title} onInput={(e) => setTitle(e.target.value)} required />
+											</div>
+											<div className='form-group'>
+												<label htmlFor='thumbnail'>Thumbnail</label>
+												<input
+													type='text'
 													className='form-control'
-													id='content'
-													name='content'
-													value={content}
-													onInput={(e) => setContent(e.target.value)}
-													style={{ width: "700px", marginRight: "14px", font: "Segoe UI" }}
-													minLength={50}
+													id='thumbnail'
+													name='thumbnail'
+													value={thumbnail}
+													onInput={(e) => setThumbnail(e.target.value)}
 													required
 												/>
-												<span style={{ width: "700px", position: "relative" }}>
-													<p style={{ position: "absolute", top: "-21px", left: "10px" }}>Preview</p>
-													<Markdown text={content} theme={theme} onCopy={notify} />
-												</span>
 											</div>
-										</div>
-										<div className='form-group'>
-											<button
-												type='submit'
-												className='float-right btn btn-primary mt-2'
-												onClick={(e) => {
-													handleSubmit(e);
-													setPopupMsg("upload");
-													setShowPopup(true);
-												}}
-											>
-												Edit Post
-											</button>
-											<button
-												type='button'
-												className='float-right btn btn-outline-secondary mt-2'
-												style={{ marginRight: ".5rem" }}
-												onClick={() => {
-													setPopupMsg("cancel and reset");
-													setShowPopup(true);
-												}}
-											>
-												Cancel
-											</button>
-										</div>
-									</form>
+											<div className='form-group'>
+												<label htmlFor='tags'>Tags (Input separated by ,)</label>
+												<input
+													type='text'
+													data-tip={`Previously used tags: ` + props.tags.join(", ")}
+													className='form-control'
+													id='tags'
+													name='tags'
+													value={tags}
+													onInput={(e) => setTags(e.target.value)}
+													required
+												/>
+											</div>
+											<div className='form-group'>
+												<label htmlFor='description'>Description</label>
+												<textarea
+													className='form-control'
+													id='description'
+													name='description'
+													value={description}
+													onInput={(e) => setDescription(e.target.value)}
+													minLength={10}
+													required
+												/>
+											</div>
+											<div className='form-group'>
+												<label htmlFor='preview'>Content</label>
+												<div className='d-flex'>
+													<textarea
+														className='form-control'
+														id='content'
+														name='content'
+														value={content}
+														onInput={(e) => setContent(e.target.value)}
+														style={{ width: "700px", marginRight: "14px", font: "Segoe UI" }}
+														minLength={50}
+														required
+													/>
+													<span style={{ width: "700px", position: "relative" }}>
+														<p style={{ position: "absolute", top: "-21px", left: "10px" }}>Preview</p>
+														<Markdown text={content} theme={theme} onCopy={notify} />
+													</span>
+												</div>
+											</div>
+											<div className='form-group'>
+												<button
+													type='submit'
+													className='float-right btn btn-primary mt-2'
+													onClick={(e) => {
+														handleSubmit(e);
+														setPopupMsg("upload");
+														setShowPopup(true);
+													}}
+												>
+													Edit Post
+												</button>
+												<button
+													type='button'
+													className='float-right btn btn-outline-secondary mt-2'
+													style={{ marginRight: ".5rem" }}
+													onClick={() => {
+														setPopupMsg("cancel and reset");
+														setShowPopup(true);
+													}}
+												>
+													Cancel
+												</button>
+											</div>
+										</form>
+									</div>
 								</div>
 							</div>
 						</div>

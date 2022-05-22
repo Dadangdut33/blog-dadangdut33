@@ -21,6 +21,12 @@ textarea#content.form-control {
 
 /* ------------------------- */
 /* index-dashboard */
+.dashboard.wrapper {
+	min-width: 575px;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
 .dashboard.inside {
 	padding: 1rem;
 }
