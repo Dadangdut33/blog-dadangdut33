@@ -9,7 +9,6 @@ import { serverUrl } from "../../../../../lib/server_url";
 import Markdown from "../../../../../components/markdown/Markdown";
 import DarkModeToggle from "../../../../../components/theme-switcher/DarkModeToggle";
 import validImageURL from "../../../../../lib/checkImage";
-// TODO: make it a single component for create and edit...
 
 export default function CreatePost(props) {
 	const [title, setTitle] = useState(props.post.title);

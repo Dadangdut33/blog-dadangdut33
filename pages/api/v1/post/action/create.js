@@ -26,6 +26,22 @@ handler.post(async (req, res) => {
 		return;
 	}
 
+	// verify admin in db
+	let userFound = req.db
+		.collection("user")
+		.find({
+			username: JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8)).username,
+			admin: JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8)).admin ? "Admin" : "User",
+		})
+		.toArray();
+
+	if (userFound.length == 0) {
+		res.status(403).json({
+			message: "You must be logged in as admin to perform this action",
+		});
+		return;
+	}
+
 	// insert into post collection
 	const post = {
 		title: req.body.title,
@@ -38,7 +54,6 @@ handler.post(async (req, res) => {
 		createdAt: new Date(),
 	};
 
-	// prettier-ignore
 	await req.db.collection("post").insertOne(post);
 
 	res.status(200).json({

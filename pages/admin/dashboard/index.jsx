@@ -6,7 +6,7 @@ import { enc } from "crypto-js/core";
 import { useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { serverUrl } from "../../../lib/server_url";
-// TODO: make the search bar a component ?
+
 export default function Dashboard(props) {
 	const filterPost = (posts, query) => {
 		if (!query) {
@@ -242,7 +242,11 @@ export default function Dashboard(props) {
 											<td style={{ maxWidth: "100px" }}>{post.views}</td>
 											<td style={{ maxWidth: "100px" }}>{post.upvote}</td>
 											<td style={{ maxWidth: "120px" }}>
-												<span className='post-date' data-tip={`Last updated: ${post.lastUpdatedAt ? parseDate(post.lastUpdatedAt) : `No Changes`}`} data-place='bottom'>
+												<span
+													className='post-date'
+													data-tip={`Last updated: ${post.lastUpdatedAt ? parseDate(post.lastUpdatedAt) : `No Changes`}`}
+													data-place='bottom'
+												>
 													{parseDate(post.createdAt)}
 												</span>
 											</td>

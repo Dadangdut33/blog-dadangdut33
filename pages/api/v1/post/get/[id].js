@@ -21,7 +21,7 @@ handler.get(async (req, res) => {
 			message: "Post not found",
 		});
 	} else {
-		if (updateView) await req.db.collection("post").updateOne({ id: id }, { $inc: { views: 1 } });
+		if (updateView && process.env.NODE_ENV !== "development") await req.db.collection("post").updateOne({ id: id }, { $inc: { views: 1 } });
 
 		res.status(200).json(post);
 	}
