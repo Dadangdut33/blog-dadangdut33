@@ -63,6 +63,10 @@ body {
   cursor: pointer;
 }
 
+.modal {
+  z-index: 99999;
+}
+
 /* --------------------------------------- */
 /* nav */
 .navbar-brand {

@@ -79,6 +79,7 @@ export default function postIdWithTitle({ post, cookie, admin }) {
 	useEffect(() => {
 		load_bootstrapjs(document);
 
+		// bg check
 		let intervalBg = setInterval(() => {
 			if (document.body.classList.contains("bg-dark")) {
 				setTheme("dark");
@@ -104,6 +105,81 @@ export default function postIdWithTitle({ post, cookie, admin }) {
 		const p_li = document.querySelectorAll("p, li");
 		p_li.forEach((p_li) => {
 			p_li.classList.add("text-dark");
+		});
+
+		// get all image inside markdownbody
+		const images = document.querySelectorAll(".markdownBody img");
+
+		images.forEach((image, i) => {
+			image.setAttribute("data-bs-toggle", "modal");
+			image.setAttribute("data-bs-target", `#modal-${i}`);
+
+			const modal = document.createElement("div");
+			modal.className = "modal fade";
+			modal.id = `modal-${i}`;
+
+			const modalDialog = document.createElement("div");
+			modalDialog.className = "modal-dialog modal-fullscreen";
+			modal.appendChild(modalDialog);
+
+			const modalContent = document.createElement("div");
+			modalContent.className = "modal-content";
+			modalDialog.appendChild(modalContent);
+
+			// header
+			const modalHeader = document.createElement("div");
+			modalHeader.className = "modal-header";
+			modalContent.appendChild(modalHeader);
+
+			const modalTitle = document.createElement("h5");
+			modalTitle.className = "modal-title";
+			modalTitle.innerHTML = image.alt;
+			modalHeader.appendChild(modalTitle);
+
+			const modalClose = document.createElement("button");
+			modalClose.className = "btn-close";
+			modalClose.style = "padding-right: 2rem;";
+			modalClose.setAttribute("data-bs-dismiss", "modal");
+			modalClose.ariaLabel = "Close";
+			modalHeader.appendChild(modalClose);
+
+			// body
+			const modalBody = document.createElement("div");
+			modalBody.className = "modal-body";
+			modalContent.appendChild(modalBody);
+
+			const imgWrapper = document.createElement("div");
+			imgWrapper.className = "d-flex";
+			modalBody.appendChild(imgWrapper);
+
+			const modalImage = document.createElement("img");
+			modalImage.className = "m-auto img-fluid";
+			modalImage.src = image.src;
+			modalImage.alt = image.alt;
+			imgWrapper.appendChild(modalImage);
+
+			// footer
+			const modalFooter = document.createElement("div");
+			modalFooter.className = "modal-footer";
+			modalContent.appendChild(modalFooter);
+
+			const modalClose2 = document.createElement("button");
+			modalClose2.className = "btn btn-secondary";
+			modalClose2.style = "margin-right: .5rem;";
+			modalClose2.setAttribute("data-bs-dismiss", "modal");
+			modalClose2.innerHTML = "Close";
+			modalFooter.appendChild(modalClose2);
+
+			const btnOpenNewTab = document.createElement("button");
+			btnOpenNewTab.className = "btn btn-primary";
+			btnOpenNewTab.style = "margin-right: .5rem;";
+			btnOpenNewTab.innerHTML = "Open in new tab";
+			btnOpenNewTab.onclick = () => {
+				window.open(image.src, "_blank");
+			};
+			modalFooter.appendChild(btnOpenNewTab);
+
+			document.body.appendChild(modal);
 		});
 
 		// check like
