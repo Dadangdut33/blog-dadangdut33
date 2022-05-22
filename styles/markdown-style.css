@@ -132,7 +132,7 @@
 
 .markdownBody p,
 .markdownBody li {
-	font-family: 'Fira Code', monospace;
+	font-family: Segoe UI, monospace;
 }
 
 .markdownBody h1 span a.heading {
