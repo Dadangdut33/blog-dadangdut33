@@ -197,6 +197,11 @@ body {
   font-size: initial;
 }
 
+.card-body {
+  min-height: 300px;
+  height: 100%;
+}
+
 /* --------------------------------------- */
 /* searchbar */
 .search-shrink {
