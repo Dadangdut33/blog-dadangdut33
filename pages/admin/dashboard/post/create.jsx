@@ -9,7 +9,6 @@ import { serverUrl } from "../../../../lib/server_url";
 import Markdown from "../../../../components/markdown/Markdown";
 import DarkModeToggle from "../../../../components/theme-switcher/DarkModeToggle";
 import validImageURL from "../../../../lib/checkImage";
-// TODO: make it a single component for create and edit...
 
 export default function CreatePost(props) {
 	const [title, setTitle] = useState("");
@@ -33,7 +32,7 @@ export default function CreatePost(props) {
 		e.preventDefault();
 	};
 
-	const submit = async () => {
+	const uploadPost = async () => {
 		const toastId = toast.loading("Submitting...");
 
 		// check empty is not allowed
@@ -63,7 +62,7 @@ export default function CreatePost(props) {
 			thumbnail: thumbnail,
 			description: description,
 			content: content,
-			tag: tags,
+			tag: tags === "" ? [] : tags.split(","),
 		};
 
 		const req = await fetch(`${serverUrl}/api/v1/post/action/create`, {
@@ -84,6 +83,75 @@ export default function CreatePost(props) {
 				autoClose: 2000,
 			});
 			resetForm();
+			window.onbeforeunload = null;
+
+			setTimeout(() => {
+				window.location.href = "/admin/dashboard";
+			}, 2000);
+		} else {
+			toast.update(toastId, {
+				render: `Err: ${res.message}`,
+				type: toast.TYPE.ERROR,
+				isLoading: false,
+				autoClose: 2000,
+			});
+		}
+	};
+
+	const saveDraft = async () => {
+		const toastId = toast.loading("Saving as draft...");
+
+		// check empty is not allowed
+		if (title === "" || description === "") {
+			toast.update(toastId, {
+				render: "Draft must have at least title and description provided.",
+				type: toast.TYPE.ERROR,
+				isLoading: false,
+				autoClose: 2000,
+			});
+			return;
+		}
+
+		// validate thumbnail
+		if (thumbnail !== "") {
+			if (!validImageURL(thumbnail)) {
+				toast.update(toastId, {
+					render: "Thumbnail is not a valid image URL.",
+					type: toast.TYPE.ERROR,
+					isLoading: false,
+					autoClose: 2000,
+				});
+				return;
+			}
+		}
+
+		const data = {
+			title: title,
+			thumbnail: thumbnail,
+			description: description,
+			content: content,
+			tag: tags === "" ? [] : tags.split(","),
+		};
+
+		const req = await fetch(`${serverUrl}/api/v1/draft/action/create`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		});
+
+		const res = await req.json();
+
+		if (req.status === 200) {
+			toast.update(toastId, {
+				render: "Post created successfully.",
+				type: toast.TYPE.SUCCESS,
+				isLoading: false,
+				autoClose: 2000,
+			});
+			resetForm();
+			window.onbeforeunload = null;
 
 			setTimeout(() => {
 				window.location.href = "/admin/dashboard";
@@ -113,6 +181,7 @@ export default function CreatePost(props) {
 			}
 		}, 100);
 
+		// page leave confirmation
 		window.onbeforeunload = function (e) {
 			e = e || window.event;
 
@@ -222,8 +291,31 @@ export default function CreatePost(props) {
 											</div>
 											<div className='form-group'>
 												<button
+													type='button'
+													className='float-right btn btn-outline-secondary mt-2'
+													onClick={() => {
+														setPopupMsg("cancel and reset");
+														setShowPopup(true);
+													}}
+												>
+													Cancel
+												</button>
+												<button
+													type='submit'
+													className='float-right btn btn-info mt-2'
+													style={{ marginRight: ".5rem" }}
+													onClick={(e) => {
+														handleSubmit(e);
+														setPopupMsg("save as draft");
+														setShowPopup(true);
+													}}
+												>
+													Save as Draft
+												</button>
+												<button
 													type='submit'
 													className='float-right btn btn-primary mt-2'
+													style={{ marginRight: ".5rem" }}
 													onClick={(e) => {
 														handleSubmit(e);
 														setPopupMsg("upload");
@@ -231,17 +323,6 @@ export default function CreatePost(props) {
 													}}
 												>
 													Submit & Upload
-												</button>
-												<button
-													type='button'
-													className='float-right btn btn-outline-secondary mt-2'
-													style={{ marginRight: ".5rem" }}
-													onClick={() => {
-														setPopupMsg("cancel and reset");
-														setShowPopup(true);
-													}}
-												>
-													Cancel
 												</button>
 											</div>
 										</form>
@@ -260,20 +341,15 @@ export default function CreatePost(props) {
 						<p>Warning! Action done is irreversible</p>
 						<div className='btn-group'>
 							<button
-								className='btn btn-sm btn-outline-primary'
-								onClick={() => {
-									setShowPopup(false);
-								}}
-							>
-								<small>🔵</small> No
-							</button>
-							<button
 								className='btn btn-sm btn-outline-danger'
 								onClick={() => {
 									if (popupMsg === "upload") {
 										// upload
-										submit();
-									} else {
+										uploadPost();
+									} else if (popupMsg === "save as draft") {
+										// save as draft
+										saveDraft();
+									} else if (popupMsg === "cancel and reset") {
 										resetForm();
 										setShowPopup(false);
 										notify("Post reseted");
@@ -281,6 +357,14 @@ export default function CreatePost(props) {
 								}}
 							>
 								<small>🔴</small> Yes
+							</button>
+							<button
+								className='btn btn-sm btn-outline-primary'
+								onClick={() => {
+									setShowPopup(false);
+								}}
+							>
+								<small>🔵</small> No
 							</button>
 						</div>
 					</div>

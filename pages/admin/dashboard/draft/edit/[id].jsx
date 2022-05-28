@@ -32,8 +32,8 @@ export default function CreatePost(props) {
 		e.preventDefault();
 	};
 
-	const submit = async () => {
-		const toastId = toast.loading("Submitting...");
+	const editDraft = async () => {
+		const toastId = toast.loading("Submitting draft edit...");
 
 		// check empty is not allowed
 		if (title === "" || thumbnail === "" || tags === "" || description === "" || content === "") {
@@ -66,7 +66,7 @@ export default function CreatePost(props) {
 			tag: tags === "" ? [] : tags.split(","),
 		};
 
-		const req = await fetch(`${serverUrl}/api/v1/post/action/edit`, {
+		const req = await fetch(`${serverUrl}/api/v1/draft/action/edit`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -78,12 +78,13 @@ export default function CreatePost(props) {
 
 		if (req.status === 200) {
 			toast.update(toastId, {
-				render: "Post updated successfully.",
+				render: "Draft updated successfully.",
 				type: toast.TYPE.SUCCESS,
 				isLoading: false,
 				autoClose: 2000,
 			});
 			window.onbeforeunload = null;
+
 			setTimeout(() => {
 				window.location.href = "/admin/dashboard";
 			}, 2000);
@@ -96,6 +97,8 @@ export default function CreatePost(props) {
 			});
 		}
 	};
+
+	const uploadAsPost = async () => {};
 
 	const notify = (message) => {
 		toast.success(message);
@@ -223,26 +226,37 @@ export default function CreatePost(props) {
 											</div>
 											<div className='form-group'>
 												<button
+													type='submit'
+													className='float-right btn btn-primary mt-2'
+													onClick={(e) => {
+														handleSubmit(e);
+														setPopupMsg("edit");
+														setShowPopup(true);
+													}}
+												>
+													Edit Draft
+												</button>
+												<button
+													type='submit'
+													className='float-right btn btn-primary mt-2'
+													onClick={(e) => {
+														handleSubmit(e);
+														setPopupMsg("upload_as_post");
+														setShowPopup(true);
+													}}
+												>
+													Upload as Post
+												</button>
+												<button
 													type='button'
 													className='float-right btn btn-outline-secondary mt-2'
+													style={{ marginRight: ".5rem" }}
 													onClick={() => {
 														setPopupMsg("cancel and reset");
 														setShowPopup(true);
 													}}
 												>
 													Cancel
-												</button>
-												<button
-													type='submit'
-													className='float-right btn btn-primary mt-2'
-													style={{ marginRight: ".5rem" }}
-													onClick={(e) => {
-														handleSubmit(e);
-														setPopupMsg("upload");
-														setShowPopup(true);
-													}}
-												>
-													Edit Post
 												</button>
 											</div>
 										</form>
@@ -257,16 +271,20 @@ export default function CreatePost(props) {
 			{showPopup ? (
 				<div className='delete-popup'>
 					<div className={theme === "light" ? "popup-content bg-light" : `popup-content bg-dark`}>
-						<h1>Are you sure you want to {popupMsg} the post?</h1>
+						<h1>Are you sure you want to {popupMsg} the draft?</h1>
 						<p>Warning! Action done is irreversible</p>
 						<div className='btn-group'>
 							<button
 								className='btn btn-sm btn-outline-danger'
 								onClick={() => {
-									if (popupMsg === "upload") {
-										// upload
-										submit();
+									if (popupMsg === "upload_as_post") {
+										// upload_as_post
+										uploadAsPost();
+									} else if (popupMsg === "edit") {
+										// edit
+										editDraft();
 									} else if (popupMsg === "cancel and reset") {
+										// cancel and reset
 										resetForm();
 										setShowPopup(false);
 										notify("Post reseted");
@@ -328,7 +346,7 @@ export async function getServerSideProps(ctx) {
 
 	// get post
 	const postId = ctx.query.id;
-	const reqPost = await fetch(`${serverUrl}/api/v1/post/get/${postId}?updateview=false`, {});
+	const reqPost = await fetch(`${serverUrl}/api/v1/draft/get/${postId}`, {});
 	if (reqPost.status === 404) {
 		return {
 			notFound: true,
