@@ -45,7 +45,6 @@ handler.post(async (req, res) => {
 		return;
 	}
 	// --------------------------------------------------
-
 	const post = {
 		title: req.body.title,
 		thumbnail: req.body.thumbnail,

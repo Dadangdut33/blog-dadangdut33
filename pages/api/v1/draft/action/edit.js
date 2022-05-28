@@ -45,11 +45,11 @@ handler.post(async (req, res) => {
 		return;
 	}
 	// --------------------------------------------------
-	// edit post
+	// edit draft
 	const _id = parseInt(req.body._id);
-	let post = await req.db.collection("draft").find({ _id: _id }).toArray();
+	let draft = await req.db.collection("draft").find({ _id: _id }).toArray();
 
-	if (post.length == 0) {
+	if (draft.length == 0) {
 		res.status(404).json({
 			message: "Draft not found",
 		});

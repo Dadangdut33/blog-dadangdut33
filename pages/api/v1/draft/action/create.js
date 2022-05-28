@@ -45,7 +45,7 @@ handler.post(async (req, res) => {
 		return;
 	}
 	// --------------------------------------------------
-	const post = {
+	const draft = {
 		title: req.body.title,
 		thumbnail: req.body.thumbnail,
 		description: req.body.description,
@@ -55,7 +55,7 @@ handler.post(async (req, res) => {
 	};
 
 	// insert into draft collection
-	await req.db.collection("draft").insertOne(post);
+	await req.db.collection("draft").insertOne(draft);
 
 	res.status(200).json({
 		message: "Draft created",
