@@ -6,6 +6,7 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.get(async (req, res) => {
+	// get all posts
 	let posts = await req.db
 		.collection("post")
 		.find({})
@@ -14,7 +15,7 @@ handler.get(async (req, res) => {
 		.sort({ id: 1 })
 		.toArray();
 
-	// reverse it so newver post is on top
+	// reverse it so newer post is on top
 	res.status(200).json(posts.reverse());
 });
 

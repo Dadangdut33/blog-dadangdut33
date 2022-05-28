@@ -6,6 +6,7 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.get(async (req, res) => {
+	// get all tags
 	let tags = await req.db
 		.collection("post")
 		.aggregate([

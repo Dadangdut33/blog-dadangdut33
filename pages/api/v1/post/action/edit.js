@@ -9,6 +9,8 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.post(async (req, res) => {
+	// --------------------------------------------------
+	// must be post request
 	if (req.method !== "POST") {
 		res.status(400).json({
 			message: "Request must be a POST request",
@@ -16,8 +18,9 @@ handler.post(async (req, res) => {
 		return;
 	}
 
-	const cookie = Cookie.fromApiRoute(req, res);
+	// --------------------------------------------------
 	// check if user is logged in and admin
+	const cookie = Cookie.fromApiRoute(req, res);
 	let admin = cookie.get("user") ? JSON.parse(aes.decrypt(cookie.get("user"), process.env.SESSION_PASSWORD).toString(enc.Utf8)).admin : false;
 	if (!admin) {
 		res.status(403).json({
@@ -41,21 +44,17 @@ handler.post(async (req, res) => {
 		});
 		return;
 	}
-
-	// edit post
+	// --------------------------------------------------
+	// edit post by id
 	const id = parseInt(req.body.id);
 
-	// prettier-ignore
-	let post = await req.db.collection("post")
-        .find({ id: id })
-        .toArray();
+	let post = await req.db.collection("post").find({ id: id }).toArray();
 
 	if (post.length == 0) {
 		res.status(404).json({
 			message: "Post not found",
 		});
 	} else {
-		// prettier-ignore
 		await req.db.collection("post").updateOne(
 			{ id: id },
 			{

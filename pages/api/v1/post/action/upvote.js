@@ -17,10 +17,7 @@ handler.post(async (req, res) => {
 	const cookie = Cookie.fromApiRoute(req, res);
 	const id = parseInt(req.body.id);
 
-	// prettier-ignore
-	let post = await req.db.collection("post")
-		.find({ id: id })
-		.toArray();
+	let post = await req.db.collection("post").find({ id: id }).toArray();
 
 	if (post.length == 0) {
 		res.status(200).json({
@@ -29,7 +26,7 @@ handler.post(async (req, res) => {
 	} else {
 		let message = "";
 
-		// add post id to localstorage as array, get the array before first
+		// check if post is already upvoted
 		let upvotedPosts = cookie.get("upvotedPosts") ? cookie.get("upvotedPosts") : false;
 		if (!upvotedPosts) {
 			upvotedPosts = [post[0].id];
