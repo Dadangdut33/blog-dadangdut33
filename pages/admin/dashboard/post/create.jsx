@@ -274,12 +274,12 @@ export default function CreatePost(props) {
 												<label htmlFor='preview'>Content</label>
 												<div className='d-flex'>
 													<textarea
-														className='form-control'
+														className='form-control ms-1'
 														id='content'
 														name='content'
 														value={content}
 														onInput={(e) => setContent(e.target.value)}
-														style={{ width: "700px", marginRight: "14px" }}
+														style={{ width: "700px" }}
 														minLength={50}
 														required
 													/>

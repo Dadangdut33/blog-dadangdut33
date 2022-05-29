@@ -208,7 +208,7 @@ export default function Home(props) {
 				<Navbar admin={props.admin} />
 				<div className='container'>
 					<motion.div variants={fadeFromTop} initial='hidden' animate='visible'>
-						<h1 style={{ marginTop: "1rem" }}>
+						<h1 className='mt-2'>
 							Blog <span style={{ fontSize: "1.25rem" }}>📝</span>
 						</h1>
 						<h5>I share thoughts, ideas, and experiences that might be useful in your coding adventure</h5>
@@ -245,7 +245,7 @@ export default function Home(props) {
 							<div className='sort-by pt-2'>
 								<div>
 									Sort by:{" "}
-									<select onChange={(e) => setSortBy(e.target.value)} style={{ marginRight: "8px" }}>
+									<select onChange={(e) => setSortBy(e.target.value)} className='me-1'>
 										<option value='Newest'>Newest - Oldest</option>
 										<option value='Oldest'>Oldest - Newest</option>
 										<option value='Views'>Most Views</option>
@@ -267,9 +267,9 @@ export default function Home(props) {
 							{props.message && showMsg ? (
 								<>
 									<div
-										className={props.message.status === "success" ? "alert alert-success mt-1" : "alert alert-danger mt-1"}
+										className={props.message.status === "success" ? "alert alert-success mt-1 mb-0" : "alert alert-danger mt-1 mb-0"}
 										role='alert'
-										style={{ position: "relative", marginBottom: "0" }}
+										style={{ position: "relative" }}
 									>
 										{props.message.message}
 										<button
@@ -302,9 +302,7 @@ export default function Home(props) {
 										<div className={`card-body ${theme.split(" ")[0]}`}>
 											<a className='link-nodecor' href={`/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>
 												<div>
-													<h5 className='card-title' style={{ marginBottom: 0 }}>
-														{post.title}
-													</h5>
+													<h5 className='card-title mb-0'>{post.title}</h5>
 													<small className='text-muted card-small-el'>{parseDate(post.createdAt)}</small> <br />
 													<small className='text-muted card-small-el'>
 														<i className='far fa-eye icon-small'></i> {post.views} <i className='far fa-heart icon-small'></i> {post.upvote}

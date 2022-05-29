@@ -193,10 +193,10 @@ export default function Dashboard(props) {
 										<a href='/admin/logout' className='btn btn-danger'>
 											🚩 Logout
 										</a>
-										<a href='/' className='btn btn-primary' style={{ marginLeft: "10px" }}>
+										<a href='/' className='btn btn-primary ms-1'>
 											🏠 Homepage
 										</a>
-										<a href='/admin/dashboard/post/create' className='btn btn-success' style={{ marginLeft: "10px" }}>
+										<a href='/admin/dashboard/post/create' className='btn btn-success ms-1'>
 											➕ Create New Post
 										</a>
 									</span>
