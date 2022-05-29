@@ -86,7 +86,6 @@ export default function CreatePost(props) {
 				autoClose: 2000,
 			});
 			window.onbeforeunload = null;
-
 			setTimeout(() => {
 				window.location.href = "/admin/dashboard";
 			}, 2000);
@@ -126,7 +125,7 @@ export default function CreatePost(props) {
 		}
 
 		const data = {
-			id: props.post.id,
+			_id: props.post._id,
 			title: title,
 			thumbnail: thumbnail,
 			description: description,
