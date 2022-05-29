@@ -145,7 +145,7 @@ export default function CreatePost(props) {
 
 		if (req.status === 200) {
 			toast.update(toastId, {
-				render: "Post created successfully.",
+				render: "Draft created successfully.",
 				type: toast.TYPE.SUCCESS,
 				isLoading: false,
 				autoClose: 1500,

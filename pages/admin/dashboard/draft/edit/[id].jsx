@@ -133,7 +133,7 @@ export default function CreatePost(props) {
 			tag: tags === "" ? [] : tags.split(","),
 		};
 
-		const req = await fetch(`${serverUrl}/api/v1/draft/action/edit`, {
+		const req = await fetch(`${serverUrl}/api/v1/draft/action/post`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

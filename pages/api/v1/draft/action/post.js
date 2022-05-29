@@ -51,7 +51,9 @@ handler.post(async (req, res) => {
 		thumbnail: req.body.thumbnail,
 		description: req.body.description,
 		content: req.body.content,
-		tag: req.body.tag.split(","),
+		tag: req.body.tag,
+		upvote: 0,
+		views: 0,
 		createdAt: new Date(),
 	};
 
