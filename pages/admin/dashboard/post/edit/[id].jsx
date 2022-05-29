@@ -41,7 +41,7 @@ export default function CreatePost(props) {
 				render: "Please fill all the required fields.",
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			return;
 		}
@@ -52,7 +52,7 @@ export default function CreatePost(props) {
 				render: "Thumbnail is not a valid image URL.",
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			return;
 		}
@@ -81,18 +81,18 @@ export default function CreatePost(props) {
 				render: "Post updated successfully.",
 				type: toast.TYPE.SUCCESS,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			window.onbeforeunload = null;
 			setTimeout(() => {
 				window.location.href = "/admin/dashboard";
-			}, 2000);
+			}, 1500);
 		} else {
 			toast.update(toastId, {
 				render: `Err: ${res.message}`,
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 		}
 	};

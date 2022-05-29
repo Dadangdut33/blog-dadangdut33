@@ -18,7 +18,7 @@ export default function Login() {
 				render: "Please fill in all the fields",
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			return;
 		}

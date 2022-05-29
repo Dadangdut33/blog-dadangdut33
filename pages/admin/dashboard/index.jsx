@@ -122,7 +122,7 @@ export default function Dashboard(props) {
 				render: "Error No ID Given",
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			return;
 		}
@@ -153,7 +153,7 @@ export default function Dashboard(props) {
 				render: "Post deleted successfully",
 				type: toast.TYPE.SUCCESS,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			if (data.type === "post") setDeletedPost([...deletedPost, data.id]);
 			else setDeletedDraft([...deletedDraft, data.id]);
@@ -165,7 +165,7 @@ export default function Dashboard(props) {
 				render: `Error ${res.message}`,
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 		}
 	};
