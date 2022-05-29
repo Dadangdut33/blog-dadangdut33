@@ -41,7 +41,7 @@ export default function CreatePost(props) {
 				render: "Please fill all the required fields.",
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			return;
 		}
@@ -52,7 +52,7 @@ export default function CreatePost(props) {
 				render: "Thumbnail is not a valid image URL.",
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			return;
 		}
@@ -80,20 +80,20 @@ export default function CreatePost(props) {
 				render: "Post created successfully.",
 				type: toast.TYPE.SUCCESS,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			resetForm();
 			window.onbeforeunload = null;
 
 			setTimeout(() => {
 				window.location.href = "/admin/dashboard";
-			}, 2000);
+			}, 1500);
 		} else {
 			toast.update(toastId, {
 				render: `Err: ${res.message}`,
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 		}
 	};
@@ -107,7 +107,7 @@ export default function CreatePost(props) {
 				render: "Draft must have at least title and description provided.",
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			return;
 		}
@@ -119,7 +119,7 @@ export default function CreatePost(props) {
 					render: "Thumbnail is not a valid image URL.",
 					type: toast.TYPE.ERROR,
 					isLoading: false,
-					autoClose: 2000,
+					autoClose: 1500,
 				});
 				return;
 			}
@@ -145,23 +145,23 @@ export default function CreatePost(props) {
 
 		if (req.status === 200) {
 			toast.update(toastId, {
-				render: "Post created successfully.",
+				render: "Draft created successfully.",
 				type: toast.TYPE.SUCCESS,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 			resetForm();
 			window.onbeforeunload = null;
 
 			setTimeout(() => {
 				window.location.href = "/admin/dashboard";
-			}, 2000);
+			}, 1500);
 		} else {
 			toast.update(toastId, {
 				render: `Err: ${res.message}`,
 				type: toast.TYPE.ERROR,
 				isLoading: false,
-				autoClose: 2000,
+				autoClose: 1500,
 			});
 		}
 	};
@@ -274,12 +274,12 @@ export default function CreatePost(props) {
 												<label htmlFor='preview'>Content</label>
 												<div className='d-flex'>
 													<textarea
-														className='form-control'
+														className='form-control ms-1'
 														id='content'
 														name='content'
 														value={content}
 														onInput={(e) => setContent(e.target.value)}
-														style={{ width: "700px", marginRight: "14px" }}
+														style={{ width: "700px" }}
 														minLength={50}
 														required
 													/>
@@ -302,8 +302,7 @@ export default function CreatePost(props) {
 												</button>
 												<button
 													type='submit'
-													className='float-right btn btn-info mt-2'
-													style={{ marginRight: ".5rem" }}
+													className='float-right btn btn-info mt-2 me-2'
 													onClick={(e) => {
 														handleSubmit(e);
 														setPopupMsg("save as draft");
@@ -314,8 +313,7 @@ export default function CreatePost(props) {
 												</button>
 												<button
 													type='submit'
-													className='float-right btn btn-primary mt-2'
-													style={{ marginRight: ".5rem" }}
+													className='float-right btn btn-primary mt-2 me-2'
 													onClick={(e) => {
 														handleSubmit(e);
 														setPopupMsg("upload");

@@ -2,6 +2,7 @@ import nextConnect from "next-connect";
 import { Cookie } from "next-cookie";
 import aes from "crypto-js/aes";
 import { enc } from "crypto-js/core";
+import { ObjectId } from "mongodb";
 import middleware from "../../../../../lib/db";
 
 const handler = nextConnect();
@@ -50,7 +51,9 @@ handler.post(async (req, res) => {
 		thumbnail: req.body.thumbnail,
 		description: req.body.description,
 		content: req.body.content,
-		tag: req.body.tag.split(","),
+		tag: req.body.tag,
+		upvote: 0,
+		views: 0,
 		createdAt: new Date(),
 	};
 
@@ -58,8 +61,8 @@ handler.post(async (req, res) => {
 	await req.db.collection("post").insertOne(post);
 
 	// delete from draft collection
-	const _id = parseInt(req.body._id);
-	await req.db.collection("draft").deleteOne({ _id });
+	const _id = req.body._id;
+	await req.db.collection("draft").deleteOne({ _id: ObjectId(_id) });
 
 	res.status(200).json({
 		message: "Draft created",

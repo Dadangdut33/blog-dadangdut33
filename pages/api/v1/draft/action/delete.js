@@ -2,6 +2,7 @@ import nextConnect from "next-connect";
 import { Cookie } from "next-cookie";
 import aes from "crypto-js/aes";
 import { enc } from "crypto-js/core";
+import { ObjectId } from "mongodb";
 import middleware from "../../../../../lib/db";
 
 const handler = nextConnect();
@@ -46,16 +47,19 @@ handler.post(async (req, res) => {
 	}
 	// --------------------------------------------------
 	// delete from post collection
-	const _id = parseInt(req.body._id);
+	const _id = req.body._id;
 
-	let draft = await req.db.collection("draft").find({ _id: _id }).toArray();
+	let draft = await req.db
+		.collection("draft")
+		.find({ _id: ObjectId(_id) })
+		.toArray();
 
 	if (draft.length == 0) {
 		res.status(404).json({
 			message: "Draft not found",
 		});
 	} else {
-		await req.db.collection("draft").deleteOne({ _id: _id });
+		await req.db.collection("draft").deleteOne({ _id: ObjectId(_id) });
 
 		res.status(200).json({
 			message: "Draft deleted",
