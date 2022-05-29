@@ -302,8 +302,7 @@ export default function CreatePost(props) {
 												</button>
 												<button
 													type='submit'
-													className='float-right btn btn-info mt-2'
-													style={{ marginRight: ".5rem" }}
+													className='float-right btn btn-info mt-2 me-2'
 													onClick={(e) => {
 														handleSubmit(e);
 														setPopupMsg("save as draft");
@@ -314,8 +313,7 @@ export default function CreatePost(props) {
 												</button>
 												<button
 													type='submit'
-													className='float-right btn btn-primary mt-2'
-													style={{ marginRight: ".5rem" }}
+													className='float-right btn btn-primary mt-2 me-2'
 													onClick={(e) => {
 														handleSubmit(e);
 														setPopupMsg("upload");

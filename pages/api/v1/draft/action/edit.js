@@ -2,6 +2,7 @@ import nextConnect from "next-connect";
 import { Cookie } from "next-cookie";
 import aes from "crypto-js/aes";
 import { enc } from "crypto-js/core";
+import { ObjectId } from "mongodb";
 import middleware from "../../../../../lib/db";
 
 const handler = nextConnect();
@@ -46,8 +47,11 @@ handler.post(async (req, res) => {
 	}
 	// --------------------------------------------------
 	// edit draft
-	const _id = parseInt(req.body._id);
-	let draft = await req.db.collection("draft").find({ _id: _id }).toArray();
+	const _id = req.body._id;
+	let draft = await req.db
+		.collection("draft")
+		.find({ _id: ObjectId(_id) })
+		.toArray();
 
 	if (draft.length == 0) {
 		res.status(404).json({
@@ -55,7 +59,7 @@ handler.post(async (req, res) => {
 		});
 	} else {
 		await req.db.collection("draft").updateOne(
-			{ _id: _id },
+			{ _id: ObjectId(_id) },
 			{
 				$set: {
 					title: req.body.title,

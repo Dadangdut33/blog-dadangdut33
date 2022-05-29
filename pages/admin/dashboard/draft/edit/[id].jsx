@@ -36,6 +36,74 @@ export default function CreatePost(props) {
 		const toastId = toast.loading("Submitting draft edit...");
 
 		// check empty is not allowed
+		if (title === "" || description === "") {
+			toast.update(toastId, {
+				render: "Draft must have at least title and description provided.",
+				type: toast.TYPE.ERROR,
+				isLoading: false,
+				autoClose: 2000,
+			});
+			return;
+		}
+
+		// validate thumbnail
+		if (thumbnail !== "") {
+			if (!validImageURL(thumbnail)) {
+				toast.update(toastId, {
+					render: "Thumbnail is not a valid image URL.",
+					type: toast.TYPE.ERROR,
+					isLoading: false,
+					autoClose: 2000,
+				});
+				return;
+			}
+		}
+
+		const data = {
+			_id: props.post._id,
+			title: title,
+			thumbnail: thumbnail,
+			description: description,
+			content: content,
+			tag: tags === "" ? [] : tags.split(","),
+		};
+
+		const req = await fetch(`${serverUrl}/api/v1/draft/action/edit`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		});
+
+		const res = await req.json();
+
+		if (req.status === 200) {
+			toast.update(toastId, {
+				render: "Draft updated successfully.",
+				type: toast.TYPE.SUCCESS,
+				isLoading: false,
+				autoClose: 2000,
+			});
+			window.onbeforeunload = null;
+
+			setTimeout(() => {
+				window.location.href = "/admin/dashboard";
+			}, 2000);
+		} else {
+			toast.update(toastId, {
+				render: `Err: ${res.message}`,
+				type: toast.TYPE.ERROR,
+				isLoading: false,
+				autoClose: 2000,
+			});
+		}
+	};
+
+	const uploadAsPost = async () => {
+		const toastId = toast.loading("Uploading as post...");
+
+		// check empty is not allowed
 		if (title === "" || thumbnail === "" || tags === "" || description === "" || content === "") {
 			toast.update(toastId, {
 				render: "Please fill all the required fields.",
@@ -78,13 +146,12 @@ export default function CreatePost(props) {
 
 		if (req.status === 200) {
 			toast.update(toastId, {
-				render: "Draft updated successfully.",
+				render: "Post updated successfully.",
 				type: toast.TYPE.SUCCESS,
 				isLoading: false,
 				autoClose: 2000,
 			});
 			window.onbeforeunload = null;
-
 			setTimeout(() => {
 				window.location.href = "/admin/dashboard";
 			}, 2000);
@@ -97,8 +164,6 @@ export default function CreatePost(props) {
 			});
 		}
 	};
-
-	const uploadAsPost = async () => {};
 
 	const notify = (message) => {
 		toast.success(message);
@@ -226,8 +291,18 @@ export default function CreatePost(props) {
 											</div>
 											<div className='form-group'>
 												<button
+													type='button'
+													className='float-right btn btn-outline-secondary mt-2'
+													onClick={() => {
+														setPopupMsg("cancel and reset");
+														setShowPopup(true);
+													}}
+												>
+													Cancel
+												</button>
+												<button
 													type='submit'
-													className='float-right btn btn-primary mt-2'
+													className='float-right btn btn-info mt-2 me-2'
 													onClick={(e) => {
 														handleSubmit(e);
 														setPopupMsg("edit");
@@ -238,7 +313,7 @@ export default function CreatePost(props) {
 												</button>
 												<button
 													type='submit'
-													className='float-right btn btn-primary mt-2'
+													className='float-right btn btn-primary mt-2 me-2'
 													onClick={(e) => {
 														handleSubmit(e);
 														setPopupMsg("upload_as_post");
@@ -246,17 +321,6 @@ export default function CreatePost(props) {
 													}}
 												>
 													Upload as Post
-												</button>
-												<button
-													type='button'
-													className='float-right btn btn-outline-secondary mt-2'
-													style={{ marginRight: ".5rem" }}
-													onClick={() => {
-														setPopupMsg("cancel and reset");
-														setShowPopup(true);
-													}}
-												>
-													Cancel
 												</button>
 											</div>
 										</form>

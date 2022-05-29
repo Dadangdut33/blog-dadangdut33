@@ -8,6 +8,22 @@ import ReactTooltip from "react-tooltip";
 import { serverUrl } from "../../../lib/server_url";
 
 export default function Dashboard(props) {
+	const sortPost = (posts, sortBy) => {
+		switch (sortBy) {
+			case "Newest":
+				return posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+			case "Oldest":
+				return posts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+			case "Views":
+				return posts.sort((a, b) => b.views - a.views);
+			case "Likes":
+				return posts.sort((a, b) => b.upvote - a.upvote);
+
+			default:
+				break;
+		}
+	};
+
 	const filterPost = (posts, query) => {
 		if (!query) {
 			return posts;
@@ -29,33 +45,28 @@ export default function Dashboard(props) {
 		}
 	};
 
-	const sortPost = (posts, sortBy) => {
-		switch (sortBy) {
-			case "Newest":
-				return posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-			case "Oldest":
-				return posts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-			case "Views":
-				return posts.sort((a, b) => b.views - a.views);
-			case "Likes":
-				return posts.sort((a, b) => b.upvote - a.upvote);
-
-			default:
-				break;
+	const filterDelete = (posts, deleted, type) => {
+		// remove post that has been deleted by id
+		if (type === "post") {
+			return posts.filter((post) => !deleted.includes(post.id));
+		} else if (type === "draft") {
+			return posts.filter((post) => !deleted.includes(post._id));
 		}
 	};
 
-	const filterDelete = (posts, deleted) => {
-		// remove post that has been deleted by id
-		return posts.filter((post) => !deleted.includes(post.id));
-	};
-
+	// posts
 	const [sortBy, setSortBy] = useState("Newest");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [deletedPost, setDeletedPost] = useState([]);
-	const posts = filterDelete(sortPost(filterPost(props.posts, searchQuery), sortBy), deletedPost);
+	const posts = filterDelete(sortPost(filterPost(props.posts, searchQuery), sortBy), deletedPost, "post");
+
+	// drafts
+	const [deletedDraft, setDeletedDraft] = useState([]);
+	const drafts = filterDelete(props.drafts, deletedDraft, "draft");
+
+	// to delete
 	const [deletePopup, setDeletePopup] = useState(false);
-	const [deletePostID, setDeletePostID] = useState(null);
+	const [deletePostData, setDeletePostData] = useState(null);
 
 	const parseDate = (date) => {
 		const dateObj = new Date(date);
@@ -103,10 +114,10 @@ export default function Dashboard(props) {
 		});
 	};
 
-	const deletePost = async (id) => {
+	const deletePost = async (data) => {
 		const toastId = toast.loading("Deleting...");
 
-		if (!id) {
+		if (!data) {
 			toast.update(toastId, {
 				render: "Error No ID Given",
 				type: toast.TYPE.ERROR,
@@ -116,14 +127,23 @@ export default function Dashboard(props) {
 			return;
 		}
 
-		const req = await fetch(`${serverUrl}/api/v1/post/action/delete`, {
+		let bodyData = {};
+		if (data.type === "draft") {
+			bodyData = {
+				_id: data.id,
+			};
+		} else {
+			bodyData = {
+				id: data.id,
+			};
+		}
+
+		const req = await fetch(`${serverUrl}/api/v1/${data.type}/action/delete`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({
-				id: id,
-			}),
+			body: JSON.stringify(bodyData),
 		});
 
 		const res = await req.json();
@@ -135,9 +155,11 @@ export default function Dashboard(props) {
 				isLoading: false,
 				autoClose: 2000,
 			});
-			setDeletedPost([...deletedPost, id]);
+			if (data.type === "post") setDeletedPost([...deletedPost, data.id]);
+			else setDeletedDraft([...deletedDraft, data.id]);
+
 			setDeletePopup(false);
-			setDeletePostID(null);
+			setDeletePostData(null);
 		} else {
 			toast.update(toastId, {
 				render: `Error ${res.message}`,
@@ -166,7 +188,7 @@ export default function Dashboard(props) {
 						<div className='row bg-white dashboard inside border-light' style={{ fontSize: "large" }}>
 							<div className='col-md-12'>
 								<h1>
-									Admin Dashboard 🛠
+									Admin 🛠
 									<span className='float-right'>
 										<a href='/admin/logout' className='btn btn-danger'>
 											🚩 Logout
@@ -179,6 +201,7 @@ export default function Dashboard(props) {
 										</a>
 									</span>
 								</h1>
+								<h2>Post</h2>
 								<input
 									value={searchQuery}
 									onInput={(e) => {
@@ -231,46 +254,120 @@ export default function Dashboard(props) {
 										</tr>
 									</thead>
 									<tbody>
-										{posts.map((post, i) => (
-											<tr key={i}>
-												<th scope='row'>{i + 1}</th>
-												<td style={{ maxWidth: "300px" }}>
-													<a href={`/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>{post.title}</a>
-													<span data-tip={`ID: ${post.id} | Tags: ` + post.tag.join(", ")}> 🔗</span>
-												</td>
-												<td style={{ maxWidth: "600px" }}>{post.description}</td>
-												<td style={{ maxWidth: "100px" }}>{post.views}</td>
-												<td style={{ maxWidth: "100px" }}>{post.upvote}</td>
-												<td style={{ maxWidth: "120px" }}>
-													<span
-														className='post-date'
-														data-tip={`Last updated: ${post.lastUpdatedAt ? parseDate(post.lastUpdatedAt) : `No Changes`}`}
-														data-place='bottom'
-													>
-														{parseDate(post.createdAt)}
-													</span>
-												</td>
-												<td style={{ maxWidth: "200px" }}>
-													<a href={`/admin/dashboard/post/edit/${post.id}`}>
-														<a className='btn btn-sm btn-outline-primary'>Edit</a>
-													</a>
-													<button
-														className='btn btn-sm btn-outline-danger dashboard action-table'
-														onClick={() => {
-															// 3 layer of confirmation just in case i'm a dumb idiot and delete something by accident
-															if (window.confirm("Confirmation #1\nAre you sure that you want to delete this post?")) {
-																if (window.confirm("Confirmation #2\nAre you really really sure that you want to delete this post?")) {
-																	setDeletePopup(true);
-																	setDeletePostID(post.id);
+										{posts.length > 0 ? (
+											posts.map((post, i) => (
+												<tr key={i}>
+													<th scope='row'>{i + 1}</th>
+													<td style={{ maxWidth: "300px" }}>
+														<a href={`/r/${post.id}/${encodeURIComponent(post.title.replace(/\s+/g, "-"))}`}>{post.title}</a>
+														<span data-tip={`ID: ${post.id} | Tags: ` + post.tag.join(", ")}> 🔗</span>
+													</td>
+													<td style={{ maxWidth: "600px" }}>{post.description}</td>
+													<td style={{ maxWidth: "100px" }}>{post.views}</td>
+													<td style={{ maxWidth: "100px" }}>{post.upvote}</td>
+													<td style={{ maxWidth: "120px" }}>
+														<span
+															className='post-date'
+															data-tip={`Last updated: ${post.lastUpdatedAt ? parseDate(post.lastUpdatedAt) : `No Changes`}`}
+															data-place='bottom'
+														>
+															{parseDate(post.createdAt)}
+														</span>
+													</td>
+													<td style={{ maxWidth: "200px" }}>
+														<a href={`/admin/dashboard/post/edit/${post.id}`}>
+															<a className='btn btn-sm btn-outline-primary'>Edit</a>
+														</a>
+														<button
+															className='btn btn-sm btn-outline-danger dashboard action-table'
+															onClick={() => {
+																// 3 layer of confirmation just in case i'm a dumb idiot and delete something by accident
+																if (window.confirm("Confirmation #1\nAre you sure that you want to delete this post?")) {
+																	if (window.confirm("Confirmation #2\nAre you really really sure that you want to delete this post?")) {
+																		setDeletePopup(true);
+																		setDeletePostData({ id: post.id, type: "post" });
+																	}
 																}
-															}
-														}}
-													>
-														Delete
-													</button>
+															}}
+														>
+															Delete
+														</button>
+													</td>
+												</tr>
+											))
+										) : (
+											<tr>
+												<td colSpan='7'>
+													<div className='text-center'>
+														<h3>No posts found</h3>
+													</div>
 												</td>
 											</tr>
-										))}
+										)}
+									</tbody>
+								</table>
+
+								<h2>Draft</h2>
+
+								<table className='table table-hover table-striped'>
+									<thead>
+										<tr>
+											<th>#</th>
+											<th scope='col'>Title</th>
+											<th scope='col'>Description</th>
+											<th scope='col'>Date</th>
+											<th scope='col'>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{drafts.length > 0 ? (
+											drafts.map((draft, i) => (
+												<tr key={i}>
+													<th scope='row'>{i + 1}</th>
+													<td style={{ maxWidth: "300px" }}>
+														{draft.title}
+														<span data-tip={`ID: ${draft._id} | Tags: ` + draft.tag.join(", ")}> 🔗</span>
+													</td>
+													<td style={{ maxWidth: "600px" }}>{draft.description}</td>
+													<td style={{ maxWidth: "120px" }}>
+														<span
+															className='post-date'
+															data-tip={`Last updated: ${draft.lastUpdatedAt ? parseDate(draft.lastUpdatedAt) : `No Changes`}`}
+															data-place='bottom'
+														>
+															{parseDate(draft.createdAt)}
+														</span>
+													</td>
+													<td style={{ maxWidth: "200px" }}>
+														<a href={`/admin/dashboard/draft/edit/${draft._id}`}>
+															<a className='btn btn-sm btn-outline-primary'>Edit</a>
+														</a>
+														<button
+															className='btn btn-sm btn-outline-danger dashboard action-table'
+															onClick={() => {
+																// 3 layer of confirmation just in case i'm a dumb idiot and delete something by accident
+																if (window.confirm("Confirmation #1\nAre you sure that you want to delete this post?")) {
+																	if (window.confirm("Confirmation #2\nAre you really really sure that you want to delete this post?")) {
+																		setDeletePopup(true);
+																		setDeletePostData({ id: draft._id, type: "draft" });
+																	}
+																}
+															}}
+														>
+															Delete
+														</button>
+													</td>
+												</tr>
+											))
+										) : (
+											<tr>
+												<td colSpan='5'>
+													<div className='text-center'>
+														<h3>No Drafts found</h3>
+													</div>
+												</td>
+											</tr>
+										)}
 									</tbody>
 								</table>
 								{deletePopup ? (
@@ -280,21 +377,21 @@ export default function Dashboard(props) {
 											<p>Warning! This action cannot be undone!!</p>
 											<div className='btn-group'>
 												<button
-													className='btn btn-sm btn-outline-primary'
-													onClick={() => {
-														setDeletePopup(false);
-														setDeletePostID(null);
-													}}
-												>
-													<small>🔵</small> Cancel
-												</button>
-												<button
 													className='btn btn-sm btn-outline-danger'
 													onClick={() => {
-														deletePost(deletePostID);
+														deletePost(deletePostData);
 													}}
 												>
 													<small>🔴</small> Delete
+												</button>
+												<button
+													className='btn btn-sm btn-outline-primary'
+													onClick={() => {
+														setDeletePopup(false);
+														setDeletePostData(null);
+													}}
+												>
+													<small>🔵</small> Cancel
 												</button>
 											</div>
 										</div>
@@ -336,6 +433,9 @@ export async function getServerSideProps(ctx) {
 	const res_Posts = await fetch(`${serverUrl}/api/v1/post/get/all`, {});
 	const data_Posts = await res_Posts.json();
 
+	const res_Drafts = await fetch(`${serverUrl}/api/v1/draft/get/all`, {});
+	const data_Drafts = await res_Drafts.json();
+
 	// get all tags from data_posts
 	let tags = data_Posts.map((post) => post.tag.map((tag) => tag));
 	tags = [].concat(...tags); // get all tags from the array tags
@@ -344,6 +444,7 @@ export async function getServerSideProps(ctx) {
 	return {
 		props: {
 			posts: data_Posts,
+			drafts: data_Drafts,
 			tags: tags,
 		},
 	};
